@@ -192,7 +192,13 @@ def generate_prompts_lm_studio(tag_combinations, lm_config, model_override=None)
     
     # Initialize LM Studio model
     try:
-        model = lms.llm(model_name)
+        # Generate a random seed for LM Studio
+        lm_seed = random.randint(1, 2147483647)
+        print_info(f"Using LM Studio seed: {lm_seed}")
+        
+        model = lms.llm(model_name, config={
+            "seed": lm_seed,
+        })
         print_success(f"Successfully loaded model: {model_name}")
     except Exception as e:
         print_error(f"Error loading LM Studio model: {e}")
@@ -347,6 +353,8 @@ def generate_images_comfyui(prompts, config, tag_combinations=None, db=None, wor
     client_id = config['comfy_ui'].get('client_id')
     output_dir = config['comfy_ui'].get('output_directory')
     
+    print_info(f"Saving images to: {output_dir}")
+    
     # Load workflow from file
     workflow_path = os.path.join("workflows", workflow_name)
     try:
@@ -407,6 +415,10 @@ def generate_images_comfyui(prompts, config, tag_combinations=None, db=None, wor
             if len(display_filename) > 40:
                 display_filename = display_filename[:20] + "..." + display_filename[-17:]
             print_info(f"Using filename based on tags: {display_filename}")
+        
+        # Add workflow name as prefix to the filename
+        custom_filename = f"{workflow_name}_{custom_filename}"
+        print_info(f"Final filename with workflow prefix: {custom_filename}")
         
         # Replace placeholders in the workflow string
         # Note: We're directly substituting the values, not as JSON strings
