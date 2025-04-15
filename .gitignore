@@ -35,3 +35,4 @@ env/
 output_images/
 flux/
 *.log
+mongodb_data/

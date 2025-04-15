@@ -11,52 +11,70 @@ import sys
 import subprocess
 import time
 import platform
+import yaml
 
 class ImageDatabase:
-    def __init__(self, db_name="stock_images", collection_name="images", data_dir="./mongodb_data"):
+    def __init__(self, config_path="config.yaml", db_name=None, collection_name=None, data_dir=None):
         """Initialize connection to MongoDB."""
         self.client = None
         self.db = None
         self.collection = None
         self.mongo_process = None
         
+        # Load configuration from config file if it exists
+        config = {}
+        try:
+            if os.path.exists(config_path):
+                with open(config_path, 'r') as f:
+                    config = yaml.safe_load(f)
+                print("✅ Loaded database configuration from config file")
+        except Exception as e:
+            print(f"⚠️ Could not load config file: {e}")
+        
+        # Get MongoDB settings from config or use defaults
+        mongodb_config = config.get('mongodb', {})
+        self.db_name = db_name or mongodb_config.get('db_name', "stock_images")
+        self.collection_name = collection_name or mongodb_config.get('collection', "images")
+        self.data_dir = data_dir or mongodb_config.get('data_dir', "./mongodb_data")
+        self.connection_string = mongodb_config.get('connection_string', "mongodb://localhost:27017/")
+        
         # Try to connect to MongoDB
         try:
-            # Connect to MongoDB running on localhost with a short timeout
-            self.client = pymongo.MongoClient("mongodb://localhost:27017/", serverSelectionTimeoutMS=1000)
+            # Connect to MongoDB using the configured connection string
+            self.client = pymongo.MongoClient(self.connection_string, serverSelectionTimeoutMS=1000)
             # Test the connection
             self.client.server_info()
             
-            self.db = self.client[db_name]
-            self.collection = self.db[collection_name]
+            self.db = self.client[self.db_name]
+            self.collection = self.db[self.collection_name]
             
             # Create an index on filename for faster lookups
             self.collection.create_index("filename", unique=True)
             # Create text index on tags and prompt for text search
             self.collection.create_index([("tags", pymongo.TEXT), ("prompt", pymongo.TEXT)])
             
-            print("✅ Connected to MongoDB database")
+            print(f"✅ Connected to MongoDB database '{self.db_name}', collection '{self.collection_name}'")
         except pymongo.errors.ServerSelectionTimeoutError:
             print("⚠️ MongoDB server not running. Attempting to start it...")
             
             # Try to start MongoDB
-            if self._start_mongodb_server(data_dir):
+            if self._start_mongodb_server(self.data_dir):
                 # Try to connect again
                 try:
                     # Connect to MongoDB running on localhost
-                    self.client = pymongo.MongoClient("mongodb://localhost:27017/", serverSelectionTimeoutMS=5000)
+                    self.client = pymongo.MongoClient(self.connection_string, serverSelectionTimeoutMS=5000)
                     # Test the connection
                     self.client.server_info()
                     
-                    self.db = self.client[db_name]
-                    self.collection = self.db[collection_name]
+                    self.db = self.client[self.db_name]
+                    self.collection = self.db[self.collection_name]
                     
                     # Create an index on filename for faster lookups
                     self.collection.create_index("filename", unique=True)
                     # Create text index on tags and prompt for text search
                     self.collection.create_index([("tags", pymongo.TEXT), ("prompt", pymongo.TEXT)])
                     
-                    print("✅ Connected to MongoDB database")
+                    print(f"✅ Connected to MongoDB database '{self.db_name}', collection '{self.collection_name}'")
                 except Exception as e:
                     print(f"❌ Error connecting to MongoDB after starting it: {e}")
                     self._stop_mongodb_server()
@@ -225,7 +243,8 @@ class ImageDatabase:
         Search for images based on tags.
         
         Args:
-            tags (list): List of tags to search for
+            tags (list): List of tags to search for. Can be in format ["subject:person", "mood:happy"] 
+                         or just ["person", "happy"]
             match_all (bool): If True, all tags must match. If False, any tag can match.
             limit (int): Maximum number of results to return
             
@@ -236,13 +255,30 @@ class ImageDatabase:
             return []
             
         try:
+            # Process the tags to handle both formats (with or without categories)
+            processed_tags = []
+            for tag in tags:
+                tag = tag.strip()
+                if ":" in tag:
+                    # Format is "category:value"
+                    category, value = tag.split(":", 1)
+                    # Create a query to match this specific category:value pair
+                    processed_tags.append({f"tags.{category}": value})
+                else:
+                    # Format is just "value" - search in all tag values
+                    # This creates a query that checks if the tag appears as any value in the tags object
+                    processed_tags.append({"$or": [
+                        {f"tags.{field}": {"$regex": tag, "$options": "i"}} 
+                        for field in ["subject", "action", "setting", "mood", "style", "lighting", "camera_angle"]
+                    ]})
+            
             # Build query based on match_all parameter
             if match_all:
-                # All tags must be present
-                query = {"tags": {"$all": [tag.strip() for tag in tags]}}
+                # All conditions must be met
+                query = {"$and": processed_tags}
             else:
-                # Any tag can match
-                query = {"tags": {"$in": [tag.strip() for tag in tags]}}
+                # Any condition can match
+                query = {"$or": processed_tags}
             
             # Execute query
             cursor = self.collection.find(query).sort("created_at", -1).limit(limit)
@@ -332,3 +368,115 @@ class ImageDatabase:
         
         # Stop MongoDB if we started it
         self._stop_mongodb_server()
+
+# CLI mode for database management
+if __name__ == "__main__":
+    import argparse
+    
+    # Set up command line argument parsing
+    parser = argparse.ArgumentParser(description="MongoDB Database Management for Stock Images Generator")
+    parser.add_argument("--info", action="store_true", help="Display database connection information")
+    parser.add_argument("--list", action="store_true", help="List all images in the database")
+    parser.add_argument("--stats", action="store_true", help="Show database statistics")
+    parser.add_argument("--trim", action="store_true", help="Remove database records for which image files don't exist")
+    parser.add_argument("--output-dir", type=str, default="output_images", help="Directory to check for image files when using --trim")
+    args = parser.parse_args()
+    
+    # Initialize database connection
+    print("Initializing database connection...")
+    db = ImageDatabase()
+    
+    if not db.is_connected():
+        print("❌ Failed to connect to database")
+        sys.exit(1)
+    
+    # Print connection information (useful for MongoDB Atlas)
+    print("\n📊 MongoDB Connection Information:")
+    print("--------------------------------")
+    print(f"🔗 Connection URL: {db.connection_string}")
+    print(f"📁 Database Name: {db.db_name}")
+    print(f"📑 Collection Name: {db.collection_name}")
+    print(f"🔐 Authentication: None (local development)")
+    print("--------------------------------")
+    print("✅ To connect with MongoDB Atlas or other tools:")
+    print("   - Use the connection string:", db.connection_string)
+    print(f"   - Database name: {db.db_name}")
+    print(f"   - Collection name: {db.collection_name}")
+    
+    # Handle specific commands
+    if args.list:
+        print("\n📋 Images in Database:")
+        images = db.get_all_images(limit=10)
+        if images:
+            for i, img in enumerate(images, 1):
+                print(f"{i}. {img['filename']} - Created: {img['created_at']}")
+                print(f"   Tags: {img.get('tags', 'None')}")
+                print(f"   Prompt: {img.get('prompt', 'None')[:50]}...")
+        else:
+            print("No images found in database.")
+    
+    if args.trim:
+        print("\n🧹 Trimming Database Records:")
+        output_dir = args.output_dir
+        if not os.path.exists(output_dir):
+            print(f"❌ Output directory '{output_dir}' does not exist.")
+        else:
+            # Get all images from database
+            all_images = db.get_all_images(limit=1000)  # Set a reasonable limit
+            removed_count = 0
+            
+            for img in all_images:
+                filename = img.get('filename')
+                if not filename:
+                    continue
+                
+                # Check if the image file exists
+                filepath = os.path.join(output_dir, filename)
+                if not os.path.exists(filepath):
+                    # Image file doesn't exist, remove from database
+                    print(f"🗑️ Removing record for missing file: {filename}")
+                    db.delete_image(filename)
+                    removed_count += 1
+            
+            if removed_count > 0:
+                print(f"✅ Removed {removed_count} records for missing image files.")
+            else:
+                print("✅ No missing image files found. Database is clean.")
+    
+    if args.stats:
+        print("\n📈 Database Statistics:")
+        try:
+            count = db.collection.count_documents({})
+            print(f"Total Images: {count}")
+            
+            # Get unique tags count
+            unique_tags = db.get_unique_tags()
+            print(f"Unique Tags: {len(unique_tags)}")
+            
+            # Get storage size
+            stats = db.db.command("dbStats")
+            storage_mb = stats.get("storageSize", 0) / (1024 * 1024)
+            print(f"Storage Size: {storage_mb:.2f} MB")
+            
+            # Get most recent image
+            latest = db.collection.find_one({}, sort=[("created_at", -1)])
+            if latest:
+                print(f"Most Recent Image: {latest['filename']}")
+                print(f"Created: {latest['created_at']}")
+        except Exception as e:
+            print(f"Error getting statistics: {e}")
+    
+    # If no specific command, just show info
+    if not (args.list or args.stats) or args.info:
+        print("\n🔍 Database Status:")
+        try:
+            count = db.collection.count_documents({})
+            print(f"Total Images: {count}")
+            print("Database is running and ready for connections.")
+        except Exception as e:
+            print(f"Error checking database status: {e}")
+    
+    # Close the connection
+    print("\nClosing database connection...")
+    db.close()
+    print("Done! 👋")

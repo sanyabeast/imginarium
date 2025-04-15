@@ -4,12 +4,13 @@ import random
 import uuid
 import os
 import json
+import time
 import requests
 import websocket
-import time
 from urllib.parse import urlparse
 import lmstudio as lms
 from pydantic import BaseModel
+from db import ImageDatabase  # Import the database module
 import sys
 
 # Define schema for LM Studio response
@@ -72,9 +73,17 @@ def tags_to_filename(tags_str):
     # Convert to lowercase and replace spaces with underscores
     filename = '_'.join(tag_values).lower().replace(' ', '_')
     
+    # Add a random component to prevent overwrites
+    timestamp = int(time.time())
+    random_str = ''.join(random.choices('abcdefghijklmnopqrstuvwxyz0123456789', k=6))
+    filename = f"{filename}_{timestamp}_{random_str}"
+    
     # Limit length to avoid excessively long filenames
     if len(filename) > 100:
-        filename = filename[:100]
+        # Preserve the random component at the end
+        random_part = f"_{timestamp}_{random_str}"
+        max_base_length = 100 - len(random_part)
+        filename = f"{filename[:max_base_length]}{random_part}"
     
     return filename
 
@@ -331,7 +340,7 @@ def get_images_from_websocket(ws, server_address, client_id, output_dir, prompt_
 
     return image_saved
 
-def generate_images_comfyui(prompts, config, tag_combinations=None):
+def generate_images_comfyui(prompts, config, tag_combinations=None, db=None):
     """Generates images for each prompt using ComfyUI."""
     print_subheader("Generating Images with ComfyUI", "🖼️")
     server_address = config['comfy_ui'].get('server_address')
@@ -414,6 +423,33 @@ def generate_images_comfyui(prompts, config, tag_combinations=None):
             if get_images_from_websocket(ws, server_address, client_id, output_dir, prompt_id):
                  images_generated += 1
                  print_success(f"Successfully generated image {images_generated}! 🎉")
+                 
+                 # Save to database if provided
+                 if db and db.is_connected():
+                     # Get the actual filename that was saved
+                     filename = f"{custom_filename}_00001_.png"  # Default format from ComfyUI
+                     
+                     # Parse tags into a structured format
+                     tags_data = {}
+                     if tag_combinations and i < len(tag_combinations):
+                         # Convert the tag string into a structured object
+                         tag_string = tag_combinations[i]
+                         for tag_item in tag_string.split(", "):
+                             if ":" in tag_item:
+                                 category, value = tag_item.split(":", 1)
+                                 tags_data[category] = value
+                     
+                     # Store in database
+                     db.add_image(
+                         filename=filename,
+                         tags=tags_data,  # Store as structured object instead of string
+                         prompt=prompt_text,
+                         seed=random_seed,
+                         steps=steps,
+                         width=width,
+                         height=height
+                     )
+                     print_info(f"Added image to database: {filename}")
             else:
                 print_error(f"Failed to get image for prompt_id {prompt_id}.")
         else:
@@ -456,12 +492,17 @@ if __name__ == "__main__":
             exit(1)
 
         # 4. Generate Images using ComfyUI
-        generate_images_comfyui(detailed_prompts, config, tag_combinations)
+        db = ImageDatabase() # Initialize database connection with config file settings
+        generate_images_comfyui(detailed_prompts, config, tag_combinations, db)
         
         print_header("✨ All Done! ✨")
         print_success("Check your output directory for the generated images!")
         print_info("Thank you for using Stock Image Generator! 🙏")
         
+        # Close database connection
+        if db and db.is_connected():
+            db.close()
+            
     except KeyboardInterrupt:
         print("\n")
         print_warning("Process interrupted by user (Ctrl+C)")
