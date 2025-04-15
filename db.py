@@ -53,7 +53,7 @@ class ImageDatabase:
             # Create text index on tags and prompt for text search
             self.collection.create_index([("tags", pymongo.TEXT), ("prompt", pymongo.TEXT)])
             
-            print(f"✅ Connected to MongoDB database '{self.db_name}', collection '{self.collection_name}'")
+            print(f"✅ Connected to MongoDB")
         except pymongo.errors.ServerSelectionTimeoutError:
             print("⚠️ MongoDB server not running. Attempting to start it...")
             
@@ -74,7 +74,7 @@ class ImageDatabase:
                     # Create text index on tags and prompt for text search
                     self.collection.create_index([("tags", pymongo.TEXT), ("prompt", pymongo.TEXT)])
                     
-                    print(f"✅ Connected to MongoDB database '{self.db_name}', collection '{self.collection_name}'")
+                    print(f"✅ Connected to MongoDB")
                 except Exception as e:
                     print(f"❌ Error connecting to MongoDB after starting it: {e}")
                     self._stop_mongodb_server()
@@ -393,15 +393,10 @@ if __name__ == "__main__":
     # Print connection information (useful for MongoDB Atlas)
     print("\n📊 MongoDB Connection Information:")
     print("--------------------------------")
-    print(f"🔗 Connection URL: {db.connection_string}")
-    print(f"📁 Database Name: {db.db_name}")
-    print(f"📑 Collection Name: {db.collection_name}")
-    print(f"🔐 Authentication: None (local development)")
+    print(f"🔗 Connection: {db.connection_string}")
+    print(f"📁 Database: {db.db_name}")
+    print(f"🗂️ Collection: {db.collection_name}")
     print("--------------------------------")
-    print("✅ To connect with MongoDB Atlas or other tools:")
-    print("   - Use the connection string:", db.connection_string)
-    print(f"   - Database name: {db.db_name}")
-    print(f"   - Collection name: {db.collection_name}")
     
     # Handle specific commands
     if args.list:
@@ -434,14 +429,18 @@ if __name__ == "__main__":
                 filepath = os.path.join(output_dir, filename)
                 if not os.path.exists(filepath):
                     # Image file doesn't exist, remove from database
-                    print(f"🗑️ Removing record for missing file: {filename}")
+                    # Get a shortened filename for display
+                    short_filename = filename
+                    if len(short_filename) > 50:
+                        short_filename = short_filename[:25] + "..." + short_filename[-22:]
+                    print(f"🗑️ Removing: {short_filename}")
                     db.delete_image(filename)
                     removed_count += 1
             
             if removed_count > 0:
-                print(f"✅ Removed {removed_count} records for missing image files.")
+                print(f"✅ Cleaned up {removed_count} records for missing files")
             else:
-                print("✅ No missing image files found. Database is clean.")
+                print("✅ No missing files found. Database is clean")
     
     if args.stats:
         print("\n📈 Database Statistics:")
@@ -467,14 +466,14 @@ if __name__ == "__main__":
             print(f"Error getting statistics: {e}")
     
     # If no specific command, just show info
-    if not (args.list or args.stats) or args.info:
+    if not (args.list or args.stats or args.trim) or args.info:
         print("\n🔍 Database Status:")
         try:
             count = db.collection.count_documents({})
-            print(f"Total Images: {count}")
-            print("Database is running and ready for connections.")
+            print(f"📊 Total Images: {count}")
+            print("✅ Database is ready")
         except Exception as e:
-            print(f"Error checking database status: {e}")
+            print(f"❌ Error: {e}")
     
     # Close the connection
     print("\nClosing database connection...")

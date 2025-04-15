@@ -272,7 +272,7 @@ def get_history(prompt_id, server_address):
 
 def get_images_from_websocket(ws, server_address, client_id, output_dir, prompt_id):
     """Listens to ComfyUI websocket for prompt execution status and retrieves images."""
-    print_info(f"Waiting for ComfyUI results for prompt_id: {prompt_id}...")
+    print_info(f"Waiting for ComfyUI to generate image...")
     image_saved = False
     while True:
         try:
@@ -282,7 +282,7 @@ def get_images_from_websocket(ws, server_address, client_id, output_dir, prompt_
                 if message['type'] == 'executing':
                     data = message['data']
                     if data['node'] is None and data['prompt_id'] == prompt_id:
-                        print_success(f"Execution finished for prompt_id: {prompt_id}")
+                        print_success(f"Generation complete!")
                         break # Execution is done
             else:
                 continue # previews are binary data
@@ -315,7 +315,7 @@ def get_images_from_websocket(ws, server_address, client_id, output_dir, prompt_
                     subfolder = image_data.get('subfolder', '')
                     img_type = image_data.get('type', 'output') # Usually 'output' or 'temp'
 
-                    print_info(f"Fetching image: {filename} (type: {img_type}, subfolder: '{subfolder}')")
+                    print_info(f"Saving image...")
                     image_content = get_image(filename, subfolder, img_type, server_address)
                     if image_content:
                         try:
@@ -376,7 +376,8 @@ def generate_images_comfyui(prompts, config, tag_combinations=None, db=None):
 
     for i, prompt_text in enumerate(prompts):
         print_step(i+1, len(prompts), "Processing prompt", "🎨")
-        print_info(f"Prompt: {prompt_text[:100]}...")
+        # Print the full prompt
+        print_info(f"Prompt: {prompt_text}")
 
         # Create a copy of the workflow string for this prompt
         current_workflow_str = workflow_str
@@ -388,7 +389,11 @@ def generate_images_comfyui(prompts, config, tag_combinations=None, db=None):
         custom_filename = f"image_{i+1}"
         if tag_combinations and i < len(tag_combinations):
             custom_filename = tags_to_filename(tag_combinations[i])
-            print_info(f"Using filename based on tags: {custom_filename}")
+            # Truncate the displayed filename if it's too long
+            display_filename = custom_filename
+            if len(display_filename) > 40:
+                display_filename = display_filename[:20] + "..." + display_filename[-17:]
+            print_info(f"Using filename based on tags: {display_filename}")
         
         # Replace placeholders in the workflow string
         # Note: We're directly substituting the values, not as JSON strings
@@ -418,7 +423,7 @@ def generate_images_comfyui(prompts, config, tag_combinations=None, db=None):
         queued_data = queue_prompt(current_workflow, client_id, server_address)
         if queued_data and 'prompt_id' in queued_data:
             prompt_id = queued_data['prompt_id']
-            print_info(f"Queued prompt with ID: {prompt_id}")
+            print_info(f"Starting generation...")
             # Wait for results and get image via WebSocket
             if get_images_from_websocket(ws, server_address, client_id, output_dir, prompt_id):
                  images_generated += 1
