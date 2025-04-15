@@ -86,10 +86,12 @@ def load_config(config_path="config.yaml"):
         with open(config_path, 'r') as f:
             config = yaml.safe_load(f)
         # Basic validation
-        if not all(k in config for k in ['tags', 'lm_studio', 'comfy_ui', 'comfy_workflow']):
+        if not all(k in config for k in ['tags', 'lm_studio', 'comfy_ui']):
             raise ValueError("Config file missing required top-level keys.")
-        if not config.get('comfy_workflow'):
-             print_warning("'comfy_workflow' is not defined in config.yaml. ComfyUI generation will likely fail.")
+        
+        # Ensure the workflow exists in comfy_ui section
+        if not config.get('comfy_ui', {}).get('workflow'):
+             print_warning("'workflow' is not defined in comfy_ui section. ComfyUI generation will likely fail.")
         # Ensure output directory exists
         output_dir = config.get('comfy_ui', {}).get('output_directory', 'output_images')
         os.makedirs(output_dir, exist_ok=True)
@@ -335,7 +337,7 @@ def generate_images_comfyui(prompts, config, tag_combinations=None):
     server_address = config['comfy_ui'].get('server_address')
     client_id = config['comfy_ui'].get('client_id')
     output_dir = config['comfy_ui'].get('output_directory')
-    workflow_str = config.get('comfy_workflow') # This is now a string, not a JSON object
+    workflow_str = config['comfy_ui'].get('workflow') # Changed from config.get('comfy_workflow')
     
     # Get parameters from config with defaults if not specified
     steps = config['comfy_ui'].get('steps', 20)
@@ -346,7 +348,7 @@ def generate_images_comfyui(prompts, config, tag_combinations=None):
     default_negative_prompt = "text, watermark, signature, blurry, distorted, low resolution, poorly drawn, bad anatomy, deformed, disfigured, out of frame, cropped"
     
     if not server_address or not client_id or not workflow_str:
-        print_error("ComfyUI 'server_address', 'client_id', or 'comfy_workflow' not configured correctly.")
+        print_error("ComfyUI 'server_address', 'client_id', or 'workflow' not configured correctly.")
         return
 
     print_info(f"Connecting to ComfyUI WebSocket at ws://{server_address}/ws?clientId={client_id}")
