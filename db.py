@@ -196,7 +196,7 @@ class ImageDatabase:
         """Check if database connection is active."""
         return self.client is not None
     
-    def add_image(self, filename, tags, prompt, seed=None, steps=None, width=None, height=None):
+    def add_image(self, filename, tags, prompt, seed=None, steps=None, width=None, height=None, workflow=None, ratio=None):
         """Add a new image entry to the database."""
         if not self.is_connected():
             print("⚠️ Database not connected, cannot register image")
@@ -212,6 +212,8 @@ class ImageDatabase:
                 "steps": steps,
                 "width": width,
                 "height": height,
+                "workflow": workflow,
+                "ratio": ratio,
                 "created_at": datetime.now()
             }
             
@@ -360,6 +362,55 @@ class ImageDatabase:
         except Exception as e:
             print(f"❌ Error deleting image from database: {e}")
             return False
+    
+    def search_by_workflow(self, workflow, limit=100):
+        """
+        Search for images generated with a specific workflow.
+        
+        Args:
+            workflow (str): Workflow name to search for
+            limit (int): Maximum number of results to return
+            
+        Returns:
+            list: List of matching image documents
+        """
+        if not self.is_connected() or not workflow:
+            return []
+            
+        try:
+            # Find images with the specified workflow
+            query = {"workflow": workflow}
+            cursor = self.collection.find(query).sort("created_at", -1).limit(limit)
+            return list(cursor)
+        except Exception as e:
+            print(f"❌ Error searching images by workflow: {e}")
+            return []
+    
+    def search_by_ratio(self, ratio, tolerance=0.1, limit=100):
+        """
+        Search for images with a specific aspect ratio (within tolerance).
+        
+        Args:
+            ratio (float): Aspect ratio to search for (width/height)
+            tolerance (float): Tolerance for ratio matching
+            limit (int): Maximum number of results to return
+            
+        Returns:
+            list: List of matching image documents
+        """
+        if not self.is_connected() or not ratio:
+            return []
+            
+        try:
+            # Find images with ratio within the specified tolerance
+            min_ratio = ratio - tolerance
+            max_ratio = ratio + tolerance
+            query = {"ratio": {"$gte": min_ratio, "$lte": max_ratio}}
+            cursor = self.collection.find(query).sort("created_at", -1).limit(limit)
+            return list(cursor)
+        except Exception as e:
+            print(f"❌ Error searching images by ratio: {e}")
+            return []
     
     def close(self):
         """Close the database connection and stop MongoDB if we started it."""

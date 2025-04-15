@@ -92,10 +92,23 @@ Configure the image generation settings:
 comfy_ui:
   server_address: "127.0.0.1:8188"
   output_directory: "output_images"
-  steps: 30
-  width: 1280
-  height: 720
-  # Workflow configuration...
+  steps: 35
+  width: 1536
+  height: 1536
+```
+
+### Workflows
+
+The project uses workflow files stored in the `workflows` directory. Each file contains a ComfyUI workflow JSON configuration:
+
+- Default workflow: `flux_dev` (optimized for ComfyUI Flux model)
+- To create a new workflow, add a file to the `workflows` directory
+- Specify which workflow to use with the `-w` parameter when generating images
+
+Example:
+```bash
+# Use a specific workflow
+python generate.py -n 5 -w my_custom_workflow
 ```
 
 ### MongoDB Configuration
@@ -116,11 +129,26 @@ mongodb:
 Generate stock images using the configured tags and settings:
 
 ```bash
-# Generate 5 images
-python generate.py -n 5
+# Generate 5 images (workflow parameter is required)
+python generate.py -n 5 -w flux_dev
 
 # Use a specific LM Studio model
-python generate.py -n 3 -m "llama-3-8b-instruct"
+python generate.py -n 3 -m "llama-3-8b-instruct" -w flux_dev
+
+# Specify custom image dimensions
+python generate.py -n 2 -w flux_dev -d 1920x1080
+
+# Override the number of steps for generation
+python generate.py -n 2 -w flux_dev -s 30
+
+# Combine parameters
+python generate.py -n 5 -m "gemma-3-4b-it" -w flux_dev -d 1024x1024 -s 40
+```
+
+Use `-h` or `--help` to see all available options:
+
+```bash
+python generate.py --help
 ```
 
 ### Managing the Database
@@ -164,6 +192,7 @@ python search.py --recent
 - `config.yaml` - Configuration file
 - `output_images/` - Directory for generated images
 - `mongodb_data/` - MongoDB database files
+- `workflows/` - Directory for workflow files
 
 ## 🔧 Advanced Usage
 

@@ -87,6 +87,10 @@ def print_image_details(image, index=None):
         params.append(f"steps={image['steps']}")
     if image.get('width') and image.get('height'):
         params.append(f"size={image['width']}x{image['height']}")
+    if image.get('ratio'):
+        params.append(f"ratio={image['ratio']:.2f}")
+    if image.get('workflow'):
+        params.append(f"workflow={image['workflow']}")
     
     if params:
         content.append(f"[bold]Parameters:[/bold] {', '.join(params)}")
@@ -252,6 +256,53 @@ def list_recent_images(db, limit=10):
     for i, image in enumerate(results, 1):
         print_image_details(image, i)
 
+def search_by_workflow(db, workflow):
+    """Search for images by workflow."""
+    print_header(f"Images Generated with Workflow: {workflow}")
+    
+    # Search for images with the specified workflow
+    results = db.search_by_workflow(workflow)
+    
+    if not results:
+        print_warning(f"No images found with workflow '{workflow}'.")
+        return
+    
+    print_success(f"Found {len(results)} images.")
+    
+    # Print each image's details
+    for i, image in enumerate(results, 1):
+        print_image_details(image, i)
+
+def search_by_ratio(db, ratio, tolerance=0.1):
+    """Search for images by aspect ratio."""
+    print_header(f"Images with Aspect Ratio: {ratio} (±{tolerance})")
+    
+    # Convert ratio to float if it's a string
+    if isinstance(ratio, str):
+        try:
+            if ':' in ratio:
+                # Handle ratios like "16:9"
+                w, h = map(float, ratio.split(':'))
+                ratio = w / h
+            else:
+                ratio = float(ratio)
+        except ValueError:
+            print_error(f"Invalid ratio format: {ratio}")
+            return
+    
+    # Search for images with the specified ratio
+    results = db.search_by_ratio(ratio, tolerance)
+    
+    if not results:
+        print_warning(f"No images found with ratio {ratio} (±{tolerance}).")
+        return
+    
+    print_success(f"Found {len(results)} images.")
+    
+    # Print each image's details
+    for i, image in enumerate(results, 1):
+        print_image_details(image, i)
+
 def main():
     """Main entry point for the script."""
     parser = argparse.ArgumentParser(
@@ -273,6 +324,12 @@ Examples:
   
   # Perform a text search (searches in tags and prompts)
   python image_finder.py --search "abandoned factory"
+  
+  # Search for images generated with a specific workflow
+  python image_finder.py --workflow "stable-diffusion"
+  
+  # Search for images with a specific aspect ratio
+  python image_finder.py --ratio "16:9"
         """
     )
     
@@ -282,9 +339,12 @@ Examples:
     action_group.add_argument("--tags", nargs="+", help="Search for images with these tags")
     action_group.add_argument("--search", type=str, help="Text search in tags and prompts")
     action_group.add_argument("--recent", type=int, nargs="?", const=10, help="List recent images (default: 10)")
+    action_group.add_argument("--workflow", type=str, help="Search for images generated with this workflow")
+    action_group.add_argument("--ratio", type=str, help="Search for images with this aspect ratio")
     
     # Additional options
     parser.add_argument("--match-all", action="store_true", help="When using --tags, require ALL tags to match (default: match ANY)")
+    parser.add_argument("--tolerance", type=float, default=0.1, help="Tolerance for aspect ratio search (default: 0.1)")
     
     args = parser.parse_args()
     
@@ -306,6 +366,10 @@ Examples:
             text_search(db, args.search)
         elif args.recent is not None:
             list_recent_images(db, args.recent)
+        elif args.workflow:
+            search_by_workflow(db, args.workflow)
+        elif args.ratio:
+            search_by_ratio(db, args.ratio, args.tolerance)
     except KeyboardInterrupt:
         print("\n")
         print_info("Search cancelled by user.")

@@ -98,9 +98,7 @@ def load_config(config_path="config.yaml"):
         if not all(k in config for k in ['tags', 'lm_studio', 'comfy_ui']):
             raise ValueError("Config file missing required top-level keys.")
         
-        # Ensure the workflow exists in comfy_ui section
-        if not config.get('comfy_ui', {}).get('workflow'):
-             print_warning("'workflow' is not defined in comfy_ui section. ComfyUI generation will likely fail.")
+        # Remove workflow warning since we now load workflows from files
         # Ensure output directory exists
         output_dir = config.get('comfy_ui', {}).get('output_directory', 'output_images')
         os.makedirs(output_dir, exist_ok=True)
@@ -340,13 +338,26 @@ def get_images_from_websocket(ws, server_address, client_id, output_dir, prompt_
 
     return image_saved
 
-def generate_images_comfyui(prompts, config, tag_combinations=None, db=None):
+def generate_images_comfyui(prompts, config, tag_combinations=None, db=None, workflow_name="flux_dev"):
     """Generates images for each prompt using ComfyUI."""
     print_subheader("Generating Images with ComfyUI", "🖼️")
     server_address = config['comfy_ui'].get('server_address')
     client_id = config['comfy_ui'].get('client_id')
     output_dir = config['comfy_ui'].get('output_directory')
-    workflow_str = config['comfy_ui'].get('workflow') # Changed from config.get('comfy_workflow')
+    
+    # Load workflow from file
+    workflow_path = os.path.join("workflows", workflow_name)
+    try:
+        with open(workflow_path, 'r') as f:
+            workflow_str = f.read()
+        print_info(f"Using workflow: {workflow_name}")
+    except FileNotFoundError:
+        print_error(f"Workflow file not found: {workflow_path}")
+        print_info(f"Make sure the workflow file exists in the 'workflows' directory")
+        return
+    except Exception as e:
+        print_error(f"Error loading workflow: {e}")
+        return
     
     # Get parameters from config with defaults if not specified
     steps = config['comfy_ui'].get('steps', 20)
@@ -452,7 +463,9 @@ def generate_images_comfyui(prompts, config, tag_combinations=None, db=None):
                          seed=random_seed,
                          steps=steps,
                          width=width,
-                         height=height
+                         height=height,
+                         workflow=workflow_name,  # Add workflow name
+                         ratio=round(width/height, 2)  # Calculate and store aspect ratio
                      )
                      print_info(f"Added image to database: {filename}")
             else:
@@ -467,9 +480,32 @@ def generate_images_comfyui(prompts, config, tag_combinations=None, db=None):
 
 # --- Main Execution ---
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Generate stock-like images using LM Studio and ComfyUI.")
+    parser = argparse.ArgumentParser(
+        description="Generate stock-like images using LM Studio and ComfyUI.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  # Generate 5 images with the flux_dev workflow
+  python generate.py -n 5 -w flux_dev
+  
+  # Use a specific LM Studio model
+  python generate.py -n 3 -m "llama-3-8b-instruct" -w flux_dev
+  
+  # Specify custom image dimensions
+  python generate.py -n 2 -w flux_dev -d 1920x1080
+  
+  # Override the number of steps for generation
+  python generate.py -n 2 -w flux_dev -s 30
+  
+  # Combine parameters
+  python generate.py -n 5 -m "gemma-3-4b-it" -w flux_dev -d 1024x1024 -s 40
+"""
+    )
     parser.add_argument("-n", "--num-images", type=int, default=5, help="Number of images to generate.")
     parser.add_argument("-m", "--model", type=str, help="LM Studio model to use (overrides config)")
+    parser.add_argument("-w", "--workflow", type=str, required=True, help="Workflow to use from the workflows directory")
+    parser.add_argument("-d", "--dimensions", type=str, help="Image dimensions in format WIDTHxHEIGHT (e.g., 1920x1080)")
+    parser.add_argument("-s", "--steps", type=int, help="Number of diffusion steps for image generation (higher = better quality but slower)")
     parser.add_argument("--config", type=str, default="config.yaml", help="Path to the configuration file.")
     args = parser.parse_args()
 
@@ -477,6 +513,15 @@ if __name__ == "__main__":
     print_info(f"Generating {args.num_images} images")
     if args.model:
         print_info(f"Using model override: {args.model}")
+    
+    # Check if workflow file exists
+    workflow_path = os.path.join("workflows", args.workflow)
+    if not os.path.exists(workflow_path):
+        print_error(f"Workflow file not found: {workflow_path}")
+        print_info(f"Make sure the workflow file exists in the 'workflows' directory")
+        exit(1)
+    else:
+        print_info(f"Using workflow: {args.workflow}")
 
     try:
         # 1. Load Configuration
@@ -498,7 +543,23 @@ if __name__ == "__main__":
 
         # 4. Generate Images using ComfyUI
         db = ImageDatabase() # Initialize database connection with config file settings
-        generate_images_comfyui(detailed_prompts, config, tag_combinations, db)
+        if args.dimensions:
+            try:
+                if 'x' not in args.dimensions:
+                    raise ValueError("Size must be in format WIDTHxHEIGHT (e.g., 1920x1080)")
+                width, height = map(int, args.dimensions.split('x'))
+                if width <= 0 or height <= 0:
+                    raise ValueError("Width and height must be positive integers")
+                print_info(f"Overriding image dimensions: {width}x{height}")
+                config['comfy_ui']['width'] = width
+                config['comfy_ui']['height'] = height
+            except ValueError as e:
+                print_error(f"Invalid size format: {e}")
+                sys.exit(1)
+        if args.steps:
+            print_info(f"Overriding steps count: {args.steps}")
+            config['comfy_ui']['steps'] = args.steps
+        generate_images_comfyui(detailed_prompts, config, tag_combinations, db, args.workflow)
         
         print_header("✨ All Done! ✨")
         print_success("Check your output directory for the generated images!")
