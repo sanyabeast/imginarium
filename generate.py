@@ -11,7 +11,9 @@ from urllib.parse import urlparse
 import lmstudio as lms
 from pydantic import BaseModel
 from db import ImageDatabase  # Import the database module
+from PIL import Image, PngImagePlugin
 import sys
+from datetime import datetime
 
 # Define schema for LM Studio response
 class PromptSchema(BaseModel):
@@ -447,9 +449,11 @@ def generate_images_comfyui(prompts, config, tag_combinations=None, db=None, wor
                  if db and db.is_connected():
                      # Get the actual filename that was saved
                      filename = f"{custom_filename}_00001_.png"  # Default format from ComfyUI
+                     file_path = os.path.join(output_dir, filename)
                      
                      # Parse tags into a structured format
                      tags_data = {}
+                     tag_string = ""
                      if tag_combinations and i < len(tag_combinations):
                          # Convert the tag string into a structured object
                          tag_string = tag_combinations[i]
@@ -471,6 +475,21 @@ def generate_images_comfyui(prompts, config, tag_combinations=None, db=None, wor
                          ratio=round(width/height, 2)  # Calculate and store aspect ratio
                      )
                      print_info(f"Added image to database: {filename}")
+                     
+                     # Add metadata to the PNG image
+                     metadata = {
+                         "Prompt": prompt_text,
+                         "Tags": tag_string,
+                         "Seed": random_seed,
+                         "Steps": steps,
+                         "Width": width,
+                         "Height": height,
+                         "Workflow": workflow_name,
+                         "Ratio": round(width/height, 2),
+                         "Generator": "Stock Image Generator",
+                         "Created": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                     }
+                     add_metadata_to_image(file_path, metadata)
             else:
                 print_error(f"Failed to get image for prompt_id {prompt_id}.")
         else:
@@ -480,6 +499,80 @@ def generate_images_comfyui(prompts, config, tag_combinations=None, db=None, wor
 
     ws.close()
     print_success(f"Finished ComfyUI processing. {images_generated}/{len(prompts)} images generated successfully! 🎉")
+
+def add_metadata_to_image(image_path, metadata):
+    """
+    Add metadata to a PNG image using text chunks.
+    
+    Args:
+        image_path (str): Path to the PNG image
+        metadata (dict): Dictionary of metadata to add to the image
+    """
+    try:
+        # Check if file exists and is a PNG
+        if not os.path.exists(image_path):
+            print_error(f"Image not found: {image_path}")
+            return False
+            
+        if not image_path.lower().endswith('.png'):
+            print_warning(f"Metadata can only be added to PNG images: {image_path}")
+            return False
+        
+        # Open the image
+        img = Image.open(image_path)
+        
+        # Create a PngInfo object
+        meta = PngImagePlugin.PngInfo()
+        
+        # Add metadata as text chunks
+        for key, value in metadata.items():
+            if value is not None:
+                # Convert any non-string values to strings
+                meta.add_text(key, str(value))
+        
+        # Save the image with metadata
+        img.save(image_path, "PNG", pnginfo=meta)
+        print_info(f"Added metadata to image: {image_path}")
+        return True
+    except Exception as e:
+        print_error(f"Error adding metadata to image: {e}")
+        return False
+
+def read_metadata_from_image(image_path):
+    """
+    Read metadata from a PNG image.
+    
+    Args:
+        image_path (str): Path to the PNG image
+        
+    Returns:
+        dict: Dictionary of metadata from the image, or empty dict if no metadata or error
+    """
+    try:
+        # Check if file exists and is a PNG
+        if not os.path.exists(image_path):
+            print_error(f"Image not found: {image_path}")
+            return {}
+            
+        if not image_path.lower().endswith('.png'):
+            print_warning(f"Metadata can only be read from PNG images: {image_path}")
+            return {}
+        
+        # Open the image
+        img = Image.open(image_path)
+        
+        # Get metadata
+        metadata = {}
+        for key, value in img.info.items():
+            # Skip internal PIL keys
+            if key.startswith('pil_'):
+                continue
+            metadata[key] = value
+        
+        return metadata
+    except Exception as e:
+        print_error(f"Error reading metadata from image: {e}")
+        return {}
 
 # --- Main Execution ---
 if __name__ == "__main__":

@@ -15,6 +15,10 @@ from rich.table import Table
 from rich.panel import Panel
 from rich import box
 import yaml
+from PIL import Image
+
+# Import the metadata reading function from generate.py
+from generate import read_metadata_from_image, print_header, print_info, print_error, print_warning, print_success, print_subheader
 
 console = Console()
 
@@ -66,6 +70,7 @@ def print_image_details(image, index=None):
     formatted_tags = []
     for tag in tags_str.split(', '):
         if ':' in tag:
+            # Tag already has category in format "category:value"
             category, value = tag.split(':', 1)
             formatted_tags.append(f"[bold yellow]{category}:[/bold yellow][green]{value}[/green]")
         else:
@@ -303,6 +308,35 @@ def search_by_ratio(db, ratio, tolerance=0.1):
     for i, image in enumerate(results, 1):
         print_image_details(image, i)
 
+def show_image_metadata(image_path):
+    """Display metadata embedded in a PNG image."""
+    print_header(f"Image Metadata")
+    
+    # Get the metadata
+    metadata = read_metadata_from_image(image_path)
+    
+    if not metadata:
+        print_warning(f"No metadata found in image: {image_path}")
+        return
+    
+    print_success(f"Found {len(metadata)} metadata entries in: {os.path.basename(image_path)}")
+    
+    # Create a panel to display the metadata
+    content = []
+    
+    # Add each metadata item
+    for key, value in metadata.items():
+        content.append(f"[bold]{key}:[/bold] {value}")
+    
+    # Create and print the panel
+    panel = Panel(
+        "\n".join(content),
+        title=f"[bold magenta]{os.path.basename(image_path)}[/bold magenta]",
+        border_style="blue",
+        box=box.ROUNDED
+    )
+    console.print(panel)
+
 def main():
     """Main entry point for the script."""
     parser = argparse.ArgumentParser(
@@ -330,6 +364,9 @@ Examples:
   
   # Search for images with a specific aspect ratio
   python image_finder.py --ratio "16:9"
+  
+  # Display metadata from a PNG image
+  python image_finder.py --metadata image.png
         """
     )
     
@@ -341,6 +378,7 @@ Examples:
     action_group.add_argument("--recent", type=int, nargs="?", const=10, help="List recent images (default: 10)")
     action_group.add_argument("--workflow", type=str, help="Search for images generated with this workflow")
     action_group.add_argument("--ratio", type=str, help="Search for images with this aspect ratio")
+    action_group.add_argument("--metadata", type=str, help="Display metadata from a PNG image")
     
     # Additional options
     parser.add_argument("--match-all", action="store_true", help="When using --tags, require ALL tags to match (default: match ANY)")
@@ -370,6 +408,8 @@ Examples:
             search_by_workflow(db, args.workflow)
         elif args.ratio:
             search_by_ratio(db, args.ratio, args.tolerance)
+        elif args.metadata:
+            show_image_metadata(args.metadata)
     except KeyboardInterrupt:
         print("\n")
         print_info("Search cancelled by user.")

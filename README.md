@@ -18,6 +18,8 @@ A powerful tool for generating high-quality stock images using AI. This project 
 - **Command-Line Interface**: Easy-to-use CLI for generation and searching
 - **Multiple Workflow Support**: Use different ComfyUI workflows for various generation techniques
 - **Placeholder System**: Use placeholders in workflows for dynamic content
+- **PNG Metadata**: Embedded PNG metadata for portability
+- **Metadata Extraction**: Extract metadata from generated PNG images
 
 ## 📋 Requirements
 
@@ -184,14 +186,23 @@ python db.py --trim
 Search for images by tags:
 
 ```bash
-# Search for images with specific tags
-python search.py --tags subject:person mood:happy
-
-# Search with text
-python search.py --text "beach sunset"
+# List all available tags
+python search.py --list-tags
 
 # List recent images
-python search.py --recent
+python search.py --recent 10
+
+# Search by tags
+python search.py --tags robot watercolor
+
+# Search by workflow
+python search.py --workflow flux_dev
+
+# Search by aspect ratio
+python search.py --ratio 16:9
+
+# Extract metadata from a PNG image
+python search.py --metadata output_images/image_name.png
 ```
 
 ## 📁 Project Structure
