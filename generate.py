@@ -408,16 +408,19 @@ def generate_images_comfyui(prompts, config, tag_combinations=None, db=None, wor
         
         # Replace placeholders in the workflow string
         # Note: We're directly substituting the values, not as JSON strings
+        # Use replace() with no count limit to replace all occurrences of each placeholder
         current_workflow_str = current_workflow_str.replace('"{PROMPT}"', json.dumps(prompt_text))
         current_workflow_str = current_workflow_str.replace('"{NEGATIVE_PROMPT}"', json.dumps(default_negative_prompt))
+        current_workflow_str = current_workflow_str.replace('{NEGATIVE_PROMPT}', default_negative_prompt)  # For direct text fields
+        current_workflow_str = current_workflow_str.replace('{PROMPT}', prompt_text)  # For direct text fields
         current_workflow_str = current_workflow_str.replace('{SEED}', str(random_seed))
         current_workflow_str = current_workflow_str.replace('{STEPS}', str(steps))
         current_workflow_str = current_workflow_str.replace('{WIDTH}', str(width))
         current_workflow_str = current_workflow_str.replace('{HEIGHT}', str(height))
         
-        # Replace the filename in the workflow
-        # Look for "filename_prefix": "flux/image" and replace with our custom filename
-        current_workflow_str = current_workflow_str.replace('"filename_prefix": "flux/image"', f'"filename_prefix": "{custom_filename}"')
+        # Replace the filename placeholder with our custom filename
+        # This works with any workflow that uses the {FILENAME_PREFIX} placeholder
+        current_workflow_str = current_workflow_str.replace('"{FILENAME_PREFIX}"', json.dumps(custom_filename))
         
         # Parse the string into a JSON object
         try:

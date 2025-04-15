@@ -16,6 +16,8 @@ A powerful tool for generating high-quality stock images using AI. This project 
 - **Database Management**: Store and search images with MongoDB
 - **Flexible Configuration**: Customize all aspects of the generation process
 - **Command-Line Interface**: Easy-to-use CLI for generation and searching
+- **Multiple Workflow Support**: Use different ComfyUI workflows for various generation techniques
+- **Placeholder System**: Use placeholders in workflows for dynamic content
 
 ## 📋 Requirements
 
@@ -99,17 +101,25 @@ comfy_ui:
 
 ### Workflows
 
-The project uses workflow files stored in the `workflows` directory. Each file contains a ComfyUI workflow JSON configuration:
+The project supports multiple ComfyUI workflows stored in the `workflows` directory:
 
-- Default workflow: `flux_dev` (optimized for ComfyUI Flux model)
-- To create a new workflow, add a file to the `workflows` directory
-- Specify which workflow to use with the `-w` parameter when generating images
+- **flux_dev**: Optimized for ComfyUI Flux model
+- **sd_35**: Stable Diffusion 3.5 workflow
+- **sdxl**: Stable Diffusion XL workflow
 
-Example:
-```bash
-# Use a specific workflow
-python generate.py -n 5 -w my_custom_workflow
-```
+Each workflow file contains a ComfyUI workflow JSON configuration with placeholders:
+- `{PROMPT}`: Replaced with the generated prompt
+- `{NEGATIVE_PROMPT}`: Replaced with the default negative prompt
+- `{SEED}`: Replaced with a random seed
+- `{STEPS}`: Replaced with the configured steps count
+- `{WIDTH}`, `{HEIGHT}`: Replaced with image dimensions
+- `{FILENAME_PREFIX}`: Replaced with a filename based on the image tags
+
+To create a new workflow:
+1. Export a workflow from ComfyUI
+2. Replace the relevant values with placeholders
+3. Save the file in the `workflows` directory
+4. Use it with the `-w` parameter when generating images
 
 ### MongoDB Configuration
 
