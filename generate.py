@@ -198,6 +198,9 @@ def generate_prompts_lm_studio(tag_combinations, lm_config, model_override=None)
         
         model = lms.llm(model_name, config={
             "seed": lm_seed,
+            "temperature": 0.8,           # ↑ more randomness & word variety
+    "top_p": 0.95,                # ↑ allows broader probability mass
+    "top_k": 100,                 # ↑ allows sampling from more potential words
         })
         print_success(f"Successfully loaded model: {model_name}")
     except Exception as e:
