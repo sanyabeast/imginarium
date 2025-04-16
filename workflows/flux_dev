@@ -65,7 +65,7 @@
     "inputs": {
       "seed": {SEED},
       "steps": {STEPS},
-      "cfg": 1,
+      "cfg": 0.8,
       "sampler_name": "euler",
       "scheduler": "simple",
       "denoise": 1,
@@ -106,7 +106,7 @@
   },
   "35": {
     "inputs": {
-      "guidance": 3.5,
+      "guidance": 0.8,
       "conditioning": [
         "6",
         0

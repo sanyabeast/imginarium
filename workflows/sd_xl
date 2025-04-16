@@ -3,7 +3,7 @@
     "inputs": {
       "seed": {SEED},
       "steps": {STEPS},
-      "cfg": 6.5,
+      "cfg": 6,
       "sampler_name": "dpmpp_2m_sde",
       "scheduler": "exponential",
       "denoise": 1,
