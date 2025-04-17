@@ -16,6 +16,8 @@ from rich.panel import Panel
 from rich import box
 import yaml
 from PIL import Image
+import re
+from difflib import SequenceMatcher
 
 # Import the metadata reading function from generate.py
 from generate import read_metadata_from_image, print_header, print_info, print_error, print_warning, print_success, print_subheader
@@ -54,11 +56,48 @@ def get_emoji(key):
 def load_config():
     """Load configuration from config.yaml."""
     try:
-        with open('config.yaml', 'r') as file:
+        with open('config.yaml', 'r', encoding='utf-8') as file:
             return yaml.safe_load(file)
     except Exception as e:
         console.print(f"[bold red]Error loading config:[/bold red] {e}")
         return {}
+
+def load_tag_categories():
+    """Load tag categories from config.yaml."""
+    config = load_config()
+    return config.get('tags', {})
+
+def find_matching_tags(search_term, tag_categories, threshold=0.6):
+    """
+    Find matching tags from the configured tag categories.
+    
+    Args:
+        search_term: The user's search term
+        tag_categories: Dictionary of tag categories from config.yaml
+        threshold: Minimum similarity score for fuzzy matching
+        
+    Returns:
+        list: List of tuples (category, tag) that match the search term
+    """
+    matches = []
+    
+    # Convert search term to lowercase for case-insensitive matching
+    search_term = search_term.lower()
+    
+    # Check each category and its tags
+    for category, tags in tag_categories.items():
+        for tag in tags:
+            # Check for direct substring match
+            if search_term in tag.lower():
+                matches.append((category, tag))
+                continue
+                
+            # Check for fuzzy match
+            similarity = SequenceMatcher(None, search_term, tag.lower()).ratio()
+            if similarity >= threshold:
+                matches.append((category, tag))
+    
+    return matches
 
 def print_header(text):
     """Print a fancy header."""
@@ -97,19 +136,31 @@ def print_image_details(image, index=None):
     if index is not None:
         header = f"[bold white]{index}.[/bold white] {header}"
     
-    # Create content with image details
+    # Create a list to hold the content lines
     content = []
     
     # Add tags with category highlighting if available
     tags_str = image.get('tags', '')
     formatted_tags = []
-    for tag in tags_str.split(', '):
-        if ':' in tag:
-            # Tag already has category in format "category:value"
-            category, value = tag.split(':', 1)
-            formatted_tags.append(f"[bold yellow]{category}:[/bold yellow][green]{value}[/green]")
-        else:
-            formatted_tags.append(f"[green]{tag}[/green]")
+    
+    # Handle tags based on type (string or dict)
+    if isinstance(tags_str, str):
+        # Handle string format (comma-separated)
+        for tag in tags_str.split(', '):
+            if ':' in tag:
+                # Tag already has category in format "category:value"
+                category, value = tag.split(':', 1)
+                formatted_tags.append(f"[bold yellow]{category}:[/bold yellow][green]{value}[/green]")
+            else:
+                formatted_tags.append(f"[green]{tag}[/green]")
+    elif isinstance(tags_str, dict):
+        # Handle dictionary format
+        for category, values in tags_str.items():
+            if isinstance(values, list):
+                for value in values:
+                    formatted_tags.append(f"[bold yellow]{category}:[/bold yellow][green]{value}[/green]")
+            else:
+                formatted_tags.append(f"[bold yellow]{category}:[/bold yellow][green]{values}[/green]")
     
     content.append(f"[bold]Tags:[/bold] {', '.join(formatted_tags)}")
     
@@ -151,6 +202,43 @@ def print_image_details(image, index=None):
         box=box.ROUNDED
     )
     console.print(panel)
+
+def fuzzy_match(query, target, threshold=0.5):
+    """
+    Check if query fuzzy matches target with a similarity score above threshold.
+    
+    Args:
+        query: The search term
+        target: The string to match against
+        threshold: Minimum similarity score (0-1) to consider a match
+        
+    Returns:
+        bool: True if it's a match, False otherwise
+    """
+    # Convert target to string if it's not already
+    if not isinstance(target, str):
+        if isinstance(target, dict):
+            # For dictionaries, check each value
+            for key, value in target.items():
+                if isinstance(value, list):
+                    for item in value:
+                        if fuzzy_match(query, str(item), threshold):
+                            return True
+                else:
+                    if fuzzy_match(query, str(value), threshold):
+                        return True
+            return False
+        else:
+            # Convert other types to string
+            target = str(target)
+    
+    # Direct match
+    if query.lower() in target.lower():
+        return True
+        
+    # Fuzzy match using sequence matcher
+    similarity = SequenceMatcher(None, query.lower(), target.lower()).ratio()
+    return similarity >= threshold
 
 def list_available_tags(db):
     """List all available tags in the database."""
@@ -241,16 +329,42 @@ def list_available_tags(db):
         
         console.print(table)
 
-def search_by_tags(db, tags, match_all=False):
+def search_by_tags(db, tags_input, match_all=False):
     """Search for images by tags."""
-    print_header(f"Searching for images with tags: {', '.join(tags)}")
+    if not tags_input:
+        print_warning("No tags specified for search.")
+        return
+    
+    # Split the input tags by comma
+    search_terms = [term.strip() for term in tags_input.split(',')]
+    
+    print_header(f"Searching for images with tags: {tags_input}")
     if match_all:
         print_info("Matching ALL specified tags")
     else:
         print_info("Matching ANY specified tag")
     
-    # Search the database
-    results = db.search_by_tags(tags, match_all)
+    # Load tag categories from config
+    tag_categories = load_tag_categories()
+    
+    # Find matching tags for each search term
+    all_matched_tags = []
+    for term in search_terms:
+        matches = find_matching_tags(term, tag_categories)
+        
+        if matches:
+            formatted_matches = [f"{category}:{tag}" for category, tag in matches]
+            print_info(f"'{term}' matched to: {', '.join(formatted_matches)}")
+            all_matched_tags.extend(formatted_matches)
+        else:
+            print_warning(f"No matches found for tag: '{term}'")
+    
+    if not all_matched_tags:
+        print_warning("No matching tags found in the configuration.")
+        return
+    
+    # Search the database with the matched tags
+    results = db.search_by_tags(all_matched_tags, match_all)
     
     if not results:
         print_warning("No images found matching these tags.")
@@ -386,10 +500,10 @@ Examples:
   python image_finder.py --recent 5
   
   # Search for images with ANY of these tags
-  python image_finder.py --tags robot dancing steampunk
+  python image_finder.py --tags robot,dancing,steampunk
   
   # Search for images with ALL of these tags
-  python image_finder.py --tags robot dancing steampunk --match-all
+  python image_finder.py --tags robot,dancing,steampunk --match-all
   
   # Perform a text search (searches in tags and prompts)
   python image_finder.py --search "abandoned factory"
@@ -408,7 +522,7 @@ Examples:
     # Create mutually exclusive group for the main actions
     action_group = parser.add_mutually_exclusive_group(required=True)
     action_group.add_argument("--list-tags", action="store_true", help="List all available tags")
-    action_group.add_argument("--tags", nargs="+", help="Search for images with these tags")
+    action_group.add_argument("--tags", type=str, help="Search for images with these tags (comma-separated)")
     action_group.add_argument("--search", type=str, help="Text search in tags and prompts")
     action_group.add_argument("--recent", type=int, nargs="?", const=10, help="List recent images (default: 10)")
     action_group.add_argument("--workflow", type=str, help="Search for images generated with this workflow")

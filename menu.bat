@@ -72,10 +72,10 @@ set /p num=
 if "%num%"=="cancel" goto generate_menu
 if "%num%"=="" set num=5
 
-echo Enter workflow name (default: hidream):
+echo Enter workflow name (default: flux_dev):
 set /p workflow=
 if "%workflow%"=="cancel" goto generate_menu
-if "%workflow%"=="" set workflow=hidream
+if "%workflow%"=="" set workflow=flux_dev
 
 echo Enter dimensions WIDTHxHEIGHT (default: 1536x1536):
 set /p dimensions=
@@ -111,26 +111,32 @@ echo Enter your choice [0-2]:
 
 set /p search_choice=
 
-if "%search_choice%"=="1" (
-    cls
-    echo ===================================================
-    echo             SEARCH BY TAGS
-    echo ===================================================
-    echo.
-    echo Enter tags (comma separated):
-    set /p tags=
-    
-    python search.py --tags "!tags!" --noemoji
-    pause
-    goto search_menu
-)
+if "%search_choice%"=="1" goto search_by_tags
 if "%search_choice%"=="2" (
     echo Browsing all images...
-    python search.py --all --noemoji
+    python search.py --recent 100 --noemoji
     pause
     goto search_menu
 )
 if "%search_choice%"=="0" goto main_menu
+goto search_menu
+
+:search_by_tags
+cls
+echo ===================================================
+echo             SEARCH BY TAGS
+echo ===================================================
+echo.
+echo At any prompt, type 'cancel' to return to the search menu.
+echo.
+
+echo Enter tags (comma separated):
+set /p tags=
+if "%tags%"=="cancel" goto search_menu
+if "%tags%"=="" goto search_menu
+
+python search.py --tags "%tags%" --noemoji
+pause
 goto search_menu
 
 :database_menu

@@ -379,16 +379,30 @@ class ImageDatabase:
             return []
             
         try:
-            # Use MongoDB's aggregation pipeline to extract unique tags
-            pipeline = [
-                {"$project": {"tags": 1}},
-                {"$unwind": "$tags"},
-                {"$group": {"_id": "$tags"}},
-                {"$sort": {"_id": 1}}
-            ]
+            # Get all images to process tags
+            all_images = self.get_all_images(limit=1000)
+            unique_tags = set()
             
-            result = self.collection.aggregate(pipeline)
-            return [doc["_id"] for doc in result]
+            # Process each image's tags
+            for image in all_images:
+                tags = image.get('tags', {})
+                
+                # Handle string format (comma-separated)
+                if isinstance(tags, str):
+                    for tag in tags.split(','):
+                        unique_tags.add(tag.strip())
+                
+                # Handle dictionary format
+                elif isinstance(tags, dict):
+                    for category, values in tags.items():
+                        if isinstance(values, list):
+                            for value in values:
+                                unique_tags.add(f"{category}:{value}")
+                        else:
+                            unique_tags.add(f"{category}:{values}")
+            
+            # Convert to sorted list
+            return sorted(list(unique_tags))
         except Exception as e:
             log_message(f"Error retrieving unique tags: {e}", "error")
             return []
