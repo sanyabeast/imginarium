@@ -12,6 +12,48 @@ import subprocess
 import time
 import platform
 import yaml
+import argparse
+
+# Global flag for emoji usage
+USE_EMOJIS = True
+
+# Function to handle global emoji flag
+def set_emoji_mode(disable_emojis=False):
+    global USE_EMOJIS
+    if disable_emojis:
+        USE_EMOJIS = False
+
+# Emoji dictionary for easy switching
+EMOJIS = {
+    "ok": "✅",
+    "warning": "⚠️",
+    "error": "❌",
+    "database": "📊",
+    "connection": "🔗",
+    "folder": "📁",
+    "collection": "🗂️",
+    "list": "📋",
+    "clean": "🧹",
+    "delete": "🗑️",
+    "stats": "📈",
+    "storage": "💾",
+    "image": "📸",
+    "search": "🔍",
+    "bye": "👋"
+}
+
+# Function to get emoji or empty string based on flag
+def get_emoji(key):
+    if USE_EMOJIS:
+        return EMOJIS.get(key, "")
+    return ""
+
+# Special logging function to handle emoji display
+def log_message(message, emoji_key=None, end="\n"):
+    if emoji_key:
+        print(f"{get_emoji(emoji_key)} {message}", end=end)
+    else:
+        print(message, end=end)
 
 class ImageDatabase:
     def __init__(self, config_path="config.yaml", db_name=None, collection_name=None, data_dir=None):
@@ -27,9 +69,9 @@ class ImageDatabase:
             if os.path.exists(config_path):
                 with open(config_path, 'r') as f:
                     config = yaml.safe_load(f)
-                print("✅ Loaded database configuration from config file")
+                log_message("Loaded database configuration from config file", "ok")
         except Exception as e:
-            print(f"⚠️ Could not load config file: {e}")
+            log_message(f"Could not load config file: {e}", "warning")
         
         # Get MongoDB settings from config or use defaults
         mongodb_config = config.get('mongodb', {})
@@ -53,9 +95,9 @@ class ImageDatabase:
             # Create text index on tags and prompt for text search
             self.collection.create_index([("tags", pymongo.TEXT), ("prompt", pymongo.TEXT)])
             
-            print(f"✅ Connected to MongoDB")
+            log_message("Connected to MongoDB", "ok")
         except pymongo.errors.ServerSelectionTimeoutError:
-            print("⚠️ MongoDB server not running. Attempting to start it...")
+            log_message("MongoDB server not running. Attempting to start it...", "warning")
             
             # Try to start MongoDB
             if self._start_mongodb_server(self.data_dir):
@@ -74,18 +116,18 @@ class ImageDatabase:
                     # Create text index on tags and prompt for text search
                     self.collection.create_index([("tags", pymongo.TEXT), ("prompt", pymongo.TEXT)])
                     
-                    print(f"✅ Connected to MongoDB")
+                    log_message("Connected to MongoDB", "ok")
                 except Exception as e:
-                    print(f"❌ Error connecting to MongoDB after starting it: {e}")
+                    log_message(f"Error connecting to MongoDB after starting it: {e}", "error")
                     self._stop_mongodb_server()
                     sys.exit(1)
             else:
-                print("❌ Failed to start MongoDB server")
-                print("⚠️ Please install MongoDB or start it manually")
+                log_message("Failed to start MongoDB server", "error")
+                log_message("Please install MongoDB or start it manually", "warning")
                 sys.exit(1)
         except Exception as e:
-            print(f"❌ Error connecting to MongoDB: {e}")
-            print("⚠️ Please check MongoDB installation and configuration")
+            log_message(f"Error connecting to MongoDB: {e}", "error")
+            log_message("Please check MongoDB installation and configuration", "warning")
             sys.exit(1)
     
     def _start_mongodb_server(self, data_dir):
@@ -100,13 +142,13 @@ class ImageDatabase:
             if system == "Windows":
                 # Try using the MongoDB service first
                 try:
-                    print("Attempting to start MongoDB service...")
+                    log_message("Attempting to start MongoDB service...", "warning")
                     subprocess.run(["net", "start", "MongoDB"], check=True, capture_output=True)
                     time.sleep(2)  # Give it time to start
                     return True
                 except subprocess.CalledProcessError:
                     # Service approach failed, try direct executable
-                    print("MongoDB service not found. Trying direct executable...")
+                    log_message("MongoDB service not found. Trying direct executable...", "warning")
                     
                 # Try to find mongod.exe in common locations
                 possible_paths = [
@@ -124,7 +166,7 @@ class ImageDatabase:
                         break
                 
                 if not mongod_path:
-                    print("❌ Could not find MongoDB executable")
+                    log_message("Could not find MongoDB executable", "error")
                     return False
                 
                 # Start MongoDB as a background process
@@ -134,7 +176,7 @@ class ImageDatabase:
                     stderr=subprocess.DEVNULL
                 )
                 
-                print(f"Started MongoDB server (PID: {self.mongo_process.pid})")
+                log_message(f"Started MongoDB server (PID: {self.mongo_process.pid})", "ok")
                 time.sleep(3)  # Give it time to start
                 return True
                 
@@ -156,7 +198,7 @@ class ImageDatabase:
                             break
                     
                     if not mongod_path:
-                        print("❌ Could not find MongoDB executable")
+                        log_message("Could not find MongoDB executable", "error")
                         return False
                 
                 # Start MongoDB as a background process
@@ -166,16 +208,16 @@ class ImageDatabase:
                     stderr=subprocess.DEVNULL
                 )
                 
-                print(f"Started MongoDB server (PID: {self.mongo_process.pid})")
+                log_message(f"Started MongoDB server (PID: {self.mongo_process.pid})", "ok")
                 time.sleep(2)  # Give it time to start
                 return True
             
             else:
-                print(f"❌ Unsupported operating system: {system}")
+                log_message(f"Unsupported operating system: {system}", "error")
                 return False
                 
         except Exception as e:
-            print(f"❌ Error starting MongoDB: {e}")
+            log_message(f"Error starting MongoDB: {e}", "error")
             return False
     
     def _stop_mongodb_server(self):
@@ -184,9 +226,9 @@ class ImageDatabase:
             try:
                 self.mongo_process.terminate()
                 self.mongo_process.wait(timeout=5)
-                print("Stopped MongoDB server")
+                log_message("Stopped MongoDB server", "ok")
             except Exception as e:
-                print(f"Error stopping MongoDB server: {e}")
+                log_message(f"Error stopping MongoDB server: {e}", "error")
                 try:
                     self.mongo_process.kill()
                 except:
@@ -199,7 +241,7 @@ class ImageDatabase:
     def add_image(self, filename, tags, prompt, seed=None, steps=None, width=None, height=None, workflow=None, ratio=None):
         """Add a new image entry to the database."""
         if not self.is_connected():
-            print("⚠️ Database not connected, cannot register image")
+            log_message("Database not connected, cannot register image", "warning")
             return False
             
         try:
@@ -226,7 +268,7 @@ class ImageDatabase:
             
             return result.acknowledged
         except Exception as e:
-            print(f"❌ Error adding image to database: {e}")
+            log_message(f"Error adding image to database: {e}", "error")
             return False
     
     def get_image(self, filename):
@@ -237,7 +279,7 @@ class ImageDatabase:
         try:
             return self.collection.find_one({"filename": filename})
         except Exception as e:
-            print(f"❌ Error retrieving image from database: {e}")
+            log_message(f"Error retrieving image from database: {e}", "error")
             return None
     
     def search_by_tags(self, tags, match_all=False, limit=100):
@@ -286,7 +328,7 @@ class ImageDatabase:
             cursor = self.collection.find(query).sort("created_at", -1).limit(limit)
             return list(cursor)
         except Exception as e:
-            print(f"❌ Error searching images by tags: {e}")
+            log_message(f"Error searching images by tags: {e}", "error")
             return []
     
     def text_search(self, search_text, limit=100):
@@ -316,7 +358,7 @@ class ImageDatabase:
             
             return list(cursor)
         except Exception as e:
-            print(f"❌ Error performing text search: {e}")
+            log_message(f"Error performing text search: {e}", "error")
             return []
     
     def get_all_images(self, limit=100):
@@ -328,7 +370,7 @@ class ImageDatabase:
             cursor = self.collection.find().sort("created_at", -1).limit(limit)
             return list(cursor)
         except Exception as e:
-            print(f"❌ Error retrieving all images from database: {e}")
+            log_message(f"Error retrieving all images from database: {e}", "error")
             return []
     
     def get_unique_tags(self):
@@ -348,7 +390,7 @@ class ImageDatabase:
             result = self.collection.aggregate(pipeline)
             return [doc["_id"] for doc in result]
         except Exception as e:
-            print(f"❌ Error retrieving unique tags: {e}")
+            log_message(f"Error retrieving unique tags: {e}", "error")
             return []
     
     def delete_image(self, filename):
@@ -360,7 +402,7 @@ class ImageDatabase:
             result = self.collection.delete_one({"filename": filename})
             return result.deleted_count > 0
         except Exception as e:
-            print(f"❌ Error deleting image from database: {e}")
+            log_message(f"Error deleting image from database: {e}", "error")
             return False
     
     def search_by_workflow(self, workflow, limit=100):
@@ -383,7 +425,7 @@ class ImageDatabase:
             cursor = self.collection.find(query).sort("created_at", -1).limit(limit)
             return list(cursor)
         except Exception as e:
-            print(f"❌ Error searching images by workflow: {e}")
+            log_message(f"Error searching images by workflow: {e}", "error")
             return []
     
     def search_by_ratio(self, ratio, tolerance=0.1, limit=100):
@@ -409,7 +451,7 @@ class ImageDatabase:
             cursor = self.collection.find(query).sort("created_at", -1).limit(limit)
             return list(cursor)
         except Exception as e:
-            print(f"❌ Error searching images by ratio: {e}")
+            log_message(f"Error searching images by ratio: {e}", "error")
             return []
     
     def close(self):
@@ -431,41 +473,46 @@ if __name__ == "__main__":
     parser.add_argument("--stats", action="store_true", help="Show database statistics")
     parser.add_argument("--trim", action="store_true", help="Remove database records for which image files don't exist")
     parser.add_argument("--output-dir", type=str, default="output_images", help="Directory to check for image files when using --trim")
+    parser.add_argument("--noemoji", action="store_true", help="Disable emojis in output")
     args = parser.parse_args()
     
+    # Set global emoji flag
+    if args.noemoji:
+        set_emoji_mode(disable_emojis=True)
+    
     # Initialize database connection
-    print("Initializing database connection...")
+    log_message("Initializing database connection...")
     db = ImageDatabase()
     
     if not db.is_connected():
-        print("❌ Failed to connect to database")
+        log_message("Failed to connect to database", "error")
         sys.exit(1)
     
     # Print connection information (useful for MongoDB Atlas)
-    print("\n📊 MongoDB Connection Information:")
-    print("--------------------------------")
-    print(f"🔗 Connection: {db.connection_string}")
-    print(f"📁 Database: {db.db_name}")
-    print(f"🗂️ Collection: {db.collection_name}")
-    print("--------------------------------")
+    log_message("\nDatabase Connection Information:")
+    log_message("--------------------------------")
+    log_message(f"Connection: {db.connection_string}")
+    log_message(f"Database: {db.db_name}")
+    log_message(f"Collection: {db.collection_name}")
+    log_message("--------------------------------")
     
     # Handle specific commands
     if args.list:
-        print("\n📋 Images in Database:")
+        log_message("\nImages in Database:")
         images = db.get_all_images(limit=10)
         if images:
             for i, img in enumerate(images, 1):
-                print(f"{i}. {img['filename']} - Created: {img['created_at']}")
-                print(f"   Tags: {img.get('tags', 'None')}")
-                print(f"   Prompt: {img.get('prompt', 'None')[:50]}...")
+                log_message(f"{i}. {img['filename']} - Created: {img['created_at']}")
+                log_message(f"   Tags: {img.get('tags', 'None')}")
+                log_message(f"   Prompt: {img.get('prompt', 'None')[:50]}...")
         else:
-            print("No images found in database.")
+            log_message("No images found in database.")
     
     if args.trim:
-        print("\n🧹 Trimming Database Records:")
+        log_message("\nTrimming Database Records:")
         output_dir = args.output_dir
         if not os.path.exists(output_dir):
-            print(f"❌ Output directory '{output_dir}' does not exist.")
+            log_message(f"Output directory '{output_dir}' does not exist.", "error")
         else:
             # Get all images from database
             all_images = db.get_all_images(limit=1000)  # Set a reasonable limit
@@ -484,49 +531,49 @@ if __name__ == "__main__":
                     short_filename = filename
                     if len(short_filename) > 50:
                         short_filename = short_filename[:25] + "..." + short_filename[-22:]
-                    print(f"🗑️ Removing: {short_filename}")
+                    log_message(f"Removing: {short_filename}", "delete")
                     db.delete_image(filename)
                     removed_count += 1
             
             if removed_count > 0:
-                print(f"✅ Cleaned up {removed_count} records for missing files")
+                log_message(f"Cleaned up {removed_count} records for missing files", "clean")
             else:
-                print("✅ No missing files found. Database is clean")
+                log_message("No missing files found. Database is clean")
     
     if args.stats:
-        print("\n📈 Database Statistics:")
+        log_message("\nDatabase Statistics:")
         try:
             count = db.collection.count_documents({})
-            print(f"Total Images: {count}")
+            log_message(f"Total Images: {count}")
             
             # Get unique tags count
             unique_tags = db.get_unique_tags()
-            print(f"Unique Tags: {len(unique_tags)}")
+            log_message(f"Unique Tags: {len(unique_tags)}")
             
             # Get storage size
             stats = db.db.command("dbStats")
             storage_mb = stats.get("storageSize", 0) / (1024 * 1024)
-            print(f"Storage Size: {storage_mb:.2f} MB")
+            log_message(f"Storage Size: {storage_mb:.2f} MB", "storage")
             
             # Get most recent image
             latest = db.collection.find_one({}, sort=[("created_at", -1)])
             if latest:
-                print(f"Most Recent Image: {latest['filename']}")
-                print(f"Created: {latest['created_at']}")
+                log_message(f"Most Recent Image: {latest['filename']}", "image")
+                log_message(f"Created: {latest['created_at']}")
         except Exception as e:
-            print(f"Error getting statistics: {e}")
+            log_message(f"Error getting statistics: {e}", "error")
     
     # If no specific command, just show info
     if not (args.list or args.stats or args.trim) or args.info:
-        print("\n🔍 Database Status:")
+        log_message("\nDatabase Status:")
         try:
             count = db.collection.count_documents({})
-            print(f"📊 Total Images: {count}")
-            print("✅ Database is ready")
+            log_message(f"Total Images: {count}")
+            log_message("Database is ready", "ok")
         except Exception as e:
-            print(f"❌ Error: {e}")
+            log_message(f"{e}", "error")
     
     # Close the connection
-    print("\nClosing database connection...")
+    log_message("\nClosing database connection...")
     db.close()
-    print("Done! 👋")
+    log_message("Done!", "bye")

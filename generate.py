@@ -15,6 +15,38 @@ from PIL import Image, PngImagePlugin
 import sys
 from datetime import datetime
 
+# Global flag for emoji usage
+USE_EMOJIS = True
+
+# Function to handle global emoji flag
+def set_emoji_mode(disable_emojis=False):
+    global USE_EMOJIS
+    if disable_emojis:
+        USE_EMOJIS = False
+
+# Emoji dictionary for easy switching
+EMOJIS = {
+    "sparkle": "✨",
+    "rocket": "🚀",
+    "check": "✅",
+    "warning": "⚠️",
+    "error": "❌",
+    "info": "ℹ️",
+    "tag": "🏷️",
+    "brain": "🧠",
+    "target": "🎯",
+    "art": "🎨",
+    "save": "💾",
+    "database": "🗃️",
+    "complete": "🏁"
+}
+
+# Function to get emoji or empty string based on flag
+def get_emoji(key):
+    if USE_EMOJIS:
+        return EMOJIS.get(key, "")
+    return ""
+
 # Define schema for LM Studio response
 class PromptSchema(BaseModel):
     prompt: str
@@ -22,34 +54,41 @@ class PromptSchema(BaseModel):
 # --- Fancy Logging Helpers ---
 def print_header(title):
     """Print a fancy header with emojis."""
+    emoji_str = f"{get_emoji('sparkle')}{get_emoji('sparkle')}"
     print(f"\n{'='*60}")
-    print(f"✨✨  {title}  ✨✨")
+    print(f"{emoji_str}  {title}  {emoji_str}")
     print(f"{'='*60}")
 
-def print_subheader(title, emoji="🔹"):
+def print_subheader(title, emoji_key="tag"):
     """Print a fancy subheader with emoji."""
-    print(f"\n{emoji} {title} {emoji}")
+    emoji_str = get_emoji(emoji_key)
+    print(f"\n{emoji_str} {title} {emoji_str}")
 
-def print_step(step_num, total_steps, description, emoji="🚀"):
+def print_step(step_num, total_steps, description, emoji_key="rocket"):
     """Print a step with progress indicator."""
+    emoji_str = get_emoji(emoji_key)
     progress = f"[{step_num}/{total_steps}]"
-    print(f"{emoji} {progress} {description}")
+    print(f"{emoji_str} {progress} {description}")
 
-def print_success(message, emoji="✅"):
+def print_success(message, emoji_key="check"):
     """Print a success message."""
-    print(f"{emoji} {message}")
+    emoji_str = get_emoji(emoji_key)
+    print(f"{emoji_str} {message}")
 
-def print_warning(message, emoji="⚠️"):
+def print_warning(message, emoji_key="warning"):
     """Print a warning message."""
-    print(f"{emoji} {message}")
+    emoji_str = get_emoji(emoji_key)
+    print(f"{emoji_str} {message}")
 
-def print_error(message, emoji="❌"):
+def print_error(message, emoji_key="error"):
     """Print an error message."""
-    print(f"{emoji} {message}")
+    emoji_str = get_emoji(emoji_key)
+    print(f"{emoji_str} {message}")
 
-def print_info(message, emoji="ℹ️"):
+def print_info(message, emoji_key="info"):
     """Print an info message."""
-    print(f"{emoji} {message}")
+    emoji_str = get_emoji(emoji_key)
+    print(f"{emoji_str} {message}")
 
 def print_progress_bar(iteration, total, prefix='', suffix='', length=30, fill='█'):
     """Print a progress bar."""
@@ -94,7 +133,7 @@ def load_config(config_path="config.yaml"):
     """Loads configuration from a YAML file."""
     try:
         print_info(f"Loading configuration from '{config_path}'...")
-        with open(config_path, 'r') as f:
+        with open(config_path, 'r', encoding='utf-8') as f:
             config = yaml.safe_load(f)
         # Basic validation
         if not all(k in config for k in ['tags', 'lm_studio', 'comfy_ui']):
@@ -119,6 +158,10 @@ def load_config(config_path="config.yaml"):
         exit(1)
     except ValueError as e:
         print_error(f"Error in configuration structure: {e}")
+        exit(1)
+    except UnicodeDecodeError as e:
+        print_error(f"Encoding error in configuration file: {e}")
+        print_info("Try saving the config.yaml file with UTF-8 encoding.")
         exit(1)
 
 # --- Tag Generation ---
@@ -358,8 +401,16 @@ def generate_images_comfyui(prompts, config, tag_combinations=None, db=None, wor
     
     print_info(f"Saving images to: {output_dir}")
     
-    # Load workflow from file
-    workflow_path = os.path.join("workflows", workflow_name)
+    # Load workflow from file - handle .wf extension
+    workflow_base_path = os.path.join("workflows", workflow_name)
+    workflow_wf_path = os.path.join("workflows", f"{workflow_name}.wf")
+    
+    # Try with .wf extension first, then without extension for backward compatibility
+    if os.path.exists(workflow_wf_path):
+        workflow_path = workflow_wf_path
+    else:
+        workflow_path = workflow_base_path
+        
     try:
         with open(workflow_path, 'r') as f:
             workflow_str = f.read()
@@ -370,6 +421,13 @@ def generate_images_comfyui(prompts, config, tag_combinations=None, db=None, wor
         return
     except Exception as e:
         print_error(f"Error loading workflow: {e}")
+        return
+    
+    # Validate workflow for required placeholders
+    is_valid, missing_required, missing_recommended = validate_workflow(workflow_str)
+    if not is_valid:
+        print_error(f"Workflow is missing required placeholders: {missing_required}")
+        print_warning(f"Workflow is missing recommended placeholders: {missing_recommended}")
         return
     
     # Get parameters from config with defaults if not specified
@@ -515,6 +573,45 @@ def generate_images_comfyui(prompts, config, tag_combinations=None, db=None, wor
     ws.close()
     print_success(f"Finished ComfyUI processing. {images_generated}/{len(prompts)} images generated successfully! 🎉")
 
+def validate_workflow(workflow_str):
+    """
+    Validates a workflow string to ensure it contains required placeholders.
+    
+    Required placeholders:
+    - {FILENAME_PREFIX}
+    - {PROMPT}
+    
+    Recommended placeholders (warnings if missing):
+    - {NEGATIVE_PROMPT}
+    - {STEPS}
+    - {SEED}
+    - {WIDTH}
+    - {HEIGHT}
+    
+    Returns:
+        tuple: (is_valid, list of missing required placeholders, list of missing recommended placeholders)
+    """
+    # Define required and recommended placeholders
+    required_placeholders = ["{FILENAME_PREFIX}", "{PROMPT}"]
+    recommended_placeholders = ["{NEGATIVE_PROMPT}", "{STEPS}", "{SEED}", "{WIDTH}", "{HEIGHT}"]
+    
+    # Check for required placeholders
+    missing_required = []
+    for placeholder in required_placeholders:
+        if placeholder not in workflow_str:
+            missing_required.append(placeholder)
+    
+    # Check for recommended placeholders
+    missing_recommended = []
+    for placeholder in recommended_placeholders:
+        if placeholder not in workflow_str:
+            missing_recommended.append(placeholder)
+    
+    # Workflow is valid if no required placeholders are missing
+    is_valid = len(missing_required) == 0
+    
+    return is_valid, missing_required, missing_recommended
+
 def add_metadata_to_image(image_path, metadata):
     """
     Add metadata to a PNG image using text chunks.
@@ -618,22 +715,58 @@ Examples:
     parser.add_argument("-d", "--dimensions", type=str, help="Image dimensions in format WIDTHxHEIGHT (e.g., 1920x1080)")
     parser.add_argument("-s", "--steps", type=int, help="Number of diffusion steps for image generation (higher = better quality but slower)")
     parser.add_argument("--config", type=str, default="config.yaml", help="Path to the configuration file.")
+    parser.add_argument("--noemoji", action="store_true", help="Disable emojis in output")
     args = parser.parse_args()
+
+    # Set global emoji flag
+    set_emoji_mode(args.noemoji)
 
     print_header(f"🌟 Stock Image Generator 🌟")
     print_info(f"Generating {args.num_images} images")
     if args.model:
         print_info(f"Using model override: {args.model}")
     
-    # Check if workflow file exists
-    workflow_path = os.path.join("workflows", args.workflow)
-    if not os.path.exists(workflow_path):
-        print_error(f"Workflow file not found: {workflow_path}")
-        print_info(f"Make sure the workflow file exists in the 'workflows' directory")
+    # Check if workflow file exists (with or without .wf extension)
+    workflow_base_path = os.path.join("workflows", args.workflow)
+    workflow_wf_path = os.path.join("workflows", f"{args.workflow}.wf")
+    
+    workflow_path = None
+    if os.path.exists(workflow_wf_path):
+        workflow_path = workflow_wf_path
+        workflow_exists = True
+    elif os.path.exists(workflow_base_path):
+        workflow_path = workflow_base_path
+        workflow_exists = True
+    else:
+        workflow_exists = False
+        
+    if not workflow_exists:
+        print_error(f"Workflow file not found: {args.workflow}")
+        print_info(f"Make sure the workflow file exists in the 'workflows' directory (with or without .wf extension)")
         exit(1)
     else:
         print_info(f"Using workflow: {args.workflow}")
-
+        
+    # Load and validate workflow
+    try:
+        with open(workflow_path, 'r') as f:
+            workflow_str = f.read()
+            
+        # Validate workflow for required and recommended placeholders
+        is_valid, missing_required, missing_recommended = validate_workflow(workflow_str)
+        
+        if not is_valid:
+            print_error(f"Workflow validation failed! Missing required placeholders: {', '.join(missing_required)}")
+            print_error("These placeholders are necessary for the workflow to function correctly.")
+            exit(1)
+            
+        if missing_recommended:
+            print_warning(f"Workflow is missing recommended placeholders: {', '.join(missing_recommended)}")
+            print_warning("The workflow will still run, but some features may not work as expected.")
+    except Exception as e:
+        print_error(f"Error loading or validating workflow: {e}")
+        exit(1)
+    
     try:
         # 1. Load Configuration
         config = load_config(args.config)

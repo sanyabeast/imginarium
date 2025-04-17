@@ -76,15 +76,21 @@ tags:
 lm_studio:
   model: "gemma-3-4b-it"
   prompt_template: |
-    Generate a stylized image prompt using the following tags: {tags}.
+    You are a creative visual assistant generating prompts for a stock image AI system.
+
+    Combine the following abstract tags into a rich **visual concept**. Use descriptive language, referencing:
+    - The **subject** and its form or materials (especially for "everyday_object")
+    - The **setting** or surrounding context
+    - The **mood** or atmosphere
+    - The **style** and **lighting** aesthetics
+
+    For "everyday_object", **avoid clichés** like phones, suitcases, or laptops. Instead, include **less common but familiar items** (e.g. mugs, umbrellas, chairs, books, glasses, shoes, keys, pillows, bags, scissors, mirrors, tools, clocks, etc.)
 
     Guidelines:
-    - Combine the tags into a single, compact visual concept.
-    - Output should be **comma-separated descriptive phrases** (no full sentences).
-    - Use visually evocative language focused on **subject, setting, mood, style, and light**.
-    - Avoid camera lingo, narrative phrasing, and redundancy.
-    - Do NOT mention "photo", "image", or UI concepts.
-    - Length: ideally 10–20 words max.
+    - Output a **single line of comma-separated descriptive phrases**.
+    - Do NOT use full sentences or camera terminology.
+    - Avoid saying “photo”, “image”, or “render”.
+    - Keep it under 20 words.
 
     Prompt:
     

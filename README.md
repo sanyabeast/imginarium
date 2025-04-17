@@ -15,8 +15,9 @@ A powerful tool for generating high-quality stock images using AI. This project 
 - **ComfyUI Integration**: Create high-quality images using the powerful ComfyUI backend
 - **Database Management**: Store and search images with MongoDB
 - **Flexible Configuration**: Customize all aspects of the generation process
-- **Command-Line Interface**: Easy-to-use CLI for generation and searching
+- **User-Friendly Menu Interface**: Simple numbered menu system for easy navigation
 - **Multiple Workflow Support**: Use different ComfyUI workflows for various generation techniques
+- **Workflow Validation**: Automatic validation of workflow files for required placeholders
 - **Placeholder System**: Use placeholders in workflows for dynamic content
 - **PNG Metadata**: Embedded PNG metadata for portability
 - **Metadata Extraction**: Extract metadata from generated PNG images
@@ -36,24 +37,48 @@ A powerful tool for generating high-quality stock images using AI. This project 
    cd stock_images_generator
    ```
 
-2. Create and activate a virtual environment:
+2. Run the installer script:
    ```bash
-   python -m venv venv
    # On Windows
-   venv\Scripts\activate
-   # On macOS/Linux
-   source venv/bin/activate
+   install.bat
    ```
 
-3. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-4. Install and set up:
+3. Install and set up:
    - [LM Studio](https://lmstudio.ai/) - For prompt generation
    - [ComfyUI](https://github.com/comfyanonymous/ComfyUI) - For image generation
    - [MongoDB](https://www.mongodb.com/try/download/community) (optional) - For database features
+
+## 📋 Using the Menu Interface
+
+The project includes a user-friendly menu interface that makes it easy to use all features without remembering command-line parameters.
+
+To start the menu:
+```bash
+menu.bat
+```
+
+The menu provides the following options:
+
+### Main Menu
+- **[1] Generate Images**: Create new images with default or custom settings
+- **[2] Search Images**: Search for images by tags or browse all images
+- **[3] Database Management**: View database stats or trim unused records
+- **[4] Setup/Update Dependencies**: Install or update project dependencies
+- **[5] Exit**: Exit the program
+
+### Generate Images Menu
+- **[1] Generate with default settings**: Generate 5 images with the flux_dev workflow
+- **[2] Custom generation**: Customize all generation parameters
+- **[0] Back to main menu**: Return to the main menu
+
+In the custom generation menu, you can specify:
+- Number of images to generate
+- Workflow to use
+- Image dimensions
+- Number of diffusion steps
+- LLM model for prompt generation
+
+You can type 'cancel' at any prompt to return to the previous menu.
 
 ## ⚙️ Configuration
 
@@ -84,7 +109,7 @@ Configure the language model for prompt generation:
 lm_studio:
   model: "gemma-3-4b-it"
   prompt_template: |
-    Generate a concise, stylized image prompt based on these tags: {tags}.
+    You are a creative visual assistant generating prompts for a stock image AI system.
     # More template instructions...
 ```
 
@@ -103,25 +128,28 @@ comfy_ui:
 
 ### Workflows
 
-The project supports multiple ComfyUI workflows stored in the `workflows` directory:
+The project supports multiple ComfyUI workflows stored in the `workflows` directory with the `.wf` extension:
 
-- **flux_dev**: Optimized for ComfyUI Flux model
-- **sd_35**: Stable Diffusion 3.5 workflow
-- **sdxl**: Stable Diffusion XL workflow
+- **flux_dev.wf**: Optimized for ComfyUI Flux model
+- **sd_xl.wf**: Stable Diffusion XL workflow
 
 Each workflow file contains a ComfyUI workflow JSON configuration with placeholders:
+
+#### Required Placeholders:
 - `{PROMPT}`: Replaced with the generated prompt
+- `{FILENAME_PREFIX}`: Replaced with a filename based on the image tags
+
+#### Recommended Placeholders:
 - `{NEGATIVE_PROMPT}`: Replaced with the default negative prompt
 - `{SEED}`: Replaced with a random seed
 - `{STEPS}`: Replaced with the configured steps count
 - `{WIDTH}`, `{HEIGHT}`: Replaced with image dimensions
-- `{FILENAME_PREFIX}`: Replaced with a filename based on the image tags
 
 To create a new workflow:
 1. Export a workflow from ComfyUI
 2. Replace the relevant values with placeholders
-3. Save the file in the `workflows` directory
-4. Use it with the `-w` parameter when generating images
+3. Save the file in the `workflows` directory with a `.wf` extension
+4. Use it with the `-w` parameter when generating images or select it in the menu
 
 ### MongoDB Configuration
 
@@ -134,14 +162,16 @@ mongodb:
   collection: "images"
 ```
 
-## 🖼️ Usage
+## 🖼️ Command-Line Usage
+
+While the menu interface is recommended for most users, you can also use the command-line interface for more advanced usage:
 
 ### Generating Images
 
 Generate stock images using the configured tags and settings:
 
 ```bash
-# Generate 5 images (workflow parameter is required)
+# Generate 5 images with the flux_dev workflow
 python generate.py -n 5 -w flux_dev
 
 # Use a specific LM Studio model

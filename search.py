@@ -22,6 +22,35 @@ from generate import read_metadata_from_image, print_header, print_info, print_e
 
 console = Console()
 
+# Function to handle global emoji flag
+def set_emoji_mode(disable_emojis=False):
+    global USE_EMOJIS
+    if disable_emojis:
+        USE_EMOJIS = False
+
+# Global flag for emoji usage
+USE_EMOJIS = True
+
+# Emoji dictionary for easy switching
+EMOJIS = {
+    "search": "🔍",
+    "list": "📋",
+    "info": "ℹ️",
+    "success": "✅",
+    "error": "❌",
+    "warning": "⚠️",
+    "image": "🖼️",
+    "tag": "🏷️",
+    "date": "📅",
+    "prompt": "💬"
+}
+
+# Function to get emoji or empty string based on flag
+def get_emoji(key):
+    if USE_EMOJIS:
+        return EMOJIS.get(key, "")
+    return ""
+
 def load_config():
     """Load configuration from config.yaml."""
     try:
@@ -33,27 +62,33 @@ def load_config():
 
 def print_header(text):
     """Print a fancy header."""
-    console.print(f"\n[bold cyan]🔍 {text} 🔍[/bold cyan]")
+    emoji_str = get_emoji("search")
+    console.print(f"\n[bold cyan]{emoji_str} {text} {emoji_str}[/bold cyan]")
 
 def print_subheader(text):
     """Print a fancy subheader."""
-    console.print(f"[bold blue]📋 {text}[/bold blue]")
+    emoji_str = get_emoji("list")
+    console.print(f"[bold blue]{emoji_str} {text}[/bold blue]")
 
 def print_info(text):
     """Print an info message."""
-    console.print(f"[blue]ℹ️ {text}[/blue]")
+    emoji_str = get_emoji("info")
+    console.print(f"[blue]{emoji_str} {text}[/blue]")
 
 def print_success(text):
     """Print a success message."""
-    console.print(f"[bold green]✅ {text}[/bold green]")
+    emoji_str = get_emoji("success")
+    console.print(f"[bold green]{emoji_str} {text}[/bold green]")
 
 def print_error(text):
     """Print an error message."""
-    console.print(f"[bold red]❌ {text}[/bold red]")
+    emoji_str = get_emoji("error")
+    console.print(f"[bold red]{emoji_str} {text}[/bold red]")
 
 def print_warning(text):
     """Print a warning message."""
-    console.print(f"[bold yellow]⚠️ {text}[/bold yellow]")
+    emoji_str = get_emoji("warning")
+    console.print(f"[bold yellow]{emoji_str} {text}[/bold yellow]")
 
 def print_image_details(image, index=None):
     """Print details of an image in a rich panel."""
@@ -383,8 +418,13 @@ Examples:
     # Additional options
     parser.add_argument("--match-all", action="store_true", help="When using --tags, require ALL tags to match (default: match ANY)")
     parser.add_argument("--tolerance", type=float, default=0.1, help="Tolerance for aspect ratio search (default: 0.1)")
+    parser.add_argument("--noemoji", action="store_true", help="Disable emojis in output")
     
     args = parser.parse_args()
+    
+    # Set global emoji flag
+    if args.noemoji:
+        set_emoji_mode(disable_emojis=True)
     
     # Connect to the database
     db = ImageDatabase()
