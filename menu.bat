@@ -11,19 +11,51 @@ if not defined VIRTUAL_ENV (
 )
 echo Virtual environment activated successfully!
 
+:config_selection
+cls
+echo ===================================================
+echo        IMGINARIUM - CONFIGURATION SELECTION
+echo ===================================================
+echo.
+echo Select a configuration to use:
+echo  [1] Stock (Default)
+echo  [2] Art
+echo  [0] Exit
+echo.
+echo Enter your choice [0-2]:
+
+set /p config_choice=
+
+if "%config_choice%"=="1" (
+    set config=stock
+    goto main_menu
+)
+if "%config_choice%"=="2" (
+    set config=art
+    goto main_menu
+)
+if "%config_choice%"=="0" goto exit_program
+if "%config_choice%"=="" (
+    set config=stock
+    goto main_menu
+)
+goto config_selection
+
 :main_menu
 cls
 echo ===================================================
-echo        STOCK IMAGES GENERATOR - MAIN MENU
+echo        IMGINARIUM - MAIN MENU
 echo ===================================================
+echo Using configuration: %config%
 echo.
 echo  [1] Generate Images
 echo  [2] Search Images
 echo  [3] Database Management
 echo  [4] Setup/Update Dependencies
-echo  [5] Exit
+echo  [5] Change Configuration
+echo  [6] Exit
 echo.
-echo Enter your choice [1-5]:
+echo Enter your choice [1-6]:
 
 set /p choice=
 
@@ -31,7 +63,8 @@ if "%choice%"=="1" goto generate_menu
 if "%choice%"=="2" goto search_menu
 if "%choice%"=="3" goto database_menu
 if "%choice%"=="4" goto setup
-if "%choice%"=="5" goto exit_program
+if "%choice%"=="5" goto config_selection
+if "%choice%"=="6" goto exit_program
 goto main_menu
 
 :generate_menu
@@ -39,6 +72,7 @@ cls
 echo ===================================================
 echo             GENERATE IMAGES
 echo ===================================================
+echo Using configuration: %config%
 echo.
 echo  [1] Generate with default settings
 echo  [2] Custom generation
@@ -50,7 +84,7 @@ set /p gen_choice=
 
 if "%gen_choice%"=="1" (
     echo Running generator with default settings...
-    python generate.py --num 5 --workflow flux_dev --noemoji
+    python generate.py --num 5 --workflow flux_dev --config %config% --noemoji
     pause
     goto generate_menu
 )
@@ -63,6 +97,7 @@ cls
 echo ===================================================
 echo             CUSTOM GENERATION
 echo ===================================================
+echo Using configuration: %config%
 echo.
 echo At any prompt, type 'cancel' to return to the generate menu.
 echo.
@@ -93,7 +128,7 @@ if "%model%"=="cancel" goto generate_menu
 if "%model%"=="" set model=gemma-3-4b-it
 
 echo Running generator with custom settings...
-python generate.py --num %num% --workflow %workflow% --dimensions %dimensions% --steps %steps% --model %model% --noemoji
+python generate.py --num %num% --workflow %workflow% --dimensions %dimensions% --steps %steps% --model %model% --config %config% --noemoji
 pause
 goto generate_menu
 
@@ -102,6 +137,7 @@ cls
 echo ===================================================
 echo             SEARCH IMAGES
 echo ===================================================
+echo Using configuration: %config%
 echo.
 echo  [1] Search by tags
 echo  [2] Browse all images
@@ -114,7 +150,7 @@ set /p search_choice=
 if "%search_choice%"=="1" goto search_by_tags
 if "%search_choice%"=="2" (
     echo Browsing all images...
-    python search.py --recent 100 --noemoji
+    python search.py --recent 100 --config %config% --noemoji
     pause
     goto search_menu
 )
@@ -126,6 +162,7 @@ cls
 echo ===================================================
 echo             SEARCH BY TAGS
 echo ===================================================
+echo Using configuration: %config%
 echo.
 echo At any prompt, type 'cancel' to return to the search menu.
 echo.
@@ -135,7 +172,7 @@ set /p tags=
 if "%tags%"=="cancel" goto search_menu
 if "%tags%"=="" goto search_menu
 
-python search.py --tags "%tags%" --noemoji
+python search.py --tags "%tags%" --config %config% --noemoji
 pause
 goto search_menu
 
@@ -144,6 +181,7 @@ cls
 echo ===================================================
 echo             DATABASE MANAGEMENT
 echo ===================================================
+echo Using configuration: %config%
 echo.
 echo  [1] Show database stats
 echo  [2] Trim database
@@ -155,13 +193,13 @@ set /p db_choice=
 
 if "%db_choice%"=="1" (
     echo Showing database stats...
-    python db.py --stats --noemoji
+    python db.py --stats --config %config% --noemoji
     pause
     goto database_menu
 )
 if "%db_choice%"=="2" (
     echo Trimming database...
-    python db.py --trim --noemoji
+    python db.py --trim --config %config% --noemoji
     pause
     goto database_menu
 )

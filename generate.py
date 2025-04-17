@@ -129,7 +129,7 @@ def tags_to_filename(tags_str):
     return filename
 
 # --- Configuration Loading ---
-def load_config(config_path="config.yaml"):
+def load_config(config_path="configs/config.yaml"):
     """Loads configuration from a YAML file."""
     try:
         print_info(f"Loading configuration from '{config_path}'...")
@@ -139,11 +139,10 @@ def load_config(config_path="config.yaml"):
         if not all(k in config for k in ['tags', 'lm_studio', 'comfy_ui']):
             raise ValueError("Config file missing required top-level keys.")
         
-        # Remove workflow warning since we now load workflows from files
-        # Ensure output directory exists
-        output_dir = config.get('comfy_ui', {}).get('output_directory', 'output_images')
-        os.makedirs(output_dir, exist_ok=True)
-        config['comfy_ui']['output_directory'] = output_dir # Store absolute path potentially
+        # Ensure comfy_ui section exists
+        if 'comfy_ui' not in config:
+            config['comfy_ui'] = {}
+            
         # Generate client_id if not present
         if not config.get('comfy_ui', {}).get('client_id'):
             config['comfy_ui']['client_id'] = str(uuid.uuid4())
@@ -714,7 +713,7 @@ Examples:
     parser.add_argument("-w", "--workflow", type=str, required=True, help="Workflow to use from the workflows directory")
     parser.add_argument("-d", "--dimensions", type=str, help="Image dimensions in format WIDTHxHEIGHT (e.g., 1920x1080)")
     parser.add_argument("-s", "--steps", type=int, help="Number of diffusion steps for image generation (higher = better quality but slower)")
-    parser.add_argument("--config", type=str, default="config.yaml", help="Path to the configuration file.")
+    parser.add_argument("-c", "--config", type=str, required=True, help="Configuration file to use (e.g., stock, art)")
     parser.add_argument("--noemoji", action="store_true", help="Disable emojis in output")
     args = parser.parse_args()
 
@@ -769,10 +768,15 @@ Examples:
     
     try:
         # 1. Load Configuration
-        config = load_config(args.config)
+        config = load_config(os.path.join("configs", f"{args.config}.yaml"))
         if not config:
             exit(1)
-
+            
+        # Override the output directory to use output/{config_name}/
+        output_dir = os.path.join("output", args.config)
+        os.makedirs(output_dir, exist_ok=True)
+        config['comfy_ui']['output_directory'] = output_dir
+        
         # 2. Generate Tag Combinations
         tag_combinations = generate_tag_combinations(config.get('tags', {}), args.num_images)
         if not tag_combinations:
@@ -786,7 +790,7 @@ Examples:
             exit(1)
 
         # 4. Generate Images using ComfyUI
-        db = ImageDatabase() # Initialize database connection with config file settings
+        db = ImageDatabase(config_path=os.path.join("configs", f"{args.config}.yaml")) # Initialize database connection with config file settings
         if args.dimensions:
             try:
                 if 'x' not in args.dimensions:

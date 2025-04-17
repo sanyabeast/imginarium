@@ -3,108 +3,117 @@ tags:
     - fragmented_identity
     - symbolic_figure
     - metaphysical_form
+    - everyday_body
+    - mundane_object
+    - dreamlike_landscape
+    - anatomical_shape
+    - ritual_totem
+    - broken_statue
+    - ambiguous_silhouette
+    - nostalgic_furniture
     - decaying_structure
-    - anthropomorphic_object
-    - mythical_creature
-    - organic_shape
-    - mechanical_limb
-    - ritual_mask
-    - ephemeral_presence
-    - blooming_entity
+    - blooming_organism
+    - floating_architecture
 
   action:
+    - stillness
+    - ritual_movement
+    - gestural_expression
+    - spatial_disruption
     - emergence
     - transformation
-    - entanglement
-    - dissolution
-    - reflection
-    - gaze
-    - juxtaposition
-    - obscuration
-    - implosion
-    - ascension
+    - duality
+    - introspection
+    - rupture
+    - weightlessness
 
   setting:
-    - infinite_void
-    - decayed_architecture
-    - sacred_geometry
-    - ruined_landscape
-    - liminal_space
-    - layered_memory
-    - chaotic_dreamscape
-    - spiritual_chamber
+    - sterile_gallery_space
+    - domestic_abstraction
     - surreal_stage
-    - submerged_world
+    - concrete_room
+    - flooded_room
+    - decayed_architecture
+    - post_urban_field
+    - sacred_geometry
+    - dreamlike_courtyard
+    - infinite_void
+    - ruined_landscape
+    - liminal_interior
 
   mood:
-    - transcendent
-    - melancholic
-    - ritualistic
-    - meditative
+    - introspective
+    - serene
+    - cold
     - grotesque
+    - melancholic
+    - absurd
     - sacred
-    - corrupted
     - nostalgic
-    - dissociative
-    - euphoric
+    - ironic
+    - contemplative
+    - tense
+    - detached
+    - playful
 
   style:
-    - expressionist
     - surrealism
-    - brutalist
+    - expressionism
+    - brutalism
+    - bauhaus_minimalism
     - abstract_expressionism
-    - cyberpunk_ritual
-    - oil_texture
-    - generative_glitch
-    - spiritual_collage
-    - anatomical_etching
-    - dreamcore_minimalism
+    - naive_art
+    - modernist_painting
+    - sketchbook_draft
+    - brutal_collage
+    - sculpture_study
+    - analog_photo_style
+    - ink_and_wash
+    - generative_noise
+    - glitch_assemblage
+    - post_digital_mixture
 
   lighting:
-    - glowing_edges
-    - chiaroscuro
-    - volumetric_beams
-    - glowing_embers
-    - shadow_play
-    - bioluminescent
-    - eclipse_light
-    - fractured_light
-    - monochrome_highlight
+    - gallery_spotlight
+    - ambient_dusk
+    - fluorescent_flicker
+    - dusty_sunlight
+    - eclipse_shadow
+    - soft_bounce
+    - dim_corner
+    - moody_gradient
+    - halogen_bleed
+    - hard_rim_light
 
   camera_angle:
-    - distorted_view
-    - split_perspective
-    - ethereal_float
-    - impossible_geometry
-    - divine_ascent
+    - frontal_view
+    - off_axis_close
+    - flattened_perspective
+    - negative_space_composition
+    - subject_obscured
     - fragmented_frame
-    - reflective_surface
+    - voyeuristic_crop
+    - soft_mirror_reflection
 
 lm_studio:
   model: "gemma-3-4b-it"
   prompt_template: |
-    You are an avant-garde artist working with an AI image generator.
+    You are an artist collaborating with an AI visual system.
 
-    Based on the following conceptual tags: {tags}, generate a surreal or symbolic image prompt.
+    Based on the following abstract tags: {tags}, generate a prompt that blends conceptual form, mood, and visual style.
 
     Guidelines:
-    - Use poetic, highly visual **comma-separated fragments** (e.g. "ritual mask in liminal corridor, chiaroscuro lighting, decayed fresco wall")
-    - Focus on mood, symbolism, surreal forms, and artistic texture
-    - Avoid literal phrases or anything that sounds like stock photo instructions
-    - Don't mention medium ("photo", "painting", etc.) or any camera equipment
-    - Keep under **24 words**
+    - Output should be one **compact line of comma-separated phrases**
+    - Emphasize ambiguity, mood, and texture over clarity
+    - Include contrasting ideas (e.g. decaying structure in pristine light, ritual act in modernist room)
+    - Avoid camera or medium language like “photo”, “render”, etc.
+    - Do not use full sentences or try to explain — just evoke
+    - Keep it under 25 words
 
     Prompt:
 
 comfy_ui:
   server_address: "127.0.0.1:8188"
-  client_id: ""
-  output_directory: "output_images"
   steps: 35
   width: 1536
   height: 1536
-
-mongodb:
-  data_dir: "./mongodb_data"
-  db_name: "imginarium"
-  collection: "art"

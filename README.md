@@ -10,6 +10,7 @@ A powerful tool for generating high-quality stock images using AI. This project 
 
 ## 🌟 Features
 
+- **Multiple Configuration Profiles**: Choose between different generation styles (stock, art, etc.)
 - **Tag-Based Generation**: Create images based on customizable tags like subject, mood, setting, and style
 - **LM Studio Integration**: Generate detailed, creative prompts using advanced language models
 - **ComfyUI Integration**: Create high-quality images using the powerful ComfyUI backend
@@ -59,30 +60,26 @@ menu.bat
 
 The menu provides the following options:
 
+### Configuration Selection
+- **[1] Stock (Default)**: Use the stock image generation configuration
+- **[2] Art**: Use the artistic image generation configuration
+
 ### Main Menu
 - **[1] Generate Images**: Create new images with default or custom settings
 - **[2] Search Images**: Search for images by tags or browse all images
 - **[3] Database Management**: View database stats or trim unused records
 - **[4] Setup/Update Dependencies**: Install or update project dependencies
-- **[5] Exit**: Exit the program
-
-### Generate Images Menu
-- **[1] Generate with default settings**: Generate 5 images with the flux_dev workflow
-- **[2] Custom generation**: Customize all generation parameters
-- **[0] Back to main menu**: Return to the main menu
-
-In the custom generation menu, you can specify:
-- Number of images to generate
-- Workflow to use
-- Image dimensions
-- Number of diffusion steps
-- LLM model for prompt generation
-
-You can type 'cancel' at any prompt to return to the previous menu.
+- **[5] Change Configuration**: Switch between different configuration profiles
+- **[6] Exit**: Exit the program
 
 ## ⚙️ Configuration
 
-Edit the `config.yaml` file to customize your setup:
+The project supports multiple configuration profiles in the `configs` directory:
+
+- **stock.yaml**: Configuration for standard stock image generation
+- **art.yaml**: Configuration for artistic/creative image generation
+
+Each configuration file defines:
 
 ### Tags Configuration
 
@@ -120,47 +117,21 @@ Configure the image generation settings:
 ```yaml
 comfy_ui:
   server_address: "127.0.0.1:8188"
-  output_directory: "output_images"
   steps: 35
   width: 1536
   height: 1536
 ```
 
-### Workflows
+### Output Directory Structure
 
-The project supports multiple ComfyUI workflows stored in the `workflows` directory with the `.wf` extension:
-
-- **flux_dev.wf**: Optimized for ComfyUI Flux model
-- **sd_xl.wf**: Stable Diffusion XL workflow
-
-Each workflow file contains a ComfyUI workflow JSON configuration with placeholders:
-
-#### Required Placeholders:
-- `{PROMPT}`: Replaced with the generated prompt
-- `{FILENAME_PREFIX}`: Replaced with a filename based on the image tags
-
-#### Recommended Placeholders:
-- `{NEGATIVE_PROMPT}`: Replaced with the default negative prompt
-- `{SEED}`: Replaced with a random seed
-- `{STEPS}`: Replaced with the configured steps count
-- `{WIDTH}`, `{HEIGHT}`: Replaced with image dimensions
-
-To create a new workflow:
-1. Export a workflow from ComfyUI
-2. Replace the relevant values with placeholders
-3. Save the file in the `workflows` directory with a `.wf` extension
-4. Use it with the `-w` parameter when generating images or select it in the menu
-
-### MongoDB Configuration
-
-Configure the database settings:
-
-```yaml
-mongodb:
-  data_dir: "./mongodb_data"
-  db_name: "stock_images"
-  collection: "images"
+Generated images are automatically saved to:
 ```
+output/{config_name}/
+```
+
+For example:
+- `output/stock/` - Images generated with the stock configuration
+- `output/art/` - Images generated with the art configuration
 
 ## 🖼️ Command-Line Usage
 
@@ -171,20 +142,20 @@ While the menu interface is recommended for most users, you can also use the com
 Generate stock images using the configured tags and settings:
 
 ```bash
-# Generate 5 images with the flux_dev workflow
-python generate.py -n 5 -w flux_dev
+# Generate 5 images with the flux_dev workflow using the stock config
+python generate.py -n 5 -w flux_dev -c stock
 
-# Use a specific LM Studio model
-python generate.py -n 3 -m "llama-3-8b-instruct" -w flux_dev
+# Use a specific LM Studio model with the art config
+python generate.py -n 3 -m "llama-3-8b-instruct" -w flux_dev -c art
 
 # Specify custom image dimensions
-python generate.py -n 2 -w flux_dev -d 1920x1080
+python generate.py -n 2 -w flux_dev -c stock -d 1920x1080
 
 # Override the number of steps for generation
-python generate.py -n 2 -w flux_dev -s 30
+python generate.py -n 2 -w flux_dev -c art -s 30
 
 # Combine parameters
-python generate.py -n 5 -m "gemma-3-4b-it" -w flux_dev -d 1024x1024 -s 40
+python generate.py -n 5 -m "gemma-3-4b-it" -w flux_dev -c stock -d 1024x1024 -s 40
 ```
 
 Use `-h` or `--help` to see all available options:
@@ -198,41 +169,17 @@ python generate.py --help
 Use the database management tools:
 
 ```bash
-# View database information
-python db.py --info
+# View database information for the stock config
+python db.py --info -c stock
 
-# List images in the database
-python db.py --list
+# List images in the art collection
+python db.py --list -c art
 
-# Show database statistics
-python db.py --stats
+# Show database statistics for the stock config
+python db.py --stats -c stock
 
-# Remove records for missing image files
-python db.py --trim
-```
-
-### Searching Images
-
-Search for images by tags:
-
-```bash
-# List all available tags
-python search.py --list-tags
-
-# List recent images
-python search.py --recent 10
-
-# Search by tags
-python search.py --tags robot watercolor
-
-# Search by workflow
-python search.py --workflow flux_dev
-
-# Search by aspect ratio
-python search.py --ratio 16:9
-
-# Extract metadata from a PNG image
-python search.py --metadata output_images/image_name.png
+# Trim database records for missing files in the art config
+python db.py --trim -c art
 ```
 
 ## 📁 Project Structure
@@ -240,8 +187,8 @@ python search.py --metadata output_images/image_name.png
 - `generate.py` - Main script for generating images
 - `search.py` - Script for searching and browsing images
 - `db.py` - Database management utilities
-- `config.yaml` - Configuration file
-- `output_images/` - Directory for generated images
+- `configs/` - Directory for configuration files
+- `output/` - Directory for generated images
 - `mongodb_data/` - MongoDB database files
 - `workflows/` - Directory for workflow files
 

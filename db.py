@@ -56,12 +56,15 @@ def log_message(message, emoji_key=None, end="\n"):
         print(message, end=end)
 
 class ImageDatabase:
-    def __init__(self, config_path="config.yaml", db_name=None, collection_name=None, data_dir=None):
+    def __init__(self, config_path="configs/stock.yaml", db_name=None, collection_name=None, data_dir=None):
         """Initialize connection to MongoDB."""
         self.client = None
         self.db = None
         self.collection = None
         self.mongo_process = None
+        
+        # Extract config name from the path (e.g., "stock" from "configs/stock.yaml")
+        config_name = os.path.splitext(os.path.basename(config_path))[0]
         
         # Load configuration from config file if it exists
         config = {}
@@ -73,12 +76,11 @@ class ImageDatabase:
         except Exception as e:
             log_message(f"Could not load config file: {e}", "warning")
         
-        # Get MongoDB settings from config or use defaults
-        mongodb_config = config.get('mongodb', {})
-        self.db_name = db_name or mongodb_config.get('db_name', "imginarium")
-        self.collection_name = collection_name or mongodb_config.get('collection', "images")
-        self.data_dir = data_dir or mongodb_config.get('data_dir', "./mongodb_data")
-        self.connection_string = mongodb_config.get('connection_string', "mongodb://localhost:27017/")
+        # Set database parameters - always use "imginarium" as db_name and config name as collection
+        self.db_name = "imginarium"
+        self.collection_name = collection_name or config_name
+        self.data_dir = "./mongodb_data"
+        self.connection_string = "mongodb://localhost:27017/"
         
         # Try to connect to MongoDB
         try:
@@ -481,12 +483,13 @@ if __name__ == "__main__":
     import argparse
     
     # Set up command line argument parsing
-    parser = argparse.ArgumentParser(description="MongoDB Database Management for Stock Images Generator")
+    parser = argparse.ArgumentParser(description="MongoDB Database Management for Imginarium")
     parser.add_argument("--info", action="store_true", help="Display database connection information")
     parser.add_argument("--list", action="store_true", help="List all images in the database")
     parser.add_argument("--stats", action="store_true", help="Show database statistics")
     parser.add_argument("--trim", action="store_true", help="Remove database records for which image files don't exist")
-    parser.add_argument("--output-dir", type=str, default="output_images", help="Directory to check for image files when using --trim")
+    parser.add_argument("--output-dir", type=str, help="Directory to check for image files when using --trim (defaults to output/{config})")
+    parser.add_argument("-c", "--config", type=str, default="stock", help="Configuration file to use (e.g., stock, art)")
     parser.add_argument("--noemoji", action="store_true", help="Disable emojis in output")
     args = parser.parse_args()
     
@@ -494,9 +497,9 @@ if __name__ == "__main__":
     if args.noemoji:
         set_emoji_mode(disable_emojis=True)
     
-    # Initialize database connection
-    log_message("Initializing database connection...")
-    db = ImageDatabase()
+    # Create database connection with specified config
+    config_path = os.path.join("configs", f"{args.config}.yaml")
+    db = ImageDatabase(config_path=config_path)
     
     if not db.is_connected():
         log_message("Failed to connect to database", "error")
@@ -524,7 +527,8 @@ if __name__ == "__main__":
     
     if args.trim:
         log_message("\nTrimming Database Records:")
-        output_dir = args.output_dir
+        # Use output/{config} as the default output directory
+        output_dir = args.output_dir if args.output_dir else os.path.join("output", args.config)
         if not os.path.exists(output_dir):
             log_message(f"Output directory '{output_dir}' does not exist.", "error")
         else:

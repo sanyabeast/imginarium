@@ -53,18 +53,18 @@ def get_emoji(key):
         return EMOJIS.get(key, "")
     return ""
 
-def load_config():
+def load_config(config_path="configs/stock.yaml"):
     """Load configuration from config.yaml."""
     try:
-        with open('config.yaml', 'r', encoding='utf-8') as file:
-            return yaml.safe_load(file)
+        with open(config_path, 'r', encoding='utf-8') as f:
+            return yaml.safe_load(f)
     except Exception as e:
-        console.print(f"[bold red]Error loading config:[/bold red] {e}")
+        print_error(f"Could not load config file: {e}")
         return {}
 
-def load_tag_categories():
-    """Load tag categories from config.yaml."""
-    config = load_config()
+def load_tag_categories(config_path="configs/stock.yaml"):
+    """Load tag categories from config file."""
+    config = load_config(config_path)
     return config.get('tags', {})
 
 def find_matching_tags(search_term, tag_categories, threshold=0.6):
@@ -129,69 +129,52 @@ def print_warning(text):
     emoji_str = get_emoji("warning")
     console.print(f"[bold yellow]{emoji_str} {text}[/bold yellow]")
 
-def print_image_details(image, index=None):
+def print_image_details(image, index=None, config_name=None):
     """Print details of an image in a rich panel."""
-    # Format the header with index if provided
-    header = f"[bold magenta]{image['filename']}[/bold magenta]"
+    # Create header with index if provided
     if index is not None:
-        header = f"[bold white]{index}.[/bold white] {header}"
+        header = f"[bold cyan]Image {index}[/bold cyan]"
+    else:
+        header = f"[bold cyan]Image Details[/bold cyan]"
     
-    # Create a list to hold the content lines
+    # Create content list
     content = []
     
-    # Add tags with category highlighting if available
-    tags_str = image.get('tags', '')
-    formatted_tags = []
+    # Add filename
+    filename = image.get('filename', 'Unknown')
+    if len(filename) > 50:
+        # Truncate long filenames for display
+        short_filename = filename[:25] + "..." + filename[-22:]
+        content.append(f"[bold]Filename:[/bold] {short_filename}")
+    else:
+        content.append(f"[bold]Filename:[/bold] {filename}")
     
-    # Handle tags based on type (string or dict)
-    if isinstance(tags_str, str):
-        # Handle string format (comma-separated)
-        for tag in tags_str.split(', '):
-            if ':' in tag:
-                # Tag already has category in format "category:value"
-                category, value = tag.split(':', 1)
-                formatted_tags.append(f"[bold yellow]{category}:[/bold yellow][green]{value}[/green]")
-            else:
-                formatted_tags.append(f"[green]{tag}[/green]")
-    elif isinstance(tags_str, dict):
-        # Handle dictionary format
-        for category, values in tags_str.items():
-            if isinstance(values, list):
-                for value in values:
-                    formatted_tags.append(f"[bold yellow]{category}:[/bold yellow][green]{value}[/green]")
-            else:
-                formatted_tags.append(f"[bold yellow]{category}:[/bold yellow][green]{values}[/green]")
+    # Add tags if present
+    tags = image.get('tags', {})
+    if tags:
+        tag_str = ""
+        for category, value in tags.items():
+            tag_str += f"[blue]{category}:[/blue] {value}, "
+        tag_str = tag_str.rstrip(", ")
+        content.append(f"[bold]Tags:[/bold] {tag_str}")
     
-    content.append(f"[bold]Tags:[/bold] {', '.join(formatted_tags)}")
-    
-    # Add prompt with truncation if too long
+    # Add prompt if present
     prompt = image.get('prompt', '')
-    if len(prompt) > 100:
-        prompt = prompt[:97] + "..."
-    content.append(f"[bold]Prompt:[/bold] {prompt}")
+    if prompt:
+        # Truncate long prompts
+        if len(prompt) > 100:
+            prompt = prompt[:97] + "..."
+        content.append(f"[bold]Prompt:[/bold] {prompt}")
     
-    # Add generation parameters if available
-    params = []
-    if image.get('seed'):
-        params.append(f"seed={image['seed']}")
-    if image.get('steps'):
-        params.append(f"steps={image['steps']}")
-    if image.get('width') and image.get('height'):
-        params.append(f"size={image['width']}x{image['height']}")
-    if image.get('ratio'):
-        params.append(f"ratio={image['ratio']:.2f}")
-    if image.get('workflow'):
-        params.append(f"workflow={image['workflow']}")
-    
-    if params:
-        content.append(f"[bold]Parameters:[/bold] {', '.join(params)}")
-    
-    # Add creation date if available
-    if image.get('created_at'):
+    # Add creation date if present
+    if 'created_at' in image:
         content.append(f"[bold]Created:[/bold] {image['created_at'].strftime('%Y-%m-%d %H:%M:%S')}")
     
     # Add file path
-    file_path = os.path.join("output_images", image['filename'])
+    if config_name:
+        file_path = os.path.join("output", config_name, image['filename'])
+    else:
+        file_path = os.path.join("output", "unknown", image['filename'])
     content.append(f"[bold]Path:[/bold] [italic]{file_path}[/italic]")
     
     # Create and print the panel
@@ -329,23 +312,17 @@ def list_available_tags(db):
         
         console.print(table)
 
-def search_by_tags(db, tags_input, match_all=False):
+def search_by_tags(db, tags_input, match_all=False, config_name=None):
     """Search for images by tags."""
-    if not tags_input:
-        print_warning("No tags specified for search.")
-        return
+    print_subheader(f"Searching for images with tags: {tags_input}")
+    print_info(f"Matching {'ALL' if match_all else 'ANY'} specified tag")
     
-    # Split the input tags by comma
-    search_terms = [term.strip() for term in tags_input.split(',')]
+    # Split input tags by comma
+    search_terms = [term.strip() for term in tags_input.split(',') if term.strip()]
     
-    print_header(f"Searching for images with tags: {tags_input}")
-    if match_all:
-        print_info("Matching ALL specified tags")
-    else:
-        print_info("Matching ANY specified tag")
-    
-    # Load tag categories from config
-    tag_categories = load_tag_categories()
+    # Get tag categories from config
+    config_path = os.path.join("configs", f"{config_name}.yaml") if config_name else "configs/stock.yaml"
+    tag_categories = load_tag_categories(config_path)
     
     # Find matching tags for each search term
     all_matched_tags = []
@@ -393,22 +370,18 @@ def text_search(db, query):
     for i, image in enumerate(results, 1):
         print_image_details(image, i)
 
-def list_recent_images(db, limit=10):
+def list_recent_images(db, limit=10, config_name=None):
     """List the most recent images."""
-    print_header(f"Most recent {limit} images")
+    print_subheader(f"Most recent {limit} images")
+    images = db.get_all_images(limit=limit)
     
-    # Get images from the database
-    results = db.get_all_images(limit)
-    
-    if not results:
-        print_warning("No images found in the database.")
+    if not images:
+        print_info("No images found in database.")
         return
     
-    print_success(f"Found {len(results)} images:")
-    
-    # Print each image's details
-    for i, image in enumerate(results, 1):
-        print_image_details(image, i)
+    print_info(f"Found {len(images)} images:")
+    for i, image in enumerate(images, 1):
+        print_image_details(image, i, config_name)
 
 def search_by_workflow(db, workflow):
     """Search for images by workflow."""
@@ -532,6 +505,7 @@ Examples:
     # Additional options
     parser.add_argument("--match-all", action="store_true", help="When using --tags, require ALL tags to match (default: match ANY)")
     parser.add_argument("--tolerance", type=float, default=0.1, help="Tolerance for aspect ratio search (default: 0.1)")
+    parser.add_argument("-c", "--config", type=str, default="stock", help="Configuration file to use (e.g., stock, art)")
     parser.add_argument("--noemoji", action="store_true", help="Disable emojis in output")
     
     args = parser.parse_args()
@@ -540,8 +514,9 @@ Examples:
     if args.noemoji:
         set_emoji_mode(disable_emojis=True)
     
-    # Connect to the database
-    db = ImageDatabase()
+    # Connect to the database with the specified config
+    config_path = os.path.join("configs", f"{args.config}.yaml")
+    db = ImageDatabase(config_path=config_path)
     
     if not db.is_connected():
         print_error("Could not connect to the MongoDB database.")
@@ -553,11 +528,11 @@ Examples:
         if args.list_tags:
             list_available_tags(db)
         elif args.tags:
-            search_by_tags(db, args.tags, args.match_all)
+            search_by_tags(db, args.tags, args.match_all, args.config)
         elif args.search:
             text_search(db, args.search)
         elif args.recent is not None:
-            list_recent_images(db, args.recent)
+            list_recent_images(db, args.recent, args.config)
         elif args.workflow:
             search_by_workflow(db, args.workflow)
         elif args.ratio:
