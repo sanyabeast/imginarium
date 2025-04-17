@@ -1,0 +1,177 @@
+{
+  "18": {
+    "inputs": {
+      "width": [
+        "38",
+        0
+      ],
+      "height": [
+        "39",
+        0
+      ],
+      "batch_size": 1
+    },
+    "class_type": "EmptyLatentImage",
+    "_meta": {
+      "title": "Empty Latent Image"
+    }
+  },
+  "19": {
+    "inputs": {
+      "samples": [
+        "242",
+        0
+      ],
+      "vae": [
+        "20",
+        0
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE Decode"
+    }
+  },
+  "20": {
+    "inputs": {
+      "vae_name": "ae.safetensors"
+    },
+    "class_type": "VAELoader",
+    "_meta": {
+      "title": "Load VAE"
+    }
+  },
+  "38": {
+    "inputs": {
+      "value": {WIDTH}
+    },
+    "class_type": "easy int",
+    "_meta": {
+      "title": "Width"
+    }
+  },
+  "39": {
+    "inputs": {
+      "value": {HEIGHT}
+    },
+    "class_type": "easy int",
+    "_meta": {
+      "title": "Height"
+    }
+  },
+  "86": {
+    "inputs": {
+      "text": "{PROMPT}",
+      "speak_and_recognation": {
+        "__value__": [
+          false,
+          true
+        ]
+      },
+      "clip": [
+        "239",
+        0
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Prompt)"
+    }
+  },
+  "239": {
+    "inputs": {
+      "clip_name1": "clip-l-hidream.safetensors",
+      "clip_name2": "clip-g-hidream.safetensors",
+      "clip_name3": "t5xxl-fp8-e4m3fn-scaled.safetensors",
+      "clip_name4": "llama-3.1-8b-instruct-fp8-scaled.safetensors"
+    },
+    "class_type": "QuadrupleCLIPLoader",
+    "_meta": {
+      "title": "QuadrupleCLIPLoader"
+    }
+  },
+  "241": {
+    "inputs": {
+      "shift": 3.0000000000000004,
+      "model": [
+        "244",
+        0
+      ]
+    },
+    "class_type": "ModelSamplingSD3",
+    "_meta": {
+      "title": "ModelSamplingSD3"
+    }
+  },
+  "242": {
+    "inputs": {
+      "seed": {SEED},
+      "steps": {STEPS},
+      "cfg": 1,
+      "sampler_name": "er_sde",
+      "scheduler": "sgm_uniform",
+      "denoise": 1,
+      "model": [
+        "241",
+        0
+      ],
+      "positive": [
+        "86",
+        0
+      ],
+      "negative": [
+        "243",
+        0
+      ],
+      "latent_image": [
+        "18",
+        0
+      ]
+    },
+    "class_type": "KSampler",
+    "_meta": {
+      "title": "KSampler"
+    }
+  },
+  "243": {
+    "inputs": {
+      "text": "{NEGATIVE_PROMPT}",
+      "speak_and_recognation": {
+        "__value__": [
+          false,
+          true
+        ]
+      },
+      "clip": [
+        "239",
+        0
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP Text Encode (Prompt)"
+    }
+  },
+  "244": {
+    "inputs": {
+      "unet_name": "hidream-i1-dev-q4-k-m.gguf"
+    },
+    "class_type": "UnetLoaderGGUF",
+    "_meta": {
+      "title": "Unet Loader (GGUF)"
+    }
+  },
+  "270": {
+    "inputs": {
+      "filename_prefix": "{FILENAME_PREFIX}",
+      "images": [
+        "19",
+        0
+      ]
+    },
+    "class_type": "SaveImage",
+    "_meta": {
+      "title": "Save Image"
+    }
+  }
+}
