@@ -105,6 +105,6 @@ comfy_ui:
 # MongoDB database configuration
 mongodb:
   data_dir: "./mongodb_data"  # Directory to store MongoDB data files
-  db_name: "stock_images"     # Database name
-  collection: "images"        # Collection name for storing image metadata
+  db_name: "imginarium"     # Database name
+  collection: "stock"        # Collection name for storing image metadata
   # connection_string: ""     # Optional: Custom MongoDB connection string (if using external MongoDB)

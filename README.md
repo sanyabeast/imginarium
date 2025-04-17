@@ -1,6 +1,6 @@
-# Stock Images Generator
+# Imginarium
 
-![Stock Images Generator](https://img.shields.io/badge/Stock%20Images-Generator-blue)
+![Imginarium](https://img.shields.io/badge/Imginarium-AI%20Image%20Generator-blue)
 ![Python](https://img.shields.io/badge/Python-3.9%2B-blue)
 ![LM Studio](https://img.shields.io/badge/LM%20Studio-Integrated-green)
 ![ComfyUI](https://img.shields.io/badge/ComfyUI-Integrated-green)
@@ -33,8 +33,8 @@ A powerful tool for generating high-quality stock images using AI. This project 
 
 1. Clone this repository:
    ```bash
-   git clone https://github.com/yourusername/stock_images_generator.git
-   cd stock_images_generator
+   git clone https://github.com/yourusername/imginarium.git
+   cd imginarium
    ```
 
 2. Run the installer script:

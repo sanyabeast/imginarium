@@ -1,0 +1,110 @@
+tags:
+  subject:
+    - fragmented_identity
+    - symbolic_figure
+    - metaphysical_form
+    - decaying_structure
+    - anthropomorphic_object
+    - mythical_creature
+    - organic_shape
+    - mechanical_limb
+    - ritual_mask
+    - ephemeral_presence
+    - blooming_entity
+
+  action:
+    - emergence
+    - transformation
+    - entanglement
+    - dissolution
+    - reflection
+    - gaze
+    - juxtaposition
+    - obscuration
+    - implosion
+    - ascension
+
+  setting:
+    - infinite_void
+    - decayed_architecture
+    - sacred_geometry
+    - ruined_landscape
+    - liminal_space
+    - layered_memory
+    - chaotic_dreamscape
+    - spiritual_chamber
+    - surreal_stage
+    - submerged_world
+
+  mood:
+    - transcendent
+    - melancholic
+    - ritualistic
+    - meditative
+    - grotesque
+    - sacred
+    - corrupted
+    - nostalgic
+    - dissociative
+    - euphoric
+
+  style:
+    - expressionist
+    - surrealism
+    - brutalist
+    - abstract_expressionism
+    - cyberpunk_ritual
+    - oil_texture
+    - generative_glitch
+    - spiritual_collage
+    - anatomical_etching
+    - dreamcore_minimalism
+
+  lighting:
+    - glowing_edges
+    - chiaroscuro
+    - volumetric_beams
+    - glowing_embers
+    - shadow_play
+    - bioluminescent
+    - eclipse_light
+    - fractured_light
+    - monochrome_highlight
+
+  camera_angle:
+    - distorted_view
+    - split_perspective
+    - ethereal_float
+    - impossible_geometry
+    - divine_ascent
+    - fragmented_frame
+    - reflective_surface
+
+lm_studio:
+  model: "gemma-3-4b-it"
+  prompt_template: |
+    You are an avant-garde artist working with an AI image generator.
+
+    Based on the following conceptual tags: {tags}, generate a surreal or symbolic image prompt.
+
+    Guidelines:
+    - Use poetic, highly visual **comma-separated fragments** (e.g. "ritual mask in liminal corridor, chiaroscuro lighting, decayed fresco wall")
+    - Focus on mood, symbolism, surreal forms, and artistic texture
+    - Avoid literal phrases or anything that sounds like stock photo instructions
+    - Don't mention medium ("photo", "painting", etc.) or any camera equipment
+    - Keep under **24 words**
+
+    Prompt:
+
+comfy_ui:
+  server_address: "127.0.0.1:8188"
+  client_id: ""
+  output_directory: "output_images"
+  steps: 35
+  width: 1536
+  height: 1536
+
+mongodb:
+  data_dir: "./mongodb_data"
+  db_name: "imginarium"
+  collection: "art"

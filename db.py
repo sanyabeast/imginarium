@@ -75,7 +75,7 @@ class ImageDatabase:
         
         # Get MongoDB settings from config or use defaults
         mongodb_config = config.get('mongodb', {})
-        self.db_name = db_name or mongodb_config.get('db_name', "stock_images")
+        self.db_name = db_name or mongodb_config.get('db_name', "imginarium")
         self.collection_name = collection_name or mongodb_config.get('collection', "images")
         self.data_dir = data_dir or mongodb_config.get('data_dir', "./mongodb_data")
         self.connection_string = mongodb_config.get('connection_string', "mongodb://localhost:27017/")
