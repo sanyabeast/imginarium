@@ -6,17 +6,19 @@
 ![ComfyUI](https://img.shields.io/badge/ComfyUI-Integrated-green)
 ![MongoDB](https://img.shields.io/badge/MongoDB-Database-green)
 
-A powerful tool for generating high-quality stock images using AI. This project combines LM Studio for prompt generation with ComfyUI for image creation, and includes a MongoDB database for image management.
+A powerful tool for generating high-quality images using AI. This project combines LM Studio for prompt generation with ComfyUI for image creation, and includes a MongoDB database for image management.
 
 ## 🌟 Features
 
-- **Multiple Configuration Profiles**: Choose between different generation styles (stock, art, etc.)
+- **Multiple Configuration Profiles**: Choose between different generation styles (stock, art, avantgarde, etc.)
+- **Dynamic Configuration Detection**: Automatically detects all config files in the configs directory
 - **Tag-Based Generation**: Create images based on customizable tags like subject, mood, setting, and style
 - **LM Studio Integration**: Generate detailed, creative prompts using advanced language models
 - **ComfyUI Integration**: Create high-quality images using the powerful ComfyUI backend
 - **Database Management**: Store and search images with MongoDB
 - **Flexible Configuration**: Customize all aspects of the generation process
 - **User-Friendly Menu Interface**: Simple numbered menu system for easy navigation
+- **Default Workflow Support**: Each configuration can specify its own default workflow
 - **Multiple Workflow Support**: Use different ComfyUI workflows for various generation techniques
 - **Workflow Validation**: Automatic validation of workflow files for required placeholders
 - **Placeholder System**: Use placeholders in workflows for dynamic content
@@ -61,8 +63,8 @@ menu.bat
 The menu provides the following options:
 
 ### Configuration Selection
-- **[1] Stock (Default)**: Use the stock image generation configuration
-- **[2] Art**: Use the artistic image generation configuration
+- The menu dynamically lists all available configurations from the `configs` directory
+- Select a configuration to use for all operations
 
 ### Main Menu
 - **[1] Generate Images**: Create new images with default or custom settings
@@ -78,6 +80,8 @@ The project supports multiple configuration profiles in the `configs` directory:
 
 - **stock.yaml**: Configuration for standard stock image generation
 - **art.yaml**: Configuration for artistic/creative image generation
+- **avantgarde.yaml**: Configuration for experimental/avant-garde image generation
+- **Add your own**: Create new .yaml files in the configs directory to add more profiles
 
 Each configuration file defines:
 
@@ -117,6 +121,7 @@ Configure the image generation settings:
 ```yaml
 comfy_ui:
   server_address: "127.0.0.1:8188"
+  default_workflow: "flux_dev"  # Default workflow to use for this config
   steps: 35
   width: 1536
   height: 1536
@@ -132,6 +137,7 @@ output/{config_name}/
 For example:
 - `output/stock/` - Images generated with the stock configuration
 - `output/art/` - Images generated with the art configuration
+- `output/avantgarde/` - Images generated with the avantgarde configuration
 
 ## 🖼️ Command-Line Usage
 
@@ -139,20 +145,23 @@ While the menu interface is recommended for most users, you can also use the com
 
 ### Generating Images
 
-Generate stock images using the configured tags and settings:
+Generate images using the configured tags and settings:
 
 ```bash
-# Generate 5 images with the flux_dev workflow using the stock config
+# Generate 5 images using the default workflow from the stock config
+python generate.py -n 5 -c stock
+
+# Specify a custom workflow instead of using the default
 python generate.py -n 5 -w flux_dev -c stock
 
 # Use a specific LM Studio model with the art config
-python generate.py -n 3 -m "llama-3-8b-instruct" -w flux_dev -c art
+python generate.py -n 3 -m "llama-3-8b-instruct" -c art
 
 # Specify custom image dimensions
-python generate.py -n 2 -w flux_dev -c stock -d 1920x1080
+python generate.py -n 2 -c stock -d 1920x1080
 
 # Override the number of steps for generation
-python generate.py -n 2 -w flux_dev -c art -s 30
+python generate.py -n 2 -c art -s 30
 
 # Combine parameters
 python generate.py -n 5 -m "gemma-3-4b-it" -w flux_dev -c stock -d 1024x1024 -s 40
@@ -196,7 +205,16 @@ python db.py --trim -c art
 
 ### Custom Workflows
 
-You can customize the ComfyUI workflow in the `config.yaml` file to use different models or generation techniques.
+You can create custom ComfyUI workflows and specify them in your configuration files. Each config can have its own default workflow.
+
+### Adding New Configurations
+
+To add a new configuration:
+
+1. Create a new YAML file in the `configs` directory (e.g., `custom.yaml`)
+2. Define your tags, prompt template, and ComfyUI settings
+3. Specify a default workflow in the ComfyUI section
+4. The new configuration will automatically appear in the menu
 
 ### External MongoDB
 
