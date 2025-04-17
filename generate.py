@@ -710,7 +710,7 @@ Examples:
     )
     parser.add_argument("-n", "--num-images", type=int, default=5, help="Number of images to generate.")
     parser.add_argument("-m", "--model", type=str, help="LM Studio model to use (overrides config)")
-    parser.add_argument("-w", "--workflow", type=str, required=True, help="Workflow to use from the workflows directory")
+    parser.add_argument("-w", "--workflow", type=str, help="Workflow to use from the workflows directory (overrides config default)")
     parser.add_argument("-d", "--dimensions", type=str, help="Image dimensions in format WIDTHxHEIGHT (e.g., 1920x1080)")
     parser.add_argument("-s", "--steps", type=int, help="Number of diffusion steps for image generation (higher = better quality but slower)")
     parser.add_argument("-c", "--config", type=str, required=True, help="Configuration file to use (e.g., stock, art)")
@@ -776,6 +776,12 @@ Examples:
         output_dir = os.path.join("output", args.config)
         os.makedirs(output_dir, exist_ok=True)
         config['comfy_ui']['output_directory'] = output_dir
+        
+        # Use default workflow from config if not specified
+        if not args.workflow:
+            default_workflow = config.get('comfy_ui', {}).get('default_workflow', 'flux_dev')
+            args.workflow = default_workflow
+            print_info(f"Using default workflow from config: {args.workflow}")
         
         # 2. Generate Tag Combinations
         tag_combinations = generate_tag_combinations(config.get('tags', {}), args.num_images)

@@ -114,6 +114,7 @@ lm_studio:
 
 comfy_ui:
   server_address: "127.0.0.1:8188"
+  default_workflow: "sd_xl" # Default workflow to use for this config
   steps: 35
   width: 1536
   height: 1536

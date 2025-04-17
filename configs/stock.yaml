@@ -96,6 +96,7 @@ lm_studio:
     
 comfy_ui:
   server_address: "127.0.0.1:8188" # Replace with your ComfyUI server address
+  default_workflow: "flux_dev" # Default workflow to use for this config
   steps: 35
   width: 1536
   height: 1536

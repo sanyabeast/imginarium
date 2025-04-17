@@ -84,7 +84,7 @@ set /p gen_choice=
 
 if "%gen_choice%"=="1" (
     echo Running generator with default settings...
-    python generate.py --num 5 --workflow flux_dev --config %config% --noemoji
+    python generate.py --num 5 --config %config% --noemoji
     pause
     goto generate_menu
 )
@@ -107,10 +107,9 @@ set /p num=
 if "%num%"=="cancel" goto generate_menu
 if "%num%"=="" set num=5
 
-echo Enter workflow name (default: flux_dev):
+echo Enter workflow name (leave empty to use default from config):
 set /p workflow=
 if "%workflow%"=="cancel" goto generate_menu
-if "%workflow%"=="" set workflow=flux_dev
 
 echo Enter dimensions WIDTHxHEIGHT (default: 1536x1536):
 set /p dimensions=
@@ -128,7 +127,11 @@ if "%model%"=="cancel" goto generate_menu
 if "%model%"=="" set model=gemma-3-4b-it
 
 echo Running generator with custom settings...
-python generate.py --num %num% --workflow %workflow% --dimensions %dimensions% --steps %steps% --model %model% --config %config% --noemoji
+if "%workflow%"=="" (
+    python generate.py --num %num% --dimensions %dimensions% --steps %steps% --model %model% --config %config% --noemoji
+) else (
+    python generate.py --num %num% --workflow %workflow% --dimensions %dimensions% --steps %steps% --model %model% --config %config% --noemoji
+)
 pause
 goto generate_menu
 
