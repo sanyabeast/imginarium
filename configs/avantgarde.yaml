@@ -1,114 +1,106 @@
 tags:
   subject:
     - recursive_form
-    - glitched_body
-    - industrial_fossil
-    - subconscious_fragment
-    - ritual_mechanism
-    - decaying_icon
-    - chromatic_noise
-    - distorted_corpse
-    - synthetic_flesh
-    - anatomical_repetition
-    - symbolic_burn_mark
-    - semiotic_mess
-    - archival_smear
-    - reversed_entity
+    - glitched_corpus
+    - industrial_totem
+    - ephemeral_frame
+    - ritual_apparatus
+    - semantic_decay
+    - inverted_organism
+    - memory_envelope
+    - distorted_mnemonic
+    - broken_interface
+    - synthetic_phenomenon
+    - anti-symbol
+    - corpus_as_structure
 
   action:
-    - paradoxical_motion
-    - conceptual_loop
-    - visual_feedback
-    - collapse_in_progress
-    - data_erosion
-    - chaotic_ritual
-    - anti_pose
-    - hyper_reflection
-    - misalignment
-    - unspeakable_ritual
+    - recursive_unfolding
+    - semiotic_collapse
+    - diagrammatic_distortion
+    - feedback_bleeding
+    - ritual_misfire
+    - anti_gesture
+    - fragmented_perception
+    - system_corruption
+    - sensory_dissonance
+    - internal_projection
 
   setting:
-    - obsolete_lab
-    - noise_grid
-    - brutal_memory_vault
-    - digital_sarcophagus
-    - corrupted_studio
-    - architectural_discontinuity
-    - melted_exhibition
-    - glitch_horizon
-    - voided_theatre
-    - subsemantic_structure
-    - mirrored_asylum
-    - fractured_temple
-    - undefined_interface
+    - post-logical_labyrinth
+    - metaphysical_grid
+    - decaying_syntax_zone
+    - neurostatic_display_hall
+    - feedback_mausoleum
+    - incoherent_monument
+    - unconscious_system_room
+    - symbolic_archaelogy_vault
+    - abstracted_machine_void
+    - mirrored_sarcophagus
+    - undefined_liminal_slice
 
   mood:
-    - violently_contemplative
-    - sacred_disgust
-    - recursive_apathy
-    - disturbed_clarity
-    - divine_disconnection
-    - romantic_horror
-    - anti-nostalgia
-    - glitched_reverence
-    - autistic_euphoria
-    - neurotic_stasis
-    - subliminal_disgust
-    - looped_serenity
-    - dissonant_transcendence
+    - oppressive_ambivalence
+    - sacred_erraticism
+    - speculative_collapse
+    - spiritual_data_bleed
+    - ceremonial_noise
+    - nostalgic_erasure
+    - reverent_detachment
+    - neurodivergent_paralysis
+    - ecstatic_fog
+    - glitch_reincarnation
+    - subconscious_overload
+    - sterile_frenzy
 
   style:
-    - anti-aesthetic
-    - datamosh_expressionism
-    - spectral_cubism
-    - glitch_mysticism
-    - corrupted_brutalism
-    - ritual_noise_overlay
-    - hypertexture_baroque
-    - neurographic_stitching
-    - para-surrealism
-    - aesthetic_decay
-    - diffusion_interruption
-    - unconscious_diagramming
-    - incoherent_collage
-    - artifact_maximalism
+    - data_occultism
+    - ritual_digitalism
+    - post-matter_expressionism
+    - glitch_tapestry
+    - mythological_computation
+    - subconscious_concrete
+    - cognitive_stretch_noise
+    - epistemic_dust_layer
+    - anti-medium_construct
+    - broken_modernism
+    - paradox_engraving
+    - diagrammatic_absurdism
 
   lighting:
-    - oscillating_pulse
-    - harsh_feedback_glow
-    - corrupted_gradient
-    - flickering_void
-    - spectral_backlight
-    - multi-source_reflection
-    - overexposed_bloom
-    - broken_spotlight
-    - inverted_shadows
-    - synthetic_neon_bleed
+    - null_gradient
+    - scrambled_illumination
+    - inner_blink
+    - shadow_mosaic
+    - refracted_imperfection
+    - overexposed_suture
+    - pulsar_bleed
+    - ghost_backscatter
+    - ambient_signal_noise
 
   camera_angle:
-    - recursive_frame
-    - anti_perspective
-    - negative_space_disruption
-    - self-consuming_crop
-    - meta-angle_reflection
-    - reversed_focus
-    - intentional_misframe
-    - glitchy_close_macro
+    - recursive_implosion
+    - negative_structure_frame
+    - collapsed_layer_view
+    - non-perspective_drift
+    - hyperstatic_internal
+    - reflection_without_origin
+    - cropped_data_trace
 
 lm_studio:
   model: "gemma-3-4b-it"
   prompt_template: |
-    You are a radical posthuman artist collaborating with a visual AI system.
+    You are an avant-garde conceptual entity collaborating with a generative visual machine.
 
-    Using these tags: {tags}, generate a **nonlinear**, highly **experimental** prompt that reflects post-conceptual and avant-garde sensibilities.
+    Based on these tags: {tags}, generate a dense, symbolic prompt for AI image synthesis.
 
-    Guidelines:
-    - Output **a single line of distorted, provocative visual phrases**, comma-separated
-    - Lean into contradiction, fragmentation, decay, and glitch
-    - Embrace ambiguity and "error" as meaningful structure
-    - Avoid naming cameras, mediums, or scene types (no “photo”, “image”, etc.)
-    - No full sentences, just visual cues and ideological residue
-    - Max: **28 words**
+    Prompt requirements:
+    - Output **a single compressed string of abstract, contradictory visual descriptors**
+    - Use **fragmented, anti-logical phrasing** (no full sentences)
+    - Embrace ambiguity, glitch, memory bleed, decay, spiritual data trauma
+    - Avoid camera jargon, visual realism, or medium-specific terms
+    - Do NOT explain. Just let the machine hallucinate the form
+    - Length: **16–28 words**
 
     Prompt:
 

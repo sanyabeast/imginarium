@@ -1,114 +1,96 @@
 tags:
   subject:
-    - space_explorer
-    - android_servant
-    - utopian_cityscape
-    - analog_device
-    - cybernetic_creature
-    - control_panel_operator
-    - atomic_scientist
-    - flying_car
-    - jetpack_pilot
-    - orbital_colony
-    - raygun_wielder
-    - modular_home
-    - neon_billboard
-    - tube_television
-    - sci_fi_family
-    - mech_suit
-    - data_tape_bank
+    - symbolic_operator
+    - synthetic_lifeform
+    - dream_vehicle
+    - ambiguous_module
+    - retro_domestic_form
+    - analog_entity
+    - speculative_architect
+    - modular_human_extension
+    - orbital_component
+    - nostalgic_machine
 
   action:
-    - communication_with_base
-    - hovering_transport
-    - synthetic_domestic_task
-    - analog_interface_interaction
-    - retrofuturistic_flight
-    - surveillance_monitoring
-    - data_retrieval
-    - city_patrolling
-    - alien_first_contact
-    - leisure_in_space_lounge
-    - nuclear_energy_harvesting
+    - speculative_activity
+    - synthetic_routine
+    - space_habitual_motion
+    - analog_data_exchange
+    - zero_g_task
+    - system_adjustment
+    - encoded_signal_exchange
+    - hyperidealized_function
+    - slow_surveillance_gesture
+    - impossible_coordination
 
   setting:
-    - 1950s_space_station
-    - vaporwave_arcade
-    - atomic_reactor_room
-    - modular_control_center
-    - neon_suburb
-    - cassette_futurism_office
-    - terraformed_colony
-    - chrome_diner_in_space
-    - skybridge_network
-    - technocratic_dreamscape
-    - raygun_gothic_city
-    - dome_protected_desert_outpost
+    - imagined_control_zone
+    - stylized_colony_plan
+    - aesthetic_dome_environment
+    - retro_research_void
+    - domestic_future_concept
+    - showroom_orbit
+    - collapsed_data_center
+    - alternate_governance_zone
+    - brochure_space_exhibit
+    - nostalgic_lab_interface
 
   mood:
-    - utopian
-    - ironic
-    - sleek
-    - mysterious
-    - playful
-    - speculative
-    - nostalgic
-    - dystopian
-    - glitched
-    - optimistic
-    - sterile
-    - hyperidealized
-    - eerie_future_decay
+    - sterile_comfort
+    - bureaucratic_optimism
+    - ironic_uplift
+    - clinical_wonder
+    - post-utopian
+    - glitchy_reminiscence
+    - surreal_order
+    - warm_logic
+    - faded_precision
+    - plastified_awe
 
   style:
-    - synthwave
-    - vaporwave
-    - atompunk
-    - raygun_gothic
-    - 70s_sci_fi_magazine
-    - brutalist_utopia
-    - neon_pop_art
-    - airbrush_retro
-    - monochrome_computer_mockup
-    - posterized_illustration
-    - early_digital_texture
-    - CRT_ui_overlay
-    - propaganda_art_parody
-    - retro_pixel_render
-    - sci_fi_brochure_aesthetic
+    - monochrome_vision
+    - brochure_illustration
+    - pastel_chromatics
+    - analog_interface_art
+    - propaganda_ui
+    - retro_linework
+    - ambient_punk
+    - neon_diagram
+    - tube_monitor_overlay
+    - speculative_tactility
+    - airbrush_geometry
+    - nostalgic_infographic
 
   lighting:
-    - CRT_glow
-    - neon_accent
-    - clean_backlight
-    - spotlight_from_above
-    - flickering_terminal_light
-    - rainbow_gradient
-    - green_monochrome_haze
-    - edge_glow_scanline
-    - warm_bakelite_reflection
+    - instructional_light
+    - glowband_accents
+    - green_phosphor_bloom
+    - soft_control_panel_lighting
+    - underlit_reflective_surface
+    - radial_console_halo
+    - tube_terminal_shadow
 
   camera_angle:
-    - schematic_cutaway_view
-    - cinematic_flyby
-    - brochure_perspective
-    - cockpit_view
-    - dramatic_low_angle
-    - satellite_view
-    - tube_screen_reflection
+    - archive_technical_view
+    - glossy_instruction_sheet
+    - detached_control_lens
+    - nostalgic_monitor_scan
+    - split_panel_display
+    - orbital_catalog_view
 
 lm_studio:
   model: "gemma-3-4b-it"
   prompt_template: |
-    You are an AI visual engineer simulating retrofuturism-inspired illustrations.
+    You are an AI trained on thousands of speculative visuals from mid-century futurism.
 
-    Combine the abstract tags: {tags} into a bold **image generation prompt** that evokes speculative futurism from the past (e.g. 1950s-1990s visions of the future).
+    Based on the following tags: {tags}, create a concise image generation prompt that reflects **retrofuturistic imagination**.
 
     Guidelines:
-    - Format output as one **comma-separated string** of 12–24 words
-    - Emphasize lighting, technology, retro materials, and speculative optimism or irony
-    - Avoid modern terms — focus on **past-era imagined futures**
-    - Do **not** mention photo/render/media formats or use full sentences
+    - Compose the prompt as a **comma-separated string** (no full sentences)
+    - Emphasize **materials, forms, mood, and outdated futuristic intent**
+    - Think in terms of a fictional 1970s science catalog, government concept art, or forgotten visual manual
+    - Avoid real-world brands, modern devices, or photographic language
+    - 12 to 24 words total — lean into abstraction and speculative contradictions
 
     Prompt:
 

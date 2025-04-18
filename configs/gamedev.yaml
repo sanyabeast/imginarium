@@ -1,122 +1,116 @@
 tags:
   subject:
-    - playable_character
-    - enemy_unit
-    - boss_entity
-    - npc
-    - animal_mount
-    - futuristic_soldier
-    - medieval_knight
-    - alien_species
-    - mutated_beast
-    - magical_construct
-    - tech_drone
-    - character_portrait
-    - weapon_design
-    - armor_set
-    - power_up_item
-    - environmental_prop
-    - world_object
-    - landmark_structure
+    - core_character
+    - enemy_form
+    - boss_shape
+    - interactive_entity
+    - support_npc
+    - unique_mount
+    - armor_suit
+    - artifact_weapon
+    - energy_object
+    - in-world_prop
+    - signature_item
+    - environmental_icon
+    - architectural_marker
+    - world_structure
+    - concept_portrait
 
   action:
-    - idle_pose
-    - battle_ready
-    - casting_spell
-    - shooting
-    - running
-    - climbing
-    - interacting_with_object
-    - exploration
-    - cinematic_pose
-    - stealth_mode
+    - idle_state
+    - combat_ready
+    - spellcast_frame
+    - ranged_attack
+    - traversal_motion
+    - cinematic_presence
+    - interaction_pose
+    - stealth_transition
+    - exploration_moment
+    - menu_idle_loop
 
   setting:
-    - open_world_landscape
-    - sci_fi_base
-    - medieval_village
-    - haunted_forest
-    - alien_ruins
-    - cyberpunk_street
-    - underwater_lab
-    - lava_cavern
-    - neon_arena
-    - cloud_city
-    - ancient_temple
-    - post_apocalyptic_outpost
-    - virtual_simulation_zone
-    - dreamlike_void
-    - dungeon_level
-    - multiplayer_lobby_space
+    - overworld_landmass
+    - biomech_lab
+    - ruin_city
+    - pixel_cave
+    - floating_island
+    - battle_arena
+    - lore_shrine
+    - fog_forest
+    - neon_highrise
+    - sacred_zone
+    - dream_stage
+    - multiplayer_lobby
+    - core_dungeon
+    - fantasy_gate
+    - stylized_warp_space
 
   mood:
-    - epic
-    - eerie
-    - playful
-    - dramatic
-    - hostile
-    - immersive
-    - cinematic
-    - dark_fantasy
-    - dystopian
-    - heroic
-    - mysterious
-    - adrenaline_pumping
+    - intense
     - mystical
+    - cinematic
+    - dystopian
+    - playful
+    - dark_fantasy
+    - ambient
+    - adrenaline_peak
+    - epic_scale
+    - low_tension_loop
+    - narrative_heavy
 
   style:
-    - triple_a_realism
-    - painterly_concept
-    - pixel_art
-    - hand_drawn_illustration
-    - toon_shaded
-    - isometric_view
-    - cel_shaded
-    - stylized_fantasy
-    - comic_style
-    - detailed_linework
-    - high_contrast_design
-    - low_poly_mockup
-    - rough_sketch
-    - UI_blueprint
-    - 3d_mockup
+    - concept_sketch
+    - high_fidelity_realism
+    - UI_overlay_style
+    - retro_pixel_grid
+    - stylized_handpainted
+    - cel_shade
+    - blueprint_mock
+    - game_menu_flat
+    - 3d_greybox
+    - painterly_fantasy
+    - vector_rpg_style
+    - voxel_simulation
+    - dynamic_line_art
+    - ink_outline_concept
 
   lighting:
-    - dramatic_backlight
-    - glowing_ambient
-    - foggy_haze
-    - dark_with_neon
-    - mystical_light_shafts
-    - lava_glow
-    - torchlight
-    - screen_reflection
-    - diffuse_daylight
-    - industrial_spotlight
+    - moody_spot
+    - directional_rim
+    - lava_bloom
+    - volumetric_godrays
+    - reflective_floorlight
+    - UI_highlight_glow
+    - arcane_pulse
+    - harsh_backlight
+    - isometric_ambient
+    - low_poly_shadowplay
 
   camera_angle:
-    - character_turnaround
-    - over_the_shoulder
-    - third_person_perspective
-    - top_down_view
-    - isometric_projection
-    - cinematic_low_angle
-    - dramatic_closeup
-    - environmental_panorama
-    - gameplay_view
+    - isometric_grid_lock
+    - character_design_loop
+    - third_person_dynamic
+    - overworld_map_focus
+    - UI_lore_closeup
+    - flyover_pan
+    - intro_scene_cut
+    - design_sheet_array
+    - top_down_pathfinder
 
 lm_studio:
   model: "gemma-3-4b-it"
   prompt_template: |
-    You are a concept artist working on a game.
+    You are a visual designer for a game prototype.
 
-    Based on the following tags: {tags}, create a visually rich prompt for an AI image generator.
+    Combine the abstract tags: {tags} into a rich, compressed concept art prompt for an AI generator.
 
     Guidelines:
-    - Output must be a single line of comma-separated descriptors
-    - Focus on subject design, game setting, mood, and artistic style
-    - Avoid generic words like “photo”, “render”, or “screenshot”
-    - No full sentences, just creative descriptors (e.g. “cybernetic knight in neon city, battle stance, lava reflections, pixel art”)
-    - 15–25 words max
+    - Output must be **one line** of comma-separated descriptors
+    - Focus on **character, setting, UI/UX, or item design**
+    - Use game-dev phrasing like "idle frame", "battle-ready", "UI overlay", "character loop", "pixel mockup"
+    - Avoid the words “photo”, “render”, “screenshot”
+    - **Do not** write full sentences — this is not a caption
+    - Keep between **15–25 words**
 
     Prompt:
 

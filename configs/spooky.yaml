@@ -1,0 +1,115 @@
+tags:
+  subject:
+    - humanoid_anomaly
+    - blank_faced_figure
+    - specimen_in_tank
+    - flesh_structure
+    - distorted_uniform
+    - decaying_bioform
+    - skeletal_remains
+    - artificial_organism
+    - contaminated_suit
+    - suspended_limb
+    - biometric_growth
+    - glass_eyeball
+    - declassified_lifeform
+    - residual_entity
+
+  action:
+    - containment
+    - breach_response
+    - suspended_stasis
+    - hazmat_intervention
+    - redacted_interaction
+    - protocol_execution
+    - anomaly_classification
+    - archival_scan
+    - incident_logging
+    - anomalous_reaction
+
+  setting:
+    - observation_cell
+    - hidden_sublevel
+    - sealed_corridor
+    - flooded_control_room
+    - reinforced_laboratory
+    - decommissioned_vault
+    - anomaly_vitrine
+    - restricted_archive
+    - blacked_out_monitor_room
+    - defunct_experiment_wing
+    - fogged_glass_unit
+
+  mood:
+    - sterile
+    - clinical_dread
+    - redacted
+    - corrupted_order
+    - low_threat_anxiety
+    - liminal_tension
+    - contaminated_silence
+    - decaying_structure
+    - memory_bleed
+    - breathless_witness
+    - bureaucratic_fear
+    - uncanny_stillness
+
+  style:
+    - incident_frame_capture
+    - security_feed_distortion
+    - analog_containment_schematic
+    - monochrome_anomaly_chart
+    - stripped_down_medical_render
+    - corrupted_report_overlay
+    - CRT_archival_glitch
+    - exposure_trace
+    - low_bit_depth_horror
+    - broken_institutional_UI
+    - vhs_bleed_texture
+    - foundational_minimalism
+
+  lighting:
+    - flickering_fluorescent
+    - artifact_glow
+    - backlit_fog
+    - shadow_gradient
+    - sterile_flashlight_cone
+    - UV_stain_pattern
+    - thermal_smear
+    - archival_graywash
+    - obscured_exit_sign
+    - corridor_bleedthrough
+
+  camera_angle:
+    - off_center_institutional
+    - first_person_containment
+    - redacted_crop
+    - broken_perspective
+    - low_frame_ceiling
+    - glare_observation_window
+    - downward_classification_angle
+    - inverted_mirror_reflection
+
+lm_studio:
+  model: "gemma-3-4b-it"
+  prompt_template: |
+    You are a visual anomaly technician for a containment agency.
+
+    Using the tags: {tags}, construct a quiet-horror visual prompt.
+
+    Guidelines:
+    - Output a single **comma-separated line** (no full sentences)
+    - Emphasize sterile dread, institutional corruption, and unrevealed danger
+    - Blend technical coldness with visceral weirdness
+    - Incorporate **invented terms**, SCP-style ambiguity, or redacted hints
+    - Avoid “photo”, “render”, or anything implying medium
+    - Stay under **28 words**
+
+    Prompt:
+
+comfy_ui:
+  server_address: "127.0.0.1:8188"
+  default_workflow: "sd_xl"
+  steps: 64
+  width: 1024
+  height: 1024

@@ -1,120 +1,112 @@
 tags:
   subject:
-    - fragmented_identity
-    - symbolic_figure
-    - metaphysical_form
-    - everyday_body
-    - mundane_object
-    - dreamlike_landscape
-    - anatomical_shape
-    - ritual_totem
-    - broken_statue
-    - ambiguous_silhouette
-    - nostalgic_furniture
-    - decaying_structure
-    - blooming_organism
-    - floating_architecture
+    - symbolic_form
+    - partial_body
+    - decayed_object
+    - abstract_figure
+    - totemic_shape
+    - fragile_material
+    - layered_surface
+    - anatomical_hint
+    - nostalgic_interior
+    - ambiguous_furniture
+    - sculptural_fragment
+    - architectural_remnant
+    - organic_pattern
+    - surreal_landform
 
   action:
-    - stillness
-    - ritual_movement
-    - gestural_expression
-    - spatial_disruption
-    - emergence
-    - transformation
-    - duality
-    - introspection
-    - rupture
-    - weightlessness
+    - silent_tension
+    - gestural_line
+    - spatial_balance
+    - ritual_pose
+    - fragmentation
+    - floating_moment
+    - reflective_state
+    - quiet_emergence
+    - spatial_disorder
+    - dissociative_repetition
 
   setting:
-    - sterile_gallery_space
-    - domestic_abstraction
-    - surreal_stage
-    - concrete_room
-    - flooded_room
-    - decayed_architecture
-    - post_urban_field
-    - sacred_geometry
-    - dreamlike_courtyard
-    - infinite_void
-    - ruined_landscape
-    - liminal_interior
+    - bare_exhibition_space
+    - surreal_chamber
+    - intimate_stage
+    - forgotten_gallery
+    - minimalist_ruin
+    - dreamlike_structure
+    - concrete_sanctuary
+    - indoor_landscape
+    - cracked_museum_floor
+    - liminal_residence
+    - conceptually_flooded_room
 
   mood:
-    - introspective
-    - serene
-    - cold
-    - grotesque
-    - melancholic
-    - absurd
-    - sacred
-    - nostalgic
-    - ironic
     - contemplative
-    - tense
-    - detached
-    - playful
+    - melancholic
+    - distant
+    - sacred
+    - absurd
+    - ironic
+    - nostalgic
+    - neutral
+    - cerebral
+    - subtle_grotesque
+    - delicate
 
   style:
-    - surrealism
-    - expressionism
-    - brutalism
-    - bauhaus_minimalism
-    - abstract_expressionism
-    - naive_art
-    - modernist_painting
-    - sketchbook_draft
-    - brutal_collage
-    - sculpture_study
-    - analog_photo_style
-    - ink_and_wash
-    - generative_noise
-    - glitch_assemblage
-    - post_digital_mixture
+    - modernist_expression
+    - poetic_minimalism
+    - abstract_symbolism
+    - soft_brutalism
+    - surreal_construct
+    - mixed_media_noise
+    - collage_impression
+    - naive_conceptual
+    - ink_wash
+    - physical_texture_study
+    - deconstructive_illustration
+    - fragmented_painting
+    - object-oriented_installation
 
   lighting:
-    - gallery_spotlight
-    - ambient_dusk
-    - fluorescent_flicker
-    - dusty_sunlight
-    - eclipse_shadow
-    - soft_bounce
-    - dim_corner
-    - moody_gradient
-    - halogen_bleed
-    - hard_rim_light
+    - ambient_spotlight
+    - dusty_exhibition_glow
+    - halogen_streak
+    - gallery_overcast
+    - eclipse_lit_space
+    - filtered_reflection
+    - partial_shadow_pool
+    - bounced_wall_light
 
   camera_angle:
-    - frontal_view
-    - off_axis_close
-    - flattened_perspective
-    - negative_space_composition
-    - subject_obscured
-    - fragmented_frame
-    - voyeuristic_crop
-    - soft_mirror_reflection
+    - dead_center_frame
+    - voyeuristic_corner
+    - intimate_close_crop
+    - misaligned_symmetry
+    - off-balance_view
+    - shadow_interference
+    - elevated_perspective
+    - formalist_geometry_frame
 
 lm_studio:
   model: "gemma-3-4b-it"
   prompt_template: |
-    You are an artist collaborating with an AI visual system.
+    You are generating a prompt for an AI trained to create conceptual and expressive artworks.
 
-    Based on the following abstract tags: {tags}, generate a prompt that blends conceptual form, mood, and visual style.
+    Using the abstract tags: {tags}, construct a **minimalist yet evocative** image prompt.
 
     Guidelines:
-    - Output should be one **compact line of comma-separated phrases**
-    - Emphasize ambiguity, mood, and texture over clarity
-    - Include contrasting ideas (e.g. decaying structure in pristine light, ritual act in modernist room)
-    - Avoid camera or medium language like “photo”, “render”, etc.
-    - Do not use full sentences or try to explain — just evoke
-    - Keep it under 25 words
+    - Use **compact, comma-separated phrases**
+    - Focus on **form, tension, texture, materiality, light, and silence**
+    - Avoid the terms "photo", "render", or any technical camera or medium references
+    - Think like an artist writing a wall label or exhibition intent — poetic, not literal
+    - Max 22 words
 
     Prompt:
 
 comfy_ui:
   server_address: "127.0.0.1:8188"
-  default_workflow: "sd_xl" # Default workflow to use for this config
+  default_workflow: "sd_xl"
   steps: 64
   width: 1024
   height: 1024
