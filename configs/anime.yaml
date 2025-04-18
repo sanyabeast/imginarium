@@ -1,116 +1,113 @@
 tags:
   subject:
-    - protagonist_teen
-    - magical_sidekick
-    - masked_warrior
-    - school_uniform_character
-    - urban_dreamer
-    - folklore_spirit
-    - mecha_frame
-    - idol_girl
-    - elegant_rival
-    - tsundere_type
-    - animal_companion
-    - heroic_mentor
-    - fantasy_traveler
-    - sci_fi_outcast
+    - teenage_protagonist
+    - quiet_transfer_student
+    - shrine_maiden
+    - mischievous_yokai
+    - idol_performer
+    - childhood_friend
+    - mysterious_senpai
+    - magical_pet
+    - wandering_swordsman
+    - shy_artist
+    - rival_with_a_secret
+    - melancholic_teacher
+    - small_town_stranger
+    - fantasy_guardian
 
   action:
-    - silent_longing
-    - rooftop_confrontation
-    - transformation_glow
-    - moonlit_confession
-    - cherry_blossom_walk
-    - thunder_flash_duel
-    - mecha_activation
-    - lunch_time_escape
-    - final_attack_pose
-    - rainy_day_wait
-    - hovering_above_city
-    - festival_lantern_dance
-    - nostalgic_gesture
+    - walking_through_rain
+    - watching_fireworks
+    - falling_through_dreamscape
+    - picking_up_a_lost_note
+    - duel_in_fog
+    - hand_reaching_out
+    - umbrella_sharing_moment
+    - climbing_to_rooftop
+    - chasing_fireflies
+    - whisper_under_tree
+    - arrival_at_shrine
+    - looking_back_at_dusk
+    - slow_motion_fall
 
   setting:
-    - sakura_hill_at_dusk
-    - glowing_tokyo_alley
-    - traditional_japanese_room
-    - anime_classroom_light
-    - rooftop_under_stars
-    - pixelated_arcade
-    - misty_forest_path
-    - shrine_on_cliff
-    - otherworld_border
-    - idol_stage
-    - dark_mecha_dock
-    - beach_during_typhoon
+    - coastal_train_station
+    - temple_under_full_moon
+    - anime_countryside_path
+    - twilight_city_bridge
+    - empty_school_hallway
+    - windblown_cliffside
+    - tatami_room_with_cicadas
+    - marketplace_at_sunset
+    - forest_edge_with_foxes
+    - narrow_backstreet_with_vending_machines
+    - floating_spirit_avenue
+    - rainy_bus_stop
 
   mood:
     - bittersweet
-    - dreamy
-    - fiery
-    - mysterious
-    - heroic
-    - tragic
-    - nostalgic
-    - lighthearted
+    - hopeful
+    - daydream_like
+    - lonely
+    - wistful
+    - enchanted
+    - playful
+    - suspenseful
     - intense
-    - whimsical
+    - quiet_anticipation
+    - lighthearted
+    - brave
     - distant
-    - romantic
-    - surreal
 
   style:
-    - vibrant_anime_frame
-    - cel_shaded_drama
-    - watercolor_manga
-    - retro_90s_style
-    - soft_shoujo_lighting
-    - gritty_shonen_panel
-    - hyper_detail_digital
-    - sketch_overlay
-    - cinematic_scene_frame
-    - pastel_color_themes
-    - bold_ink_lines
-    - dynamic_visual_novel
+    - nostalgic_anime_aesthetic
+    - detailed_manga_interior
+    - cinematic_soft_focus
+    - watercolor_blend
+    - light_grain_vintage
+    - cel_shaded_fantasy
+    - dreamy_visual_novel
+    - quiet_scene_sketch
+    - retro_inspired_cut
+    - high_emotion_frame
 
   lighting:
-    - sunset_gradient
-    - neon_rim_light
-    - moonlit_blush
-    - magical_aura_glow
-    - rainy_reflection
-    - nostalgic_fade
-    - festival_light_sparkle
-    - glowing_morning_light
-    - interior_soft_glow
+    - warm_evening_light
+    - soft_twilight_shadow
+    - lantern_glow_in_mist
+    - lightning_strike_flash
+    - sunrays_through_forest
+    - sakura_blossom_reflection
+    - horizon_fade
+    - moonlight_cast_on_water
+    - neon_gleam_in_rain
 
   camera_angle:
-    - tilted_drama_frame
-    - emotional_closeup
-    - low_angle_jump
-    - top_down_silhouette
-    - over_shoulder_flashback
-    - midair_dynamic
-    - profile_in_shadow
-    - dramatic_back_view
+    - distant_profile_glance
+    - emotional_still_closeup
+    - over_the_shoulder_with_sunset
+    - wide_establishing_landscape
+    - dreamy_walkaway_view
+    - low_angle_sky_gaze
+    - midair_stillness
 
 lm_studio:
   model: "gemma-3-4b-it"
   prompt_template: |
-    Generate a powerful anime-style image prompt using the abstract tags: {tags}.
+    Generate a poetic anime-style image prompt based on these tags: {tags}.
 
     Guidelines:
-    - Use **emotive, scene-like phrases**, comma-separated
-    - Think like an anime storyboard artist — highlight action, emotion, atmosphere
-    - No full sentences or camera lingo
-    - Prompt should feel like a moment from an anime opening, battle climax, or emotional turning point
-    - Keep under **30 words**
+    - Compose as a **comma-separated list** of rich, visual fragments
+    - Focus on atmosphere, character emotion, anime-style environments, and lighting
+    - Evoke the feeling of a keyframe, background, or poster still
+    - Avoid camera jargon or explicit media terms
+    - Keep it under **30 words**
 
     Prompt:
 
 comfy_ui:
   server_address: "127.0.0.1:8188"
-  default_workflow: "hidream"
-  steps: 30
-  width: 1360
-  height: 768
+  default_workflow: "sd_xl_anime"
+  steps: 64
+  width: 1968
+  height: 1248
