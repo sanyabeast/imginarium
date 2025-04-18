@@ -12,6 +12,7 @@ dnspython==2.7.0
 emoji==2.14.1
 exceptiongroup==1.2.2
 Flask==3.1.0
+fuzzywuzzy==0.18.0
 gevent==24.11.1
 greenlet==3.1.1
 h11==0.14.0
@@ -24,10 +25,12 @@ imageio==2.37.0
 imageio-ffmpeg==0.6.0
 itsdangerous==2.2.0
 Jinja2==3.1.6
+linkify-it-py==2.0.3
 lmstudio==1.2.0
 markdown-it-py==3.0.0
 MarkupSafe==3.0.2
 mcp==1.4.1
+mdit-py-plugins==0.4.2
 mdurl==0.1.2
 moviepy==1.0.3
 msgspec==0.19.0
@@ -39,7 +42,6 @@ pydantic==2.11.3
 pydantic-settings==2.8.1
 pydantic_core==2.33.1
 Pygments==2.19.1
-pymongo==4.12.0
 python-dotenv==1.0.1
 PyYAML==6.0.2
 qrcode==8.0
@@ -55,6 +57,7 @@ tqdm==4.67.1
 typer==0.15.2
 typing-inspection==0.4.0
 typing_extensions==4.13.2
+uc-micro-py==1.0.3
 urllib3==2.4.0
 uv==0.6.8
 uvicorn==0.34.0

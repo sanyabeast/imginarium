@@ -4,9 +4,8 @@
 ![Python](https://img.shields.io/badge/Python-3.9%2B-blue)
 ![LM Studio](https://img.shields.io/badge/LM%20Studio-Integrated-green)
 ![ComfyUI](https://img.shields.io/badge/ComfyUI-Integrated-green)
-![MongoDB](https://img.shields.io/badge/MongoDB-Database-green)
 
-A powerful tool for generating high-quality images using AI. This project combines LM Studio for prompt generation with ComfyUI for image creation, and includes a MongoDB database for image management.
+A powerful tool for generating high-quality images using AI. This project combines LM Studio for prompt generation with ComfyUI for image creation, with embedded metadata for easy searching.
 
 ## 🌟 Features
 
@@ -15,7 +14,7 @@ A powerful tool for generating high-quality images using AI. This project combin
 - **Tag-Based Generation**: Create images based on customizable tags like subject, mood, setting, and style
 - **LM Studio Integration**: Generate detailed, creative prompts using advanced language models
 - **ComfyUI Integration**: Create high-quality images using the powerful ComfyUI backend
-- **Database Management**: Store and search images with MongoDB
+- **Metadata-Based Search**: Search for images using embedded PNG metadata
 - **HTTP Server API**: Search and retrieve images across configurations via a RESTful API
 - **Flexible Configuration**: Customize all aspects of the generation process
 - **User-Friendly Menu Interface**: Simple numbered menu system for easy navigation
@@ -23,16 +22,16 @@ A powerful tool for generating high-quality images using AI. This project combin
 - **Multiple Workflow Support**: Use different ComfyUI workflows for various generation techniques
 - **Workflow Validation**: Automatic validation of workflow files for required placeholders
 - **Placeholder System**: Use placeholders in workflows for dynamic content
-- **PNG Metadata**: Embedded PNG metadata for portability
+- **PNG Metadata**: Embedded PNG metadata for portability and searchability
 - **Metadata Extraction**: Extract metadata from generated PNG images
 - **Improved Parameter Handling**: Config defaults are properly respected when custom parameters are skipped
+- **Fuzzy Search**: Find images with similar descriptions using fuzzy matching
 
 ## 📋 Requirements
 
 - Python 3.9+
 - LM Studio (for prompt generation)
 - ComfyUI (for image generation)
-- MongoDB (optional, for database features)
 
 ## 🚀 Installation
 
@@ -51,7 +50,6 @@ A powerful tool for generating high-quality images using AI. This project combin
 3. Install and set up:
    - [LM Studio](https://lmstudio.ai/) - For prompt generation
    - [ComfyUI](https://github.com/comfyanonymous/ComfyUI) - For image generation
-   - [MongoDB](https://www.mongodb.com/try/download/community) (optional) - For database features
 
 ## 📋 Using the Menu Interface
 
@@ -64,95 +62,99 @@ menu.bat
 
 The menu provides the following options:
 
-### Configuration Selection
-- The menu dynamically lists all available configurations from the `configs` directory
-- Select a configuration to use for all operations
-
 ### Main Menu
 - **[1] Generate Images**: Create new images with default or custom settings
-- **[2] Search Images**: Search for images by tags or browse all images
-- **[3] Database Management**: View database stats or trim unused records
+- **[2] Search Images**: Search for images using text queries
+- **[3] Start Search Server**: Launch the HTTP search API server
 - **[4] Setup/Update Dependencies**: Install or update project dependencies
-- **[5] Change Configuration**: Switch between different configuration profiles
-- **[6] Exit**: Exit the program
+- **[5] Exit**: Exit the program
 
-## 🌐 HTTP Server API
+### Generate Images
+When selecting "Generate Images", you'll first choose a configuration profile, then proceed to the generation menu:
+- **[1] Generate with default settings**: Quick generation with default parameters
+- **[2] Custom generation**: Specify custom parameters like number of images, dimensions, etc.
 
-The project includes an HTTP server that allows searching and retrieving images across different configurations:
+### Search Images
+The search feature allows you to find images using text queries:
+- Enter your search terms
+- Specify the maximum number of results to show
+- Results will display with detailed metadata
+
+### Start Search Server
+Launch an HTTP server that provides a search API:
+- Enter a port number (default: 5666)
+- The server will start and provide endpoints for searching images
+
+## 🌐 HTTP Search API
+
+The project includes an HTTP server that allows searching for images using their embedded metadata:
 
 ### Starting the Server
 
-Run the server using the provided batch file:
+Start the server using the menu interface or directly:
 ```bash
-server.bat
+python search.py --server [PORT]
 ```
 
-The server will prompt for a port number (default: 5666) and start listening for requests.
+The default port is 5666 if not specified.
 
 ### API Endpoints
 
 #### Search Images
-
-**POST /search**
-
-Search for images using JSON parameters:
-
-```json
-{
-  "configs": ["art", "stock", "avantgarde"],
-  "workflows": ["sd_xl", "flux_dev"],
-  "tags": ["modern_home_interior", "calm"],
-  "limit": 5,
-  "verbose": true
-}
-```
 
 **GET /search**
 
 Search for images using query parameters:
 
 ```
-/search?configs=art,stock,avantgarde&workflows=sd_xl,flux_dev&tags=modern_home_interior,calm&limit=5&verbose=true
+/search?query=modern+home+interior&limit=5&threshold=0.6
 ```
 
 **Parameters:**
 
-- `configs`: List of configuration names to search in (optional, defaults to all configs)
-- `workflows`: List of workflow names to filter by (optional, defaults to all workflows)
-- `tags`: List of tags to search for (optional)
-- `limit`: Maximum number of images to return (default: 1)
-- `verbose`: Whether to return full image details or just paths (default: true)
+- `query`: Text to search for in image descriptions and tags (required)
+- `limit`: Maximum number of images to return (default: 5)
+- `threshold`: Fuzzy matching threshold from 0.0 to 1.0 (default: 0.5)
+  - Lower values (e.g., 0.3) = more lenient matching, more results
+  - Higher values (e.g., 0.8) = stricter matching, fewer but more relevant results
 
 **Response:**
 
-When `verbose=true`, the API returns full image details:
+The API returns a list of absolute paths to matching images:
 ```json
 [
-  {
-    "_id": "6078f3a5e7b6c1234567890a",
-    "filename": "image_20250418_123456.png",
-    "prompt": "A modern home interior with calm atmosphere",
-    "tags": {
-      "setting": "modern_home_interior",
-      "mood": "calm"
-    },
-    "created_at": "2025-04-18T12:34:56.789Z",
-    "workflow": "flux_dev",
-    "config": "stock",
-    "absolute_path": "G:\\Projects\\experiments\\imginarium\\output\\stock\\image_20250418_123456.png",
-    "exists": true
+  "G:\\Projects\\experiments\\imginarium\\output\\stock\\image_20250418_123456.png",
+  "G:\\Projects\\experiments\\imginarium\\output\\art\\image_20250418_234567.png"
+]
+```
+
+#### Get Statistics
+
+**GET /stats**
+
+Get statistics about the image collection:
+
+```
+/stats
+```
+
+**Response:**
+
+```json
+{
+  "total_images": 459,
+  "configs": {
+    "anime": 24,
+    "art": 109,
+    "avantgarde": 145,
+    "cctv": 5,
+    "gamedev": 10,
+    "retrofuture": 59,
+    "spooky": 61,
+    "stock": 46
   }
-]
+}
 ```
-
-When `verbose=false`, the API returns just a list of absolute paths:
-```json
-[
-  "G:\\Projects\\experiments\\imginarium\\output\\stock\\image_20250418_123456.png"
-]
-```
-
-The API performs fuzzy matching on tags and randomizes results when there are more matches than the requested limit, ensuring diverse results with each request.
 
 ## ⚙️ Configuration
 
@@ -201,112 +203,51 @@ Configure the image generation settings:
 ```yaml
 comfy_ui:
   server_address: "127.0.0.1:8188"
-  default_workflow: "flux_dev"  # Default workflow to use for this config
-  steps: 35
+  client_id: "1234abcd-1234-abcd-1234-abcd1234abcd"  # Auto-generated if not provided
+  output_directory: "output/stock"
+  default_workflow: "flux_dev"
   width: 1536
   height: 1536
+  steps: 35
 ```
 
-When generating images with custom parameters but choosing to skip the parameter selection, the system will now properly use these config defaults rather than falling back to hardcoded values.
+## 📝 Command Line Usage
 
-### Output Directory Structure
+While the menu interface is recommended, you can also use the command line directly:
 
-Generated images are automatically saved to:
-```
-output/{config_name}/
-```
-
-For example:
-- `output/stock/` - Images generated with the stock configuration
-- `output/art/` - Images generated with the art configuration
-- `output/avantgarde/` - Images generated with the avantgarde configuration
-
-## 🖼️ Command-Line Usage
-
-While the menu interface is recommended for most users, you can also use the command-line interface for more advanced usage:
-
-### Generating Images
-
-Generate images using the configured tags and settings:
+### Generate Images
 
 ```bash
-# Generate 5 images using the default workflow from the stock config
-python generate.py -n 5 -c stock
-
-# Specify a custom workflow instead of using the default
-python generate.py -n 5 -w flux_dev -c stock
-
-# Use a specific LM Studio model with the art config
-python generate.py -n 3 -m "llama-3-8b-instruct" -c art
-
-# Specify custom image dimensions
-python generate.py -n 2 -c stock -d 1920x1080
-
-# Override the number of steps for generation
-python generate.py -n 2 -c art -s 30
-
-# Combine parameters
-python generate.py -n 5 -m "gemma-3-4b-it" -w flux_dev -c stock -d 1024x1024 -s 40
+python generate.py --num 5 --config stock --workflow flux_dev --dimensions 1024x1024 --steps 30
 ```
 
-Use `-h` or `--help` to see all available options:
+### Search Images
 
 ```bash
-python generate.py --help
+python search.py -q "forest landscape" -l 10 -t 0.7
 ```
 
-### Managing the Database
-
-Use the database management tools:
+### Start Search Server
 
 ```bash
-# View database information for the stock config
-python db.py --info -c stock
-
-# List images in the art collection
-python db.py --list -c art
-
-# Show database statistics for the stock config
-python db.py --stats -c stock
-
-# Trim database records for missing files in the art config
-python db.py --trim -c art
+python search.py --server 8080
 ```
 
-## 📁 Project Structure
+## 📂 Project Structure
 
-- `generate.py` - Main script for generating images
-- `search.py` - Script for searching and browsing images
-- `db.py` - Database management utilities
-- `configs/` - Directory for configuration files
-- `output/` - Directory for generated images
-- `mongodb_data/` - MongoDB database files
-- `workflows/` - Directory for workflow files
+- **configs/**: Configuration files for different generation styles
+- **workflows/**: ComfyUI workflow files
+- **output/**: Generated images, organized by configuration
+- **menu.bat**: User-friendly menu interface
+- **generate.py**: Image generation script
+- **search.py**: Image search script
+- **install.bat**: Installation and dependency setup script
 
-## 🔧 Advanced Usage
-
-### Custom Workflows
-
-You can create custom ComfyUI workflows and specify them in your configuration files. Each config can have its own default workflow.
-
-### Adding New Configurations
-
-To add a new configuration:
-
-1. Create a new YAML file in the `configs` directory (e.g., `custom.yaml`)
-2. Define your tags, prompt template, and ComfyUI settings
-3. Specify a default workflow in the ComfyUI section
-4. The new configuration will automatically appear in the menu
-
-### External MongoDB
-
-To use an external MongoDB instance, update the connection string in the `mongodb` section of the config.
-
-## 📝 License
+## 📜 License
 
 MIT License
 
-Copyright (c) 2025 @sanyabeast
+Copyright (c) 2025
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

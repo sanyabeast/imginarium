@@ -18,16 +18,59 @@ echo        IMGINARIUM - MAIN MENU
 echo ===================================================
 echo.
 echo  [1] Generate Images
-echo  [2] Setup/Update Dependencies
-echo  [3] Exit
+echo  [2] Search Images
+echo  [3] Start Search Server
+echo  [4] Setup/Update Dependencies
+echo  [5] Exit
 echo.
-echo Enter your choice [1-3]:
+echo Enter your choice [1-5]:
 
 set /p choice=
 
 if "%choice%"=="1" goto config_selection
-if "%choice%"=="2" goto setup
-if "%choice%"=="3" goto exit_program
+if "%choice%"=="2" goto search_menu
+if "%choice%"=="3" goto server_menu
+if "%choice%"=="4" goto setup
+if "%choice%"=="5" goto exit_program
+goto main_menu
+
+:server_menu
+cls
+echo ===================================================
+echo             START SEARCH SERVER
+echo ===================================================
+echo.
+echo Enter server port (default: 5666, press Enter to use default):
+set /p port=
+if "%port%"=="" set port=5666
+
+echo.
+echo Starting search server on port %port%...
+echo Press Ctrl+C to stop the server when done.
+echo.
+python search.py --server %port%
+pause
+goto main_menu
+
+:search_menu
+cls
+echo ===================================================
+echo             SEARCH IMAGES
+echo ===================================================
+echo.
+echo Enter search query (or type 'cancel' to return to main menu):
+set /p query=
+if "%query%"=="cancel" goto main_menu
+if "%query%"=="" goto search_menu
+
+echo Enter maximum number of results to show (default: 5):
+set /p limit=
+if "%limit%"=="cancel" goto main_menu
+if "%limit%"=="" set limit=5
+
+echo Searching for images matching "%query%"...
+python search.py -q "%query%" -l %limit% --noemoji
+pause
 goto main_menu
 
 :config_selection
