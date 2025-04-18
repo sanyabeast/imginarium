@@ -1,0 +1,113 @@
+tags:
+  subject:
+    - unidentified_person
+    - blurred_individual
+    - loitering_silhouette
+    - suspicious_group
+    - lone_traveler
+    - uniformed_guard
+    - hooded_figure
+    - sleeping_passenger
+    - crouched_intruder
+    - lost_child
+    - forgotten_bag
+    - frozen_body
+    - distorted_reflection
+
+  action:
+    - standing_idle
+    - walking_away
+    - staring_at_camera
+    - unauthorized_entry
+    - loitering
+    - hiding_in_corner
+    - passing_through
+    - accessing_terminal
+    - collapse_event
+    - elevator_waiting
+
+  setting:
+    - underground_parking
+    - apartment_hallway
+    - metro_station
+    - deserted_office_floor
+    - elevator_lobby
+    - gas_station_forecourt
+    - grocery_aisle
+    - long_corridor
+    - stairwell
+    - school_gymnasium
+    - laundromat
+    - border_control_room
+    - abandoned_reception
+
+  mood:
+    - uneventful
+    - uncertain
+    - slightly_wrong
+    - frozen
+    - eerie_silence
+    - bureaucratic_detachment
+    - artificial_peace
+    - analog_tension
+    - accidental_fear
+    - overmonitored
+    - unseen_presence
+
+  style:
+    - analog_feed
+    - security_overlay
+    - washed_grayscale
+    - thermal_noise_pattern
+    - timestamp_glitch
+    - fisheye_distortion
+    - institutional_UI
+    - static_frame_texture
+    - monochrome_surveillance
+    - blurred_face_render
+
+  lighting:
+    - flickering_ceiling_light
+    - single_tube_fluorescent
+    - security_backlight
+    - low_contrast_static
+    - shadowless_diffuse
+    - ambient_camera_glow
+    - overexposed_whiteout
+    - cold_hue_filter
+    - red_alert_overlay
+
+  camera_angle:
+    - fixed_corner_lookdown
+    - elevator_top_angle
+    - distant_ceiling_view
+    - doorway_crosswatch
+    - hallway_depth_frame
+    - overhead_parking_angle
+    - hidden_ceiling_sensor
+    - rotating_panoramic
+    - thermal_sidewatch
+
+lm_studio:
+  model: "gemma-3-4b-it"
+  prompt_template: |
+    You are a visual algorithm generating footage artifacts for a surveillance archive.
+
+    Using the abstract tags: {tags}, create a **cold, observational prompt** as if from a malfunctioning CCTV system.
+
+    Guidelines:
+    - Output a **single line of comma-separated descriptors**
+    - Focus on quiet tension, passive threat, and institutional visuals
+    - Use **surveillance terminology** or timestamp-style fragments if needed
+    - No full sentences, no mention of media types like “photo” or “render”
+    - Lean into analog tech, detachment, and ambient unease
+    - 18–28 words max
+
+    Prompt:
+
+comfy_ui:
+  server_address: "127.0.0.1:8188"
+  default_workflow: "flux_dev"
+  steps: 25
+  width: 1280
+  height: 800
