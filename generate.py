@@ -739,7 +739,7 @@ Examples:
         # Use default workflow from config if not specified
         default_workflow = config.get('comfy_ui', {}).get('default_workflow', 'flux_dev')
         workflow_name = args.workflow or default_workflow
-        print_info(f"Using workflow: {workflow_name}")
+        print_info(f"Using workflow: {workflow_name} (from {'command line' if args.workflow else 'config'})")
         
         # Now check if workflow file exists (with or without .wf extension)
         workflow_base_path = os.path.join("workflows", workflow_name)
@@ -818,6 +818,7 @@ Examples:
                 config['comfy_ui']['steps'] = args.steps
             else:
                 steps = config['comfy_ui'].get('steps', 35)
+                config['comfy_ui']['steps'] = steps
                 print_info(f"Using steps from config: {steps}")
                 
             if args.model:

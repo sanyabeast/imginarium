@@ -24,6 +24,7 @@ A powerful tool for generating high-quality images using AI. This project combin
 - **Placeholder System**: Use placeholders in workflows for dynamic content
 - **PNG Metadata**: Embedded PNG metadata for portability
 - **Metadata Extraction**: Extract metadata from generated PNG images
+- **Improved Parameter Handling**: Config defaults are properly respected when custom parameters are skipped
 
 ## 📋 Requirements
 
@@ -126,6 +127,8 @@ comfy_ui:
   width: 1536
   height: 1536
 ```
+
+When generating images with custom parameters but choosing to skip the parameter selection, the system will now properly use these config defaults rather than falling back to hardcoded values.
 
 ### Output Directory Structure
 
