@@ -10,7 +10,6 @@ import websocket
 from urllib.parse import urlparse
 import lmstudio as lms
 from pydantic import BaseModel
-from db import ImageDatabase  # Import the database module
 from PIL import Image, PngImagePlugin
 import sys
 from datetime import datetime
@@ -391,7 +390,7 @@ def get_images_from_websocket(ws, server_address, client_id, output_dir, prompt_
 
     return image_saved
 
-def generate_images_comfyui(prompts, config, tag_combinations=None, db=None, workflow_name="flux_dev"):
+def generate_images_comfyui(prompts, config, tag_combinations=None, workflow_name="flux_dev"):
     """Generates images for each prompt using ComfyUI."""
     print_subheader("Generating Images with ComfyUI", "🖼️")
     server_address = config['comfy_ui'].get('server_address')
@@ -517,51 +516,29 @@ def generate_images_comfyui(prompts, config, tag_combinations=None, db=None, wor
                  images_generated += 1
                  print_success(f"Successfully generated image {images_generated}! 🎉")
                  
-                 # Save to database if provided
-                 if db and db.is_connected():
-                     # Get the actual filename that was saved
-                     filename = f"{custom_filename}_00001_.png"  # Default format from ComfyUI
-                     file_path = os.path.join(output_dir, filename)
-                     
-                     # Parse tags into a structured format
-                     tags_data = {}
+                 # Get the actual filename that was saved
+                 filename = f"{custom_filename}_00001_.png"  # Default format from ComfyUI
+                 file_path = os.path.join(output_dir, filename)
+                 
+                 # Add metadata to the PNG image
+                 if tag_combinations and i < len(tag_combinations):
+                     tag_string = tag_combinations[i]
+                 else:
                      tag_string = ""
-                     if tag_combinations and i < len(tag_combinations):
-                         # Convert the tag string into a structured object
-                         tag_string = tag_combinations[i]
-                         for tag_item in tag_string.split(", "):
-                             if ":" in tag_item:
-                                 category, value = tag_item.split(":", 1)
-                                 tags_data[category] = value
                      
-                     # Store in database
-                     db.add_image(
-                         filename=filename,
-                         tags=tags_data,  # Store as structured object instead of string
-                         prompt=prompt_text,
-                         seed=random_seed,
-                         steps=steps,
-                         width=width,
-                         height=height,
-                         workflow=workflow_name,  # Add workflow name
-                         ratio=round(width/height, 2)  # Calculate and store aspect ratio
-                     )
-                     print_info(f"Added image to database: {filename}")
-                     
-                     # Add metadata to the PNG image
-                     metadata = {
-                         "Prompt": prompt_text,
-                         "Tags": tag_string,
-                         "Seed": random_seed,
-                         "Steps": steps,
-                         "Width": width,
-                         "Height": height,
-                         "Workflow": workflow_name,
-                         "Ratio": round(width/height, 2),
-                         "Generator": "Stock Image Generator",
-                         "Created": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                     }
-                     add_metadata_to_image(file_path, metadata)
+                 metadata = {
+                     "Prompt": prompt_text,
+                     "Tags": tag_string,
+                     "Seed": random_seed,
+                     "Steps": steps,
+                     "Width": width,
+                     "Height": height,
+                     "Workflow": workflow_name,
+                     "Ratio": round(width/height, 2),
+                     "Generator": "Stock Image Generator",
+                     "Created": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                 }
+                 add_metadata_to_image(file_path, metadata)
             else:
                 print_error(f"Failed to get image for prompt_id {prompt_id}.")
         else:
@@ -572,6 +549,7 @@ def generate_images_comfyui(prompts, config, tag_combinations=None, db=None, wor
     ws.close()
     print_success(f"Finished ComfyUI processing. {images_generated}/{len(prompts)} images generated successfully! 🎉")
 
+# --- Validation ---
 def validate_workflow(workflow_str):
     """
     Validates a workflow string to ensure it contains required placeholders.
@@ -611,6 +589,7 @@ def validate_workflow(workflow_str):
     
     return is_valid, missing_required, missing_recommended
 
+# --- Metadata ---
 def add_metadata_to_image(image_path, metadata):
     """
     Add metadata to a PNG image using text chunks.
@@ -692,11 +671,11 @@ if __name__ == "__main__":
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  # Generate 5 images with the flux_dev workflow
-  python generate.py -n 5 -w flux_dev
+  # Generate 5 images with default settings
+  python generate.py -n 5 -c stock
   
-  # Use a specific LM Studio model
-  python generate.py -n 3 -m "llama-3-8b-instruct" -w flux_dev
+  # Use a specific workflow
+  python generate.py -n 2 -w flux_dev -c stock
   
   # Specify custom image dimensions
   python generate.py -n 2 -w flux_dev -d 1920x1080
@@ -794,7 +773,6 @@ Examples:
                 exit(1)
 
             # 4. Generate Images using ComfyUI
-            db = ImageDatabase(config_path=os.path.join("configs", f"{args.config}.yaml")) # Initialize database connection with config file settings
             if args.dimensions:
                 try:
                     if 'x' not in args.dimensions:
@@ -828,19 +806,13 @@ Examples:
                 print_info(f"Using model from config: {model}")
                 args.model = model
                 
-            generate_images_comfyui(detailed_prompts, config, tag_combinations, db, workflow_name)
+            generate_images_comfyui(detailed_prompts, config, tag_combinations, workflow_name)
             
             print_header("✨ All Done! ✨")
             print_success("Check your output directory for the generated images!")
             print_info("Thank you for using Stock Image Generator! 🙏")
-            
-            # Close database connection
-            if db and db.is_connected():
-                db.close()
         except Exception as e:
             print_error(f"An error occurred during image generation: {e}")
-            if 'db' in locals() and db and db.is_connected():
-                db.close()
             exit(1)
     except KeyboardInterrupt:
         print("\n")
