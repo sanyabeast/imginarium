@@ -1,0 +1,123 @@
+tags:
+  subject:
+    - anime_boy
+    - anime_girl
+    - magical_girl
+    - mecha_unit
+    - school_student
+    - yokai_spirit
+    - shonen_hero
+    - bishounen
+    - catgirl
+    - masked_warrior
+    - demon_lord
+    - idol_performer
+    - urban_teen
+    - fantasy_companion
+    - slice_of_life_character
+
+  action:
+    - sword_duel
+    - transformation_sequence
+    - quiet_moment
+    - battle_pose
+    - emotional_confession
+    - rooftop_stare
+    - cherry_blossom_walk
+    - jump_attack
+    - midair_flight
+    - eating_ramen
+    - casting_spell
+    - running_late
+    - tea_ceremony
+    - mecha_launch
+    - holding_umbrella
+
+  setting:
+    - japanese_high_school
+    - neon_tokyo_street
+    - sakura_garden
+    - spirit_realm
+    - cozy_cafe
+    - space_station
+    - dark_forest
+    - rainy_alleyway
+    - mecha_hangar
+    - fantasy_village
+    - traditional_shrine
+    - futuristic_district
+    - underwater_palace
+    - dojo_training_room
+
+  mood:
+    - cute
+    - melancholic
+    - intense
+    - heroic
+    - romantic
+    - mysterious
+    - nostalgic
+    - cheerful
+    - dreamy
+    - epic
+    - serene
+    - dramatic
+
+  style:
+    - anime
+    - manga_panel
+    - colored_ink
+    - cel_shading
+    - retro_anime
+    - shoujo_aesthetic
+    - shonen_vibe
+    - gritty_manga
+    - visual_novel_art
+    - 90s_ova_style
+    - high_detail_digital
+    - anime_painting
+    - handdrawn_sketch
+
+  lighting:
+    - bright_daylight
+    - rim_light
+    - dramatic_contrast
+    - glowing_magic
+    - sakura_glow
+    - cool_moonlight
+    - sunset_shadows
+    - screen_glare
+    - neon_reflection
+    - interior_softlight
+
+  camera_angle:
+    - dynamic_low_angle
+    - over_the_shoulder
+    - close_up_tears
+    - extreme_perspective
+    - character_turnaround
+    - dramatic_top_down
+    - face_frontal_smile
+    - background_focus_blur
+
+lm_studio:
+  model: "gemma-3-4b-it"
+  prompt_template: |
+    Generate a vivid anime/manga-style image prompt using the tags: {tags}.
+
+    Guidelines:
+    - Use expressive **comma-separated phrases**
+    - Focus on the **subject, emotion, scene setting, and stylization**
+    - Do NOT mention “photo” or camera terms
+    - Avoid generic prompts — make it feel like a scene from a show or cover art
+    - Keep under **30 words**
+    - Must feel like it belongs in an anime opening, keyframe, or panel splash
+
+    Prompt:
+
+comfy_ui:
+  server_address: "127.0.0.1:8188"
+  default_workflow: "sd_xl"  # optional override if you have anime-focused ComfyUI graph
+  steps: 64
+  width: 1024
+  height: 1024

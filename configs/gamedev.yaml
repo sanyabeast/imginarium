@@ -1,0 +1,128 @@
+tags:
+  subject:
+    - playable_character
+    - enemy_unit
+    - boss_entity
+    - npc
+    - animal_mount
+    - futuristic_soldier
+    - medieval_knight
+    - alien_species
+    - mutated_beast
+    - magical_construct
+    - tech_drone
+    - character_portrait
+    - weapon_design
+    - armor_set
+    - power_up_item
+    - environmental_prop
+    - world_object
+    - landmark_structure
+
+  action:
+    - idle_pose
+    - battle_ready
+    - casting_spell
+    - shooting
+    - running
+    - climbing
+    - interacting_with_object
+    - exploration
+    - cinematic_pose
+    - stealth_mode
+
+  setting:
+    - open_world_landscape
+    - sci_fi_base
+    - medieval_village
+    - haunted_forest
+    - alien_ruins
+    - cyberpunk_street
+    - underwater_lab
+    - lava_cavern
+    - neon_arena
+    - cloud_city
+    - ancient_temple
+    - post_apocalyptic_outpost
+    - virtual_simulation_zone
+    - dreamlike_void
+    - dungeon_level
+    - multiplayer_lobby_space
+
+  mood:
+    - epic
+    - eerie
+    - playful
+    - dramatic
+    - hostile
+    - immersive
+    - cinematic
+    - dark_fantasy
+    - dystopian
+    - heroic
+    - mysterious
+    - adrenaline_pumping
+    - mystical
+
+  style:
+    - triple_a_realism
+    - painterly_concept
+    - pixel_art
+    - hand_drawn_illustration
+    - toon_shaded
+    - isometric_view
+    - cel_shaded
+    - stylized_fantasy
+    - comic_style
+    - detailed_linework
+    - high_contrast_design
+    - low_poly_mockup
+    - rough_sketch
+    - UI_blueprint
+    - 3d_mockup
+
+  lighting:
+    - dramatic_backlight
+    - glowing_ambient
+    - foggy_haze
+    - dark_with_neon
+    - mystical_light_shafts
+    - lava_glow
+    - torchlight
+    - screen_reflection
+    - diffuse_daylight
+    - industrial_spotlight
+
+  camera_angle:
+    - character_turnaround
+    - over_the_shoulder
+    - third_person_perspective
+    - top_down_view
+    - isometric_projection
+    - cinematic_low_angle
+    - dramatic_closeup
+    - environmental_panorama
+    - gameplay_view
+
+lm_studio:
+  model: "gemma-3-4b-it"
+  prompt_template: |
+    You are a concept artist working on a game.
+
+    Based on the following tags: {tags}, create a visually rich prompt for an AI image generator.
+
+    Guidelines:
+    - Output must be a single line of comma-separated descriptors
+    - Focus on subject design, game setting, mood, and artistic style
+    - Avoid generic words like “photo”, “render”, or “screenshot”
+    - No full sentences, just creative descriptors (e.g. “cybernetic knight in neon city, battle stance, lava reflections, pixel art”)
+    - 15–25 words max
+
+    Prompt:
+
+comfy_ui:
+  server_address: "127.0.0.1:8188"
+  default_workflow: "sd_xl"
+  steps: 64
+  width: 1024
+  height: 1024
