@@ -215,9 +215,10 @@ echo Using configuration: %config%
 echo.
 echo  [1] Show database stats
 echo  [2] Trim database
+echo  [3] Trim all databases (all configs)
 echo  [0] Back to main menu
 echo.
-echo Enter your choice [0-2]:
+echo Enter your choice [0-3]:
 
 set /p db_choice=
 
@@ -230,6 +231,18 @@ if "%db_choice%"=="1" (
 if "%db_choice%"=="2" (
     echo Trimming database...
     python db.py --trim --config %config% --noemoji
+    pause
+    goto database_menu
+)
+if "%db_choice%"=="3" (
+    echo Trimming all databases for all configurations...
+    echo.
+    for %%f in (configs\*.yaml) do (
+        set "current_config=%%~nf"
+        echo Processing config: !current_config!
+        python db.py --trim --config !current_config! --noemoji
+        echo.
+    )
     pause
     goto database_menu
 )
