@@ -100,6 +100,6 @@ lm_studio:
 comfy_ui:
   server_address: "127.0.0.1:8188"
   default_workflow: "flux_dev"
-  steps: 35
+  steps: 30
   width: 1536
-  height: 1536
+  height: 1024
