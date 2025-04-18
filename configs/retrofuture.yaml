@@ -1,0 +1,120 @@
+tags:
+  subject:
+    - space_explorer
+    - android_servant
+    - utopian_cityscape
+    - analog_device
+    - cybernetic_creature
+    - control_panel_operator
+    - atomic_scientist
+    - flying_car
+    - jetpack_pilot
+    - orbital_colony
+    - raygun_wielder
+    - modular_home
+    - neon_billboard
+    - tube_television
+    - sci_fi_family
+    - mech_suit
+    - data_tape_bank
+
+  action:
+    - communication_with_base
+    - hovering_transport
+    - synthetic_domestic_task
+    - analog_interface_interaction
+    - retrofuturistic_flight
+    - surveillance_monitoring
+    - data_retrieval
+    - city_patrolling
+    - alien_first_contact
+    - leisure_in_space_lounge
+    - nuclear_energy_harvesting
+
+  setting:
+    - 1950s_space_station
+    - vaporwave_arcade
+    - atomic_reactor_room
+    - modular_control_center
+    - neon_suburb
+    - cassette_futurism_office
+    - terraformed_colony
+    - chrome_diner_in_space
+    - skybridge_network
+    - technocratic_dreamscape
+    - raygun_gothic_city
+    - dome_protected_desert_outpost
+
+  mood:
+    - utopian
+    - ironic
+    - sleek
+    - mysterious
+    - playful
+    - speculative
+    - nostalgic
+    - dystopian
+    - glitched
+    - optimistic
+    - sterile
+    - hyperidealized
+    - eerie_future_decay
+
+  style:
+    - synthwave
+    - vaporwave
+    - atompunk
+    - raygun_gothic
+    - 70s_sci_fi_magazine
+    - brutalist_utopia
+    - neon_pop_art
+    - airbrush_retro
+    - monochrome_computer_mockup
+    - posterized_illustration
+    - early_digital_texture
+    - CRT_ui_overlay
+    - propaganda_art_parody
+    - retro_pixel_render
+    - sci_fi_brochure_aesthetic
+
+  lighting:
+    - CRT_glow
+    - neon_accent
+    - clean_backlight
+    - spotlight_from_above
+    - flickering_terminal_light
+    - rainbow_gradient
+    - green_monochrome_haze
+    - edge_glow_scanline
+    - warm_bakelite_reflection
+
+  camera_angle:
+    - schematic_cutaway_view
+    - cinematic_flyby
+    - brochure_perspective
+    - cockpit_view
+    - dramatic_low_angle
+    - satellite_view
+    - tube_screen_reflection
+
+lm_studio:
+  model: "gemma-3-4b-it"
+  prompt_template: |
+    You are an AI visual engineer simulating retrofuturism-inspired illustrations.
+
+    Combine the abstract tags: {tags} into a bold **image generation prompt** that evokes speculative futurism from the past (e.g. 1950s-1990s visions of the future).
+
+    Guidelines:
+    - Format output as one **comma-separated string** of 12–24 words
+    - Emphasize lighting, technology, retro materials, and speculative optimism or irony
+    - Avoid modern terms — focus on **past-era imagined futures**
+    - Do **not** mention photo/render/media formats or use full sentences
+
+    Prompt:
+
+comfy_ui:
+  server_address: "127.0.0.1:8188"
+  default_workflow: "sd_xl"
+  steps: 64
+  width: 1024
+  height: 1024
