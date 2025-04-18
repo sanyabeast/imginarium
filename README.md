@@ -16,6 +16,7 @@ A powerful tool for generating high-quality images using AI. This project combin
 - **LM Studio Integration**: Generate detailed, creative prompts using advanced language models
 - **ComfyUI Integration**: Create high-quality images using the powerful ComfyUI backend
 - **Database Management**: Store and search images with MongoDB
+- **HTTP Server API**: Search and retrieve images across configurations via a RESTful API
 - **Flexible Configuration**: Customize all aspects of the generation process
 - **User-Friendly Menu Interface**: Simple numbered menu system for easy navigation
 - **Default Workflow Support**: Each configuration can specify its own default workflow
@@ -74,6 +75,84 @@ The menu provides the following options:
 - **[4] Setup/Update Dependencies**: Install or update project dependencies
 - **[5] Change Configuration**: Switch between different configuration profiles
 - **[6] Exit**: Exit the program
+
+## 🌐 HTTP Server API
+
+The project includes an HTTP server that allows searching and retrieving images across different configurations:
+
+### Starting the Server
+
+Run the server using the provided batch file:
+```bash
+server.bat
+```
+
+The server will prompt for a port number (default: 5666) and start listening for requests.
+
+### API Endpoints
+
+#### Search Images
+
+**POST /search**
+
+Search for images using JSON parameters:
+
+```json
+{
+  "configs": ["art", "stock", "avantgarde"],
+  "workflows": ["sd_xl", "flux_dev"],
+  "tags": ["modern_home_interior", "calm"],
+  "limit": 5,
+  "verbose": true
+}
+```
+
+**GET /search**
+
+Search for images using query parameters:
+
+```
+/search?configs=art,stock,avantgarde&workflows=sd_xl,flux_dev&tags=modern_home_interior,calm&limit=5&verbose=true
+```
+
+**Parameters:**
+
+- `configs`: List of configuration names to search in (optional, defaults to all configs)
+- `workflows`: List of workflow names to filter by (optional, defaults to all workflows)
+- `tags`: List of tags to search for (optional)
+- `limit`: Maximum number of images to return (default: 1)
+- `verbose`: Whether to return full image details or just paths (default: true)
+
+**Response:**
+
+When `verbose=true`, the API returns full image details:
+```json
+[
+  {
+    "_id": "6078f3a5e7b6c1234567890a",
+    "filename": "image_20250418_123456.png",
+    "prompt": "A modern home interior with calm atmosphere",
+    "tags": {
+      "setting": "modern_home_interior",
+      "mood": "calm"
+    },
+    "created_at": "2025-04-18T12:34:56.789Z",
+    "workflow": "flux_dev",
+    "config": "stock",
+    "absolute_path": "G:\\Projects\\experiments\\imginarium\\output\\stock\\image_20250418_123456.png",
+    "exists": true
+  }
+]
+```
+
+When `verbose=false`, the API returns just a list of absolute paths:
+```json
+[
+  "G:\\Projects\\experiments\\imginarium\\output\\stock\\image_20250418_123456.png"
+]
+```
+
+The API performs fuzzy matching on tags and randomizes results when there are more matches than the requested limit, ensuring diverse results with each request.
 
 ## ⚙️ Configuration
 
