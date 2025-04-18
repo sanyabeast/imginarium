@@ -208,13 +208,27 @@ def scan_output_directories():
             # Combine prompt and tags for searching
             description = f"{prompt} {tags}".lower()
             
+            # Extract additional metadata for filtering
+            workflow = metadata.get("Workflow", "")
+            steps = metadata.get("Steps", 0)
+            width = metadata.get("Width", 0)
+            height = metadata.get("Height", 0)
+            
+            # Calculate ratio if dimensions are available
+            ratio = 0
+            if width and height and width > 0 and height > 0:
+                ratio = width / height
+            
             # Store image info
             image_info = {
                 "path": abs_img_path,
                 "metadata": metadata,
                 "description": description,
                 "config": config_dir,
-                "filename": os.path.basename(abs_img_path)
+                "filename": os.path.basename(abs_img_path),
+                "workflow": workflow,
+                "steps": steps,
+                "ratio": ratio
             }
             
             all_images.append(image_info)
@@ -226,6 +240,65 @@ def scan_output_directories():
     IMAGE_DATABASE = all_images
     
     return all_images
+
+def filter_images(image_list, filters=None):
+    """
+    Filter images based on specified criteria.
+    
+    Args:
+        image_list (list): List of image info dictionaries
+        filters (dict): Dictionary of filter criteria
+            - configs (list): List of config names to include
+            - workflows (list): List of workflow names to include
+            - min_ratio (float): Minimum aspect ratio
+            - max_ratio (float): Maximum aspect ratio
+            - min_steps (int): Minimum number of steps
+            
+    Returns:
+        list: Filtered list of image info dictionaries
+    """
+    if not filters or not image_list:
+        return image_list
+        
+    filtered_images = []
+    
+    # Extract filter criteria
+    configs = filters.get('configs', [])
+    workflows = filters.get('workflows', [])
+    min_ratio = filters.get('min_ratio', 0)
+    max_ratio = filters.get('max_ratio', float('inf'))
+    min_steps = filters.get('min_steps', 0)
+    
+    # Convert to lowercase for case-insensitive matching
+    if configs:
+        configs = [c.lower() for c in configs]
+    if workflows:
+        workflows = [w.lower() for w in workflows]
+    
+    # Apply filters
+    for img_info in image_list:
+        # Filter by config
+        if configs and img_info['config'].lower() not in configs:
+            continue
+            
+        # Filter by workflow
+        if workflows and img_info['workflow'].lower() not in workflows:
+            continue
+            
+        # Filter by ratio
+        ratio = img_info['ratio']
+        if ratio < min_ratio or ratio > max_ratio:
+            continue
+            
+        # Filter by steps
+        steps = img_info['steps']
+        if steps < min_steps:
+            continue
+            
+        # All filters passed, include this image
+        filtered_images.append(img_info)
+    
+    return filtered_images
 
 def search_images(image_list, query, limit=5, threshold=0.5):
     """
@@ -361,6 +434,7 @@ def start_server(port=5666):
     
     @app.route('/search', methods=['GET'])
     def api_search():
+        # Get search parameters
         query = request.args.get('query', '')
         limit = int(request.args.get('limit', 5))
         
@@ -371,6 +445,42 @@ def start_server(port=5666):
             threshold = max(0.0, min(1.0, threshold))
         except ValueError:
             threshold = 0.5
+            
+        # Get filter parameters
+        filters = {}
+        
+        # Config filter
+        config_param = request.args.get('config', '')
+        if config_param:
+            filters['configs'] = [c.strip() for c in config_param.split(',')]
+            
+        # Workflow filter
+        workflow_param = request.args.get('workflow', '')
+        if workflow_param:
+            filters['workflows'] = [w.strip() for w in workflow_param.split(',')]
+            
+        # Ratio filters
+        try:
+            min_ratio = float(request.args.get('min_ratio', 0))
+            if min_ratio > 0:
+                filters['min_ratio'] = min_ratio
+        except ValueError:
+            pass
+            
+        try:
+            max_ratio = float(request.args.get('max_ratio', 0))
+            if max_ratio > 0:
+                filters['max_ratio'] = max_ratio
+        except ValueError:
+            pass
+            
+        # Steps filter
+        try:
+            min_steps = int(request.args.get('min_steps', 0))
+            if min_steps > 0:
+                filters['min_steps'] = min_steps
+        except ValueError:
+            pass
         
         if not query:
             return jsonify({"error": "Query parameter 'query' is required"}), 400
@@ -378,8 +488,11 @@ def start_server(port=5666):
         # Make sure we have scanned the images
         image_list = scan_output_directories()
         
-        # Perform the search
-        results = search_images(image_list, query, limit, threshold)
+        # Apply filters
+        filtered_images = filter_images(image_list, filters)
+        
+        # Perform the search on filtered images
+        results = search_images(filtered_images, query, limit, threshold)
         
         # Return absolute paths with normalized separators
         paths = [os.path.normpath(img_info["path"]) for img_info in results]
@@ -407,7 +520,7 @@ def start_server(port=5666):
     print_header(f"{get_emoji('server')} Starting Search API Server {get_emoji('server')}")
     print_info(f"Server running at http://0.0.0.0:{port}")
     print_info("Available endpoints:")
-    print_info("  /search?query=<query>&limit=<limit>&threshold=<0.0-1.0> - Search for images")
+    print_info("  /search?query=<query>&limit=<limit>&threshold=<0.0-1.0>&config=<config1,config2>&workflow=<workflow1,workflow2>&min_ratio=<ratio>&max_ratio=<ratio>&min_steps=<steps> - Search for images")
     print_info("  /stats - Get image statistics")
     print_info("Press Ctrl+C to stop the server")
     
