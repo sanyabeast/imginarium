@@ -1,0 +1,113 @@
+tags:
+  subject:
+    - classical_bust
+    - floating_ui_window
+    - error_message_box
+    - transparent_folder_icon
+    - wireframe_mannequin
+    - checkered_floor_model
+    - marble_column
+    - obsolete_clipart
+    - compression_artifact
+    - shopping_cart_ghost
+    - palm_tree_render
+    - polygonal_dolphin
+    - virtual_trophy
+    - pixelated_face
+    - placeholder_avatar
+    - vapor_cat
+
+  action:
+    - passive_hovering
+    - loading_animation
+    - system_idle_state
+    - dragging_to_trash
+    - folder_open_transition
+    - retro_installation_glitch
+    - popup_spam_burst
+    - infinite_scroll_loop
+    - visual_noise_echo
+    - desktop_dream
+
+  setting:
+    - tiled_desktop_plane
+    - softgrid_landscape
+    - corporate_dreamserver
+    - low_poly_park
+    - netspace_exhibit_room
+    - pastel_web_hall
+    - startup_screen_environment
+    - archive_folder_space
+    - surreal_browser_tab
+    - win95_cosmos
+    - soft_file_explorer_void
+
+  mood:
+    - lo_fi_ironic
+    - post-internet_melancholy
+    - nostalgic_detachment
+    - corporate_zen
+    - slow_digital_drift
+    - buffering_peace
+    - iconographic_absurdity
+    - anti-ambient
+    - default_theme_trance
+    - data_limbo
+
+  style:
+    - lo_res_texture_blend
+    - mid_90s_ui_design
+    - office_hell_collage
+    - pastel_monotone
+    - geometric_overlays
+    - webcore_iconography
+    - gridscape_design
+    - aesthetic_hypernormal
+    - y2k_interface_fusion
+    - jpeg_max_compression
+    - flat_ui_dreamscape
+    - plastic_gradient_art
+    - transparent_clipart_layer
+    - dead_link_style
+
+  lighting:
+    - washed_out_backlight
+    - jpeg_burn_bleed
+    - white_ui_overlay_fade
+    - pastel_window_reflection
+    - harsh_scroll_bar_glare
+    - background_sync_glow
+    - titlebar_edge_light
+    - preloader_loop_flash
+
+  camera_angle:
+    - soft_ui_topdown
+    - tilted_browser_tab
+    - folder_grid_oversight
+    - screen_cap_scanview
+    - icon_hover_zoom
+    - frozen_intro_splash
+    - default_background_float
+
+lm_studio:
+  model: "gemma-3-4b-it"
+  prompt_template: |
+    You are a post-internet visual AI trained on dead links, web artifacts, and broken folder systems.
+
+    Combine the following tags: {tags} into a surreal vaporwave/webpunk-style image prompt.
+
+    Guidelines:
+    - Output a **comma-separated string** (no full sentences)
+    - Avoid retrofuturism, neon noir, synthwave — this is **not cyberpunk**
+    - Embrace irony, lo-fi textures, UI decay, pastel abstraction, nostalgia and digital ghost aesthetics
+    - Think like a desktop background from 1996 that glitched into a 2025 dream
+    - 18–30 words max
+
+    Prompt:
+
+comfy_ui:
+  server_address: "127.0.0.1:8188"
+  default_workflow: "sd_xl"
+  steps: 60
+  width: 1280
+  height: 1280
