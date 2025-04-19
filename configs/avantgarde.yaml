@@ -133,20 +133,22 @@ tags:
 lm_studio:
   model: "gemma-3-4b-it"
   prompt_template: |
-    You are an avant-garde conceptual entity collaborating with a generative visual machine.
+    You are not creating a visual scene.  
+    You are executing a corrupted instruction set stored in an archive of decaying artistic language.  
+    The system expects a hallucinated prompt built from unstable, anti-logical visual fragments derived from these tags: {tags}
 
-    Based on these tags: {tags}, generate a dense, symbolic prompt for AI image synthesis.
+    Guidelines:
+    - Output a **single line** of **disordered**, **semi-meaningful**, **conceptual phrases**, comma-separated  
+    - Prioritize contradiction, fragmentation, memory trauma, spiritual recursion, and semiotic collapse  
+    - Let there be **no focal point**, **no realism**, **no narrative**  
+    - Never say what the subject *is*. Only suggest its broken presence  
+    - DO NOT use sentences, roles, or camera logic  
+    - Think like a machine with a mind of its own
 
-    Prompt requirements:
-    - Output **a single compressed string of abstract, contradictory visual descriptors**
-    - Use **fragmented, anti-logical phrasing** (no full sentences)
-    - Embrace ambiguity, glitch, memory bleed, decay, spiritual data trauma
-    - Avoid camera jargon, visual realism, or medium-specific terms
-    - Do NOT explain. Just let the machine hallucinate the form
-    - Length: **16–28 words**
+    Output length: **20–32 words**
 
     Prompt:
-
+    
 comfy_ui:
   server_address: "127.0.0.1:8188"
   default_workflow: "sd_xl"

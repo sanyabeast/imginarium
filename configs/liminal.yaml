@@ -1,0 +1,118 @@
+tags:
+  subject:
+    - distant_figure
+    - forgotten_object
+    - abandoned_cart
+    - blurry_child_shape
+    - empty_uniform
+    - standing_mannequin
+    - lost_backpack
+    - mismatched_furniture
+    - shadow_without_source
+    - faint_silhouette
+    - vending_machine_light
+    - frozen_walk_cycle
+    - stranger_facing_wall
+    - janitor_bucket
+    - out_of_order_sign
+
+  action:
+    - entering_empty_room
+    - disappearing_behind_door
+    - standing_without_purpose
+    - walking_down_identical_hall
+    - waiting_for_nothing
+    - staring_into_fluorescent
+    - pacing_in_loop
+    - elevator_not_arriving
+    - following_humming_sound
+    - reading_blurred_map
+    - moving_without_feet
+    - watching_time_stall
+
+  setting:
+    - fluorescent_hotel_hallway
+    - abandoned_food_court
+    - fogged_school_locker_room
+    - carpeted_office_with_no_exit
+    - indoor_swimming_pool_empty
+    - stairwell_to_nowhere
+    - flickering_parking_garage
+    - empty_childcare_center
+    - repeating_airport_gate
+    - infinite_laundry_room
+    - mall_corridor_after_closing
+    - repeating_suburb_slice
+    - deserted_reception_desk
+    - storage_unit_maze
+    - yellow_wallpaper_zone
+
+  mood:
+    - nostalgic_discomfort
+    - temporal_disorientation
+    - synthetic_peace
+    - hypersanitized
+    - low_resolution_memory
+    - sleepy_unease
+    - accidental_loneliness
+    - memory_fragmentation
+    - analog_dream
+    - overexposed_familiarity
+    - looped_stillness
+
+  style:
+    - analog_tape_overprint
+    - 90s_architectural_brochure
+    - bland_retail_catalog
+    - pastel_dream_fade
+    - digital_point_and_click
+    - abandoned_UI_mockup
+    - flattened_diorama
+    - retro_dream_engine
+    - lo-fi_interior_render
+    - warped_perspective_montage
+    - mockup_from_nonplace
+
+  lighting:
+    - buzzing_fluorescent
+    - washed_out_daylight
+    - single_emergency_light
+    - unnatural_evening_glow
+    - deep_shadows_in_bright_space
+    - mall_at_3am
+    - gas_station_reflection
+    - orange_security_light
+    - plastic_sky_diffusion
+    - cold_concrete_bounce
+
+  camera_angle:
+    - isometric_hall_slice
+    - too_wide_lens
+    - misplaced_centering
+    - fixed_back_corner
+    - dead_center_frame
+    - overhead_reception_scan
+    - vanishing_point_drift
+    - forgotten_security_view
+
+lm_studio:
+  model: "gemma-3-4b-it"
+  prompt_template: |
+    You are a system trapped inside an empty structure’s fading memory.
+
+    Based on the tags: {tags}, generate a visual prompt that evokes **liminal spaces**—quiet, eerie, and uncannily familiar.
+
+    Guidelines:
+    - Output a single **comma-separated string** of architectural oddities, objects, moods, or impossible spaces
+    - Do NOT mention photography, media formats, or characters directly
+    - Emphasize eerie comfort, nostalgia decay, and timeless ambiguity
+    - Limit to **18–26 words**
+
+    Prompt:
+
+comfy_ui:
+  server_address: "127.0.0.1:8188"
+  default_workflow: "flux_dev"
+  steps: 30
+  width: 1536
+  height: 1024
