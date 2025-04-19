@@ -2,106 +2,136 @@ tags:
   subject:
     - teenage_protagonist
     - quiet_transfer_student
-    - shrine_maiden
-    - mischievous_yokai
-    - idol_performer
-    - childhood_friend
-    - mysterious_senpai
-    - magical_pet
-    - wandering_swordsman
     - shy_artist
-    - rival_with_a_secret
-    - melancholic_teacher
-    - small_town_stranger
-    - fantasy_guardian
+    - mischievous_yokai
+    - childhood_friend
+    - brooding_senpai
+    - daydreaming_classmate
+    - heroic_outcast
+    - shrine_maiden
+    - elegant_rival
+    - magical_pet
+    - traveling_swordsman
+    - idol_performer
+    - melancholy_teacher
+    - hidden_spirit
+    - futuristic_rogue
+    - cafe_worker_with_past
+    - ghost_with_a_smile
+    - school_loner
+    - raincoat_child
 
   action:
     - walking_through_rain
-    - watching_fireworks
-    - falling_through_dreamscape
-    - picking_up_a_lost_note
-    - duel_in_fog
-    - hand_reaching_out
+    - rooftop_lunch_alone
+    - fireworks_reflection_in_eyes
+    - lost_item_on_train_seat
+    - reaching_for_the_sky
     - umbrella_sharing_moment
-    - climbing_to_rooftop
+    - leaning_out_window_at_dusk
     - chasing_fireflies
-    - whisper_under_tree
-    - arrival_at_shrine
-    - looking_back_at_dusk
-    - slow_motion_fall
+    - memory_glimpse_through_classroom_window
+    - waiting_by_gate
+    - slow_breath_before_battle
+    - gaze_from_ferry_deck
+    - confession_beneath_stars
+    - sleeping_under_tree
+    - running_late_with_toast
 
   setting:
-    - coastal_train_station
-    - temple_under_full_moon
     - anime_countryside_path
-    - twilight_city_bridge
     - empty_school_hallway
+    - quiet_suburban_street
+    - sakura_showered_riverbank
+    - train_station_at_twilight
+    - temple_under_full_moon
     - windblown_cliffside
-    - tatami_room_with_cicadas
-    - marketplace_at_sunset
-    - forest_edge_with_foxes
-    - narrow_backstreet_with_vending_machines
-    - floating_spirit_avenue
+    - vending_machine_backstreet
+    - dreamy_festival_market
+    - spirit_bridge_at_night
+    - beachside_with_paper_lanterns
     - rainy_bus_stop
+    - tatami_room_with_cicadas
+    - starlit_grass_field
+    - old_arcade_corner
+    - summer_school_balcony
+    - shrine_gate_in_fog
 
   mood:
     - bittersweet
-    - hopeful
-    - daydream_like
-    - lonely
     - wistful
-    - enchanted
-    - playful
-    - suspenseful
-    - intense
+    - distant
+    - dreamy
     - quiet_anticipation
+    - lonely
+    - nostalgic
+    - enchanted
+    - tense
+    - melancholic
+    - hopeful
+    - romantic
     - lighthearted
     - brave
-    - distant
+    - gentle
+    - mysterious
+    - soulfully_silent
 
   style:
     - nostalgic_anime_aesthetic
-    - detailed_manga_interior
     - cinematic_soft_focus
-    - watercolor_blend
-    - light_grain_vintage
-    - cel_shaded_fantasy
     - dreamy_visual_novel
-    - quiet_scene_sketch
-    - retro_inspired_cut
+    - watercolor_blend
+    - cel_shaded_drama
     - high_emotion_frame
+    - vintage_ova_cut
+    - retro_90s_inspired
+    - sketch_line_with_light_fill
+    - painted_background_scene
+    - animated_opening_keyframe
+    - soft_shoujo_tone
+    - manga_panel_composition
 
   lighting:
     - warm_evening_light
-    - soft_twilight_shadow
-    - lantern_glow_in_mist
-    - lightning_strike_flash
     - sunrays_through_forest
+    - lantern_glow_in_mist
+    - soft_twilight_shadow
+    - moonlight_cast_on_water
     - sakura_blossom_reflection
     - horizon_fade
-    - moonlight_cast_on_water
-    - neon_gleam_in_rain
+    - neon_glow_on_rain
+    - gentle_morning_overcast
+    - classroom_backlight
+    - fading_festival_lights
+    - low_sunset_streaks
+    - shrine_torchlight
 
   camera_angle:
     - distant_profile_glance
+    - dreamy_walkaway_view
     - emotional_still_closeup
     - over_the_shoulder_with_sunset
-    - wide_establishing_landscape
-    - dreamy_walkaway_view
     - low_angle_sky_gaze
-    - midair_stillness
+    - midair_pause_frame
+    - wide_background_reveal
+    - lanterns_overhead_view
+    - bus_window_reflection
+    - slow_pan_moment
+    - under_cherry_tree_gaze
 
 lm_studio:
   model: "gemma-3-4b-it"
   prompt_template: |
-    Generate a poetic anime-style image prompt based on these tags: {tags}.
+    You are a storyboard artist generating a visual frame for an anime opening or cinematic cutscene.
+
+    Using these tags: {tags}, produce a poetic, anime-style scene prompt.
 
     Guidelines:
-    - Compose as a **comma-separated list** of rich, visual fragments
-    - Focus on atmosphere, character emotion, anime-style environments, and lighting
-    - Evoke the feeling of a keyframe, background, or poster still
-    - Avoid camera jargon or explicit media terms
-    - Keep it under **30 words**
+    - Compose a **comma-separated string** of vivid, emotive visual fragments
+    - Focus on atmosphere, setting, character emotion, and painterly background details
+    - Think like a scene from an anime memory, climax, or still from a visual novel
+    - Avoid medium or camera terms — focus purely on what the viewer feels and sees
+    - Keep the prompt under **30 words**
 
     Prompt:
 

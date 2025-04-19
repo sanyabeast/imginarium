@@ -1,116 +1,130 @@
 tags:
   subject:
     - core_character
-    - enemy_form
-    - boss_shape
-    - interactive_entity
+    - boss_form
+    - elite_enemy
+    - interactive_object
     - support_npc
-    - unique_mount
-    - armor_suit
-    - artifact_weapon
-    - energy_object
-    - in-world_prop
-    - signature_item
-    - environmental_icon
-    - architectural_marker
-    - world_structure
-    - concept_portrait
+    - cryptic_vendor
+    - quest_icon
+    - ancient_mount
+    - exosuit_frame
+    - mechanical_boss_core
+    - relic_weapon
+    - elemental_device
+    - UI_focus_entity
+    - biome_core
+    - character_portrait_sheet
+    - ambient_prop
+    - level_glyph_marker
+    - spawn_totem
+    - warp_beacon
+    - gameplay_token
 
   action:
     - idle_state
-    - combat_ready
-    - spellcast_frame
-    - ranged_attack
-    - traversal_motion
-    - cinematic_presence
-    - interaction_pose
-    - stealth_transition
-    - exploration_moment
-    - menu_idle_loop
+    - animation_loop
+    - ranged_attack_frame
+    - spellcasting_gesture
+    - crouch_transition
+    - cinematic_hover
+    - stealth_ready_pose
+    - ambient_movement
+    - terrain_navigation
+    - dialogue_interaction_idle
+    - emote_triggered_action
+    - save_point_activation
+    - summon_effect_start
+    - platform_jump_loop
 
   setting:
-    - overworld_landmass
-    - biomech_lab
-    - ruin_city
-    - pixel_cave
-    - floating_island
-    - battle_arena
-    - lore_shrine
-    - fog_forest
-    - neon_highrise
-    - sacred_zone
-    - dream_stage
-    - multiplayer_lobby
-    - core_dungeon
-    - fantasy_gate
-    - stylized_warp_space
+    - overworld_map_zone
+    - sci_fi_command_hub
+    - modular_space_dock
+    - pixel_shrine_corridor
+    - floating_combat_island
+    - industrial_garbage_quarter
+    - magical_rune_valley
+    - lowpoly_cloud_arena
+    - dungeon_biome_cell
+    - VR_grid_map
+    - dreamgate_expanse
+    - co-op_ready_lobby
+    - fractal_terrain_testroom
+    - haunted_tower_top
+    - animated_main_menu_bg
 
   mood:
+    - immersive
+    - exploratory
     - intense
-    - mystical
-    - cinematic
-    - dystopian
+    - low_pressure
+    - epic
+    - glitchy_retro
+    - narrative_weighted
+    - arcane
+    - minimal_UI
+    - eerie_ambient
+    - action_loop_engaged
+    - fast_response_zone
     - playful
-    - dark_fantasy
-    - ambient
-    - adrenaline_peak
-    - epic_scale
-    - low_tension_loop
-    - narrative_heavy
+    - dark_world_layer
 
   style:
-    - concept_sketch
-    - high_fidelity_realism
-    - UI_overlay_style
-    - retro_pixel_grid
-    - stylized_handpainted
-    - cel_shade
-    - blueprint_mock
-    - game_menu_flat
-    - 3d_greybox
-    - painterly_fantasy
-    - vector_rpg_style
-    - voxel_simulation
-    - dynamic_line_art
-    - ink_outline_concept
+    - concept_sketch_loose
+    - UI_blueprint_wire
+    - painterly_mock
+    - pixel_diagram
+    - lowpoly_view
+    - cel_shaded_idea
+    - dev_log_asset
+    - stylized_fantasy_rough
+    - map_concept_panel
+    - isometric_rpg_style
+    - combat_portrait_sheet
+    - 3D_blockout_layer
+    - grid_UI_marker
+    - visual_novel_cutin
+    - game_asset_ref_sheet
 
   lighting:
-    - moody_spot
-    - directional_rim
-    - lava_bloom
+    - directional_edge
     - volumetric_godrays
-    - reflective_floorlight
-    - UI_highlight_glow
-    - arcane_pulse
-    - harsh_backlight
-    - isometric_ambient
-    - low_poly_shadowplay
+    - shadow_bounce
+    - glitched_UI_highlight
+    - status_effect_aura
+    - fiery_core_rim
+    - ambient_spell_flicker
+    - terminal_reflection
+    - fog_layered
+    - control_room_glow
+    - overcast_surface_shine
 
   camera_angle:
     - isometric_grid_lock
-    - character_design_loop
-    - third_person_dynamic
-    - overworld_map_focus
-    - UI_lore_closeup
-    - flyover_pan
-    - intro_scene_cut
-    - design_sheet_array
-    - top_down_pathfinder
+    - orthographic_ui_frame
+    - third_person_overhead
+    - flyover_intro_cut
+    - pixel_battle_stage_flat
+    - over_the_shoulder_lore
+    - UI_zoom_focus
+    - character_loop_test
+    - schematic_environment_slice
+    - pause_menu_frame_view
 
 lm_studio:
   model: "gemma-3-4b-it"
   prompt_template: |
-    You are a visual designer for a game prototype.
+    You are a game concept designer generating imagery for a prototype.
 
-    Combine the abstract tags: {tags} into a rich, compressed concept art prompt for an AI generator.
+    Combine the tags: {tags} into a focused **concept art prompt** for a playable game element.
 
     Guidelines:
-    - Output must be **one line** of comma-separated descriptors
-    - Focus on **character, setting, UI/UX, or item design**
-    - Use game-dev phrasing like "idle frame", "battle-ready", "UI overlay", "character loop", "pixel mockup"
-    - Avoid the words “photo”, “render”, “screenshot”
-    - **Do not** write full sentences — this is not a caption
-    - Keep between **15–25 words**
+    - Output a single line of **comma-separated game art descriptors**
+    - Include things like: idle frame, pixel view, battle-ready stance, level slice, UI panel, visual glyph, 3D mock
+    - Avoid media references like “render”, “photo”, “screenshot”
+    - Do not write in full sentences — think production notes or asset references
+    - Keep it **15–25 words**, max punch, ready for ComfyUI
 
     Prompt:
 

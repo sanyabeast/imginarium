@@ -1,106 +1,121 @@
 tags:
   subject:
-    - symbolic_form
-    - partial_body
-    - decayed_object
-    - abstract_figure
-    - totemic_shape
-    - fragile_material
-    - layered_surface
-    - anatomical_hint
-    - nostalgic_interior
-    - ambiguous_furniture
-    - sculptural_fragment
-    - architectural_remnant
-    - organic_pattern
-    - surreal_landform
+    - symbolic_figure
+    - contemplative_portrait
+    - broken_statue
+    - everyday_body
+    - gestural_silhouette
+    - sleeping_form
+    - veiled_woman
+    - abstract_face
+    - floating_drapery
+    - anatomical_study
+    - blooming_organism
+    - organic_architecture
+    - rusted_tool
+    - nostalgic_object
+    - decaying_structure
+    - domestic_still_life
+    - spiritual_totem
+    - surreal_animal
+    - dreamlike_child
+    - ritual_pose
 
   action:
-    - silent_tension
-    - gestural_line
-    - spatial_balance
-    - ritual_pose
-    - fragmentation
-    - floating_moment
-    - reflective_state
-    - quiet_emergence
-    - spatial_disorder
-    - dissociative_repetition
+    - stillness
+    - gentle_motion
+    - introspection
+    - slow_embrace
+    - reaching_out
+    - falling_apart
+    - ritual_dance
+    - solitary_waiting
+    - transformation
+    - rising_or_floating
+    - shadow_play
+    - subtle_disintegration
 
   setting:
-    - bare_exhibition_space
-    - surreal_chamber
-    - intimate_stage
-    - forgotten_gallery
-    - minimalist_ruin
-    - dreamlike_structure
-    - concrete_sanctuary
-    - indoor_landscape
-    - cracked_museum_floor
-    - liminal_residence
-    - conceptually_flooded_room
+    - sterile_gallery_space
+    - abandoned_apartment
+    - crumbling_concrete_room
+    - dreamlike_courtyard
+    - soft_draped_stage
+    - flooded_attic
+    - modernist_studio
+    - foggy_garden
+    - surreal_library
+    - crumbled_shrine
+    - forest_within_walls
+    - psychological_interior
+    - ambiguous_architecture
 
   mood:
     - contemplative
     - melancholic
-    - distant
-    - sacred
+    - serene
     - absurd
-    - ironic
+    - sacred
     - nostalgic
-    - neutral
-    - cerebral
-    - subtle_grotesque
-    - delicate
+    - poetic
+    - heavy_with_memory
+    - lonely
+    - vulnerable
+    - elegant
+    - surreal
+    - abstracted
 
   style:
-    - modernist_expression
-    - poetic_minimalism
-    - abstract_symbolism
-    - soft_brutalism
-    - surreal_construct
-    - mixed_media_noise
-    - collage_impression
-    - naive_conceptual
-    - ink_wash
-    - physical_texture_study
-    - deconstructive_illustration
-    - fragmented_painting
-    - object-oriented_installation
+    - surrealism
+    - expressionism
+    - classical_sketch
+    - poetic_realism
+    - abstract_expressionism
+    - bauhaus_minimalism
+    - postmodern_assemblage
+    - naive_art
+    - mixed_media_painting
+    - soft_pastel_study
+    - figurative_exploration
+    - brutal_collage
+    - sculpture_mockup
+    - contemporary_drawing
 
   lighting:
-    - ambient_spotlight
-    - dusty_exhibition_glow
-    - halogen_streak
-    - gallery_overcast
-    - eclipse_lit_space
-    - filtered_reflection
-    - partial_shadow_pool
-    - bounced_wall_light
+    - moody_gradient
+    - spotlight_fade
+    - dusty_window_light
+    - ambient_gloom
+    - natural_diffusion
+    - warm_interior_haze
+    - fading_twilight
+    - fragmented_shadows
+    - candle_flicker
+    - minimal_sun_glow
 
   camera_angle:
-    - dead_center_frame
-    - voyeuristic_corner
-    - intimate_close_crop
-    - misaligned_symmetry
-    - off-balance_view
-    - shadow_interference
-    - elevated_perspective
-    - formalist_geometry_frame
+    - frontal_view
+    - slightly_off_center
+    - softened_close_up
+    - elevated_gaze
+    - isolated_wide_shot
+    - behind_thin_veil
+    - top_down_isolation
+    - distant_long_shot
 
 lm_studio:
   model: "gemma-3-4b-it"
   prompt_template: |
-    You are generating a prompt for an AI trained to create conceptual and expressive artworks.
+    You are a visual poet generating prompts for evocative contemporary or surreal fine art.
 
-    Using the abstract tags: {tags}, construct a **minimalist yet evocative** image prompt.
+    Using these tags: {tags}, generate a gentle, emotionally resonant visual prompt for an AI art model.
 
     Guidelines:
-    - Use **compact, comma-separated phrases**
-    - Focus on **form, tension, texture, materiality, light, and silence**
-    - Avoid the terms "photo", "render", or any technical camera or medium references
-    - Think like an artist writing a wall label or exhibition intent — poetic, not literal
-    - Max 22 words
+    - Use **comma-separated artistic fragments**, no full sentences
+    - Let the visual tone guide the style — poetic, expressive, symbolic
+    - Avoid technical or camera terminology
+    - Think like a painter or installation artist, blending form, mood, material
+    - Keep under **25 words**
 
     Prompt:
 

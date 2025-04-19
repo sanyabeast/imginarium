@@ -2,98 +2,133 @@ tags:
   subject:
     - individual_person
     - small_group
-    - family_dynamic
+    - diverse_family
+    - child_playing
+    - senior_couple
+    - office_worker
+    - creative_freelancer
     - domestic_pet
     - urban_wildlife
-    - household_item
-    - workspace_object
-    - plant_life
-    - digital_device
-    - tool_or_accessory
-    - neutral_symbol
-    - decorative_shape
-    - cozy_element
+    - potted_plant
+    - cozy_blanket
+    - ceramic_mug
+    - paper_notebook
+    - decorative_pillow
+    - reusable_water_bottle
+    - eyeglasses_on_table
+    - household_tool
+    - fresh_fruit
+    - healthy_meal
+    - hand_gesture
+    - soft_fabric_fold
+    - hanging_light_fixture
+    - modern_chair
+    - analog_clock
+    - calendar_page
+    - kitchen_utensil
+    - indoor_shoes
 
   action:
-    - daily_activity
+    - daily_routine
+    - shared_conversation
     - emotional_expression
-    - focused_task
-    - social_interaction
-    - leisure_moment
-    - creative_process
-    - care_or_gesture
+    - focused_work_moment
+    - brainstorming_session
+    - healthy_lifestyle_task
+    - parenting_interaction
+    - reading_or_writing
+    - gentle_smile
+    - spontaneous_laughter
+    - sipping_tea_or_coffee
+    - stretching_or_yoga
+    - browsing_or_planning
+    - relaxing_with_pet
+    - organizing_items
     - thoughtful_pause
-    - passive_motion
+    - subtle_hand_movement
+    - quiet_solitude
 
   setting:
-    - modern_home_interior
-    - office_space
-    - living_room
-    - public_park
-    - transit_area
-    - cafe_or_bistro
-    - kitchen_counter
-    - city_street_corner
-    - bright_studio_backdrop
-    - neutral_background
+    - well_lit_living_room
+    - bright_kitchen_space
+    - casual_home_office
+    - cozy_bedroom_corner
+    - modern_coworking_area
+    - urban_balcony_scene
+    - window_nook_with_plants
+    - minimal_cafe_table
+    - neutral_studio_backdrop
+    - clean_desk_arrangement
+    - morning_breakfast_scene
+    - park_path_with_sunlight
+    - city_street_walkway
+    - public_transit_moment
+    - natural_light_stairwell
 
   mood:
-    - calm
-    - cheerful
-    - thoughtful
-    - motivated
-    - peaceful
-    - collaborative
-    - practical
-    - content
-    - gentle
-    - sincere
+    - calm_focus
+    - gentle_warmth
+    - cheerful_energy
+    - collaborative_spirit
+    - peaceful_solitude
+    - fresh_morning_mood
+    - soft_nostalgia
+    - cozy_comfort
+    - productive_tone
+    - honest_connection
+    - low_key_intimacy
+    - neutral_professionalism
 
   style:
     - clean_realism
-    - editorial_minimalism
-    - lifestyle_soft_focus
-    - pastel_flat
-    - muted_conceptual
-    - modern_visual_language
-    - business_casual
-    - health_wellness_styling
-    - abstract_corporate
+    - lifestyle_minimalism
+    - editorial_neutral
+    - wellness_friendly
+    - gentle_pastel
+    - muted_corporate
+    - soft_focus_aesthetic
+    - bright_contemporary
+    - daily_life_reportage
+    - functional_flat_styling
+    - accessible_modernism
 
   lighting:
-    - natural_daylight
-    - softbox_even
-    - indirect_sunlight
-    - warm_indoor
-    - subtle_shadowplay
-    - neutral_fill_light
-    - backlit_diffusion
-    - window_light_bounce
+    - soft_daylight_through_window
+    - gentle_shadow_fill
+    - morning_sun_highlights
+    - neutral_backlight
+    - evening_warm_glow
+    - ceiling_softbox_emulation
+    - directional_desk_lamp
+    - indoor_diffused_sunlight
+    - natural_bounce_fill
+    - overcast_indirect_light
 
   camera_angle:
     - level_eye_view
-    - three_quarter_frame
-    - above_tabletop
-    - close_crop
-    - over_shoulder
-    - perspective_peek
-    - lifestyle_wide
-    - subject_centered
+    - three_quarter_profile
+    - wide_casual_frame
+    - tabletop_closeup
+    - close_crop_detail
+    - over_shoulder_activity
+    - standing_roomwide_perspective
+    - relaxed_centered_focus
+    - framed_through_doorway
+    - object_on_surface_view
 
 lm_studio:
   model: "gemma-3-4b-it"
   prompt_template: |
-    You are creating a prompt for a **stock image generator**.
+    You are building a clean, descriptive prompt for a **realistic stock image** generator.
 
-    Use the following tags: {tags}
+    Based on these tags: {tags}, generate a concise image concept suitable for commercial stock use.
 
     Guidelines:
-    - Output should be a single line of **comma-separated phrases**
-    - Focus on **human presence, lifestyle elements, clean visuals, and contextual clarity**
-    - Especially for everyday objects, be **specific** and avoid clichés (no phones, laptops, suitcases)
-    - Use clear visual language: form, material, mood, light, setting
-    - Do **not** use full sentences or mention cameras, photos, or image types
-    - Keep it under **20 words**
+    - Output a **comma-separated list** of descriptive phrases
+    - Use clear **everyday visual details** with emphasis on object form, human activity, light, and tone
+    - Avoid clichés like “business handshake” or overused tech tropes (no phones/laptops/suitcases unless explicitly tagged)
+    - Do NOT use camera terms, media types, or full sentences
+    - Target length: **12–20 words**
 
     Prompt:
 

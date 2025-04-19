@@ -1,96 +1,112 @@
 tags:
   subject:
-    - symbolic_operator
-    - synthetic_lifeform
-    - dream_vehicle
-    - ambiguous_module
-    - retro_domestic_form
-    - analog_entity
-    - speculative_architect
-    - modular_human_extension
-    - orbital_component
-    - nostalgic_machine
+    - space_colony_resident
+    - orbital_control_technician
+    - domestic_synth_unit
+    - bio-modified_child
+    - utopian_family_group
+    - aesthetic_lifeform
+    - analog_data_clerk
+    - operator_with_clipboard
+    - artificial_womb_system
+    - chrome_utilitarian_frame
+    - neon_reflection_mannequin
+    - recreational_console_agent
+    - signal_processing_attendant
+    - high_gloss_caretaker_unit
 
   action:
-    - speculative_activity
-    - synthetic_routine
-    - space_habitual_motion
-    - analog_data_exchange
-    - zero_g_task
-    - system_adjustment
-    - encoded_signal_exchange
-    - hyperidealized_function
-    - slow_surveillance_gesture
-    - impossible_coordination
+    - status_monitoring
+    - protocol_rehearsal
+    - post-labor_rest
+    - signal_feedback_loop
+    - data_dial_input
+    - behavioral_simulation
+    - ergonomic_alignment
+    - synchronized_module_use
+    - ambient_activity_observation
+    - oxygen_system_check
+    - tech_recreation
+    - slow_industrial_motion
 
   setting:
-    - imagined_control_zone
-    - stylized_colony_plan
-    - aesthetic_dome_environment
-    - retro_research_void
-    - domestic_future_concept
-    - showroom_orbit
-    - collapsed_data_center
-    - alternate_governance_zone
-    - brochure_space_exhibit
-    - nostalgic_lab_interface
+    - plastiform_living_unit
+    - low_orbit_administration_core
+    - neon_planned_neighborhood
+    - chrome_panoramic_tower
+    - transparent_dome_outlook
+    - control_pad_interior
+    - library_of_futures
+    - vinyl_panel_archive
+    - terraforming_central_tube
+    - synthetic_communal_kitchen
+    - pastel_labyrinth
+    - corridor_of_perfect_order
+    - obsolete_command_center
+    - simplified_research_sprawl
 
   mood:
-    - sterile_comfort
-    - bureaucratic_optimism
-    - ironic_uplift
-    - clinical_wonder
-    - post-utopian
-    - glitchy_reminiscence
-    - surreal_order
-    - warm_logic
-    - faded_precision
-    - plastified_awe
+    - techno-serene
+    - sanitized_progress
+    - ironic_efficiency
+    - hollowed_optimism
+    - modular_fantasy
+    - spectral_formality
+    - faux_comfort
+    - emotionally_neutral_wonder
+    - regulated_nostalgia
+    - cold_cheerfulness
+    - conceptual_reassurance
+    - glitch_tinted_hope
 
   style:
-    - monochrome_vision
-    - brochure_illustration
-    - pastel_chromatics
-    - analog_interface_art
-    - propaganda_ui
-    - retro_linework
-    - ambient_punk
-    - neon_diagram
-    - tube_monitor_overlay
-    - speculative_tactility
-    - airbrush_geometry
-    - nostalgic_infographic
+    - atompunk_diagram
+    - soft_system_interface
+    - pastel_speculative_design
+    - broadcast_manual_overlay
+    - plastiglobe_illustration
+    - museum_brochure_cutaway
+    - vhs_technical_mockup
+    - brutalist_futurity
+    - geometric_instruction_grid
+    - interface_labeling_art
+    - obsolete_UI_visualization
+    - mono_palette_dream
+    - futuristic_exhibit_render
 
   lighting:
-    - instructional_light
-    - glowband_accents
-    - green_phosphor_bloom
-    - soft_control_panel_lighting
-    - underlit_reflective_surface
-    - radial_console_halo
-    - tube_terminal_shadow
+    - neon_glow_fringe
+    - plastilight_diffusion
+    - CRT_flicker_emission
+    - radial_console_bloom
+    - pastel_surface_reflection
+    - analog_monitor_illumination
+    - sterile_hallway_striplight
+    - artificial_dawnwash
+    - thermal_overlay_cast
 
   camera_angle:
-    - archive_technical_view
-    - glossy_instruction_sheet
-    - detached_control_lens
-    - nostalgic_monitor_scan
-    - split_panel_display
-    - orbital_catalog_view
+    - static_monitor_observation
+    - schematic_cross_section
+    - room_diagram_view
+    - mirror_panel_viewpoint
+    - documentary_lab_crop
+    - catalog_entry_perspective
+    - internal_console_glimpse
 
 lm_studio:
   model: "gemma-3-4b-it"
   prompt_template: |
-    You are an AI trained on thousands of speculative visuals from mid-century futurism.
+    You are an AI trained on speculative visual manuals, museum catalogs, and atomic-era sci-fi concept art.
 
-    Based on the following tags: {tags}, create a concise image generation prompt that reflects **retrofuturistic imagination**.
+    Using the following tags: {tags}, generate a retrofuturistic image prompt inspired by visions of the future from 1950s–1990s.
 
-    Guidelines:
-    - Compose the prompt as a **comma-separated string** (no full sentences)
-    - Emphasize **materials, forms, mood, and outdated futuristic intent**
-    - Think in terms of a fictional 1970s science catalog, government concept art, or forgotten visual manual
-    - Avoid real-world brands, modern devices, or photographic language
-    - 12 to 24 words total — lean into abstraction and speculative contradictions
+    Prompt guidelines:
+    - Output must be a **comma-separated string** (no full sentences)
+    - Emphasize speculative forms, surfaces, institutional emotion, and technological optimism or irony
+    - Use language fitting for brochures, manuals, architectural diagrams, or UI mockups
+    - Avoid modern brands, camera terms, or photo language
+    - Use **12–26 abstract but coherent visual fragments**
 
     Prompt:
 

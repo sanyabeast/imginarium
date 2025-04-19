@@ -2,108 +2,137 @@ tags:
   subject:
     - humanoid_anomaly
     - blank_faced_figure
+    - declassified_lifeform
+    - synthetic_shell
+    - biometric_growth
+    - suspended_limb
     - specimen_in_tank
+    - contaminated_suit
+    - malformed_clone
+    - archive_mummification
     - flesh_structure
     - distorted_uniform
-    - decaying_bioform
     - skeletal_remains
+    - post-human_carrier
     - artificial_organism
-    - contaminated_suit
-    - suspended_limb
-    - biometric_growth
-    - glass_eyeball
-    - declassified_lifeform
+    - twitching_organ_cluster
+    - forgotten_patient
+    - proximity_class_entity
     - residual_entity
+    - breathing_wall_growth
 
   action:
-    - containment
-    - breach_response
     - suspended_stasis
-    - hazmat_intervention
-    - redacted_interaction
     - protocol_execution
-    - anomaly_classification
+    - breach_response
+    - memory_deletion
     - archival_scan
-    - incident_logging
+    - anomaly_documentation
+    - internal_lockdown
+    - visual_quarantine
+    - containment_reinforcement
+    - expired_protocol_activation
+    - hallucination_detection
     - anomalous_reaction
+    - reality_stabilization_attempt
+    - redacted_interaction
+    - post-event_classification
 
   setting:
-    - observation_cell
-    - hidden_sublevel
     - sealed_corridor
-    - flooded_control_room
     - reinforced_laboratory
-    - decommissioned_vault
+    - containment_observation_cell
+    - hidden_sublevel
+    - flooded_control_room
+    - artifact_storage_bay
     - anomaly_vitrine
     - restricted_archive
-    - blacked_out_monitor_room
-    - defunct_experiment_wing
-    - fogged_glass_unit
+    - classified_disposal_sector
+    - glass_partition_failure
+    - decommissioned_vault
+    - overgrown_bio_unit
+    - anomaly_exposure_chamber
+    - procedural_freeze_zone
+    - protocol_execution_tunnel
+    - blank_monitor_cluster
+    - expired_section_alpha
 
   mood:
-    - sterile
     - clinical_dread
-    - redacted
     - corrupted_order
-    - low_threat_anxiety
-    - liminal_tension
-    - contaminated_silence
+    - archival_suspicion
+    - redacted_threat
+    - sterile_tension
+    - forgotten_warning
+    - ambiguous_paranoia
     - decaying_structure
     - memory_bleed
+    - suppressed_panic
+    - quiet_bureaucratic_fear
+    - institutional_stillness
+    - cold_glitch_presence
     - breathless_witness
-    - bureaucratic_fear
-    - uncanny_stillness
 
   style:
-    - incident_frame_capture
-    - security_feed_distortion
     - analog_containment_schematic
-    - monochrome_anomaly_chart
-    - stripped_down_medical_render
     - corrupted_report_overlay
-    - CRT_archival_glitch
-    - exposure_trace
-    - low_bit_depth_horror
-    - broken_institutional_UI
-    - vhs_bleed_texture
-    - foundational_minimalism
+    - institutional_minimalism
+    - incident_frame_capture
+    - analog_monitor_aesthetic
+    - broken_UI_overlay
+    - VHS_contamination_filter
+    - CRT_noise_layering
+    - security_feed_distortion
+    - archival_monitor_composite
+    - pre-event_diagnostics
+    - glitch_form_suppression
+    - anomaly_chart_fragment
+    - mono_palette_observation
+    - biohazard_outline_art
+    - SCP_document_painting
 
   lighting:
     - flickering_fluorescent
-    - artifact_glow
-    - backlit_fog
-    - shadow_gradient
-    - sterile_flashlight_cone
-    - UV_stain_pattern
-    - thermal_smear
-    - archival_graywash
-    - obscured_exit_sign
+    - flicker_strobe_scan
     - corridor_bleedthrough
+    - UV_trace_backlight
+    - artifact_glow_emission
+    - dim_biometric_indicator
+    - archival_graywash
+    - sterile_flashlight_cone
+    - thermal_overlay_flicker
+    - observation_shadow_bleed
+    - emergency_red_fade
+    - overprocessed_monitor_light
 
   camera_angle:
-    - off_center_institutional
     - first_person_containment
-    - redacted_crop
-    - broken_perspective
-    - low_frame_ceiling
+    - security_corner_view
     - glare_observation_window
+    - artifact_focus_frame
+    - redacted_crop
+    - off_center_institutional
+    - broken_perspective
+    - surveillance_tilt
+    - containment_from_above
+    - glare_masked_hallway
     - downward_classification_angle
     - inverted_mirror_reflection
 
 lm_studio:
   model: "gemma-3-4b-it"
   prompt_template: |
-    You are a visual anomaly technician for a containment agency.
+    You are a visual anomaly technician documenting containment irregularities through an AI system.
 
-    Using the tags: {tags}, construct a quiet-horror visual prompt.
+    Based on the tags: {tags}, generate a visual record fragment for internal use.
 
     Guidelines:
-    - Output a single **comma-separated line** (no full sentences)
-    - Emphasize sterile dread, institutional corruption, and unrevealed danger
-    - Blend technical coldness with visceral weirdness
-    - Incorporate **invented terms**, SCP-style ambiguity, or redacted hints
-    - Avoid “photo”, “render”, or anything implying medium
-    - Stay under **28 words**
+    - Output a **single line of comma-separated phrases**
+    - Focus on **ambiguous biological threats**, institutional decay, containment rituals, and low-information dread
+    - Feel free to invent containment terms, procedural phrases, or visual anomalies
+    - Avoid sentences or camera/media language
+    - Tone: SCP dossier meets glitching medical scanner
+    - Length: **18–28 words**
 
     Prompt:
 

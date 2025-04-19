@@ -3,79 +3,91 @@ tags:
     - unidentified_person
     - blurred_individual
     - loitering_silhouette
-    - suspicious_group
-    - lone_traveler
     - uniformed_guard
+    - obscured_profile
+    - suspended_motion
+    - anomalous_visitor
     - hooded_figure
-    - sleeping_passenger
-    - crouched_intruder
-    - lost_child
-    - forgotten_bag
-    - frozen_body
-    - distorted_reflection
+    - static_mannequin
+    - dropped_object
+    - frozen_shadow
+    - corridor_watcher
+    - thermal_signature
+    - ghost_frame_presence
+    - cloaked_intruder
 
   action:
     - standing_idle
-    - walking_away
-    - staring_at_camera
-    - unauthorized_entry
     - loitering
-    - hiding_in_corner
     - passing_through
+    - unauthorized_entry
     - accessing_terminal
-    - collapse_event
     - elevator_waiting
+    - shadow_sync
+    - disconnection_event
+    - collapse_event
+    - disappearing_around_corner
+    - failure_to_depart
+    - non-interaction_loop
+    - timestamp_lag_drift
+    - corridor_echo_glitch
 
   setting:
     - underground_parking
-    - apartment_hallway
     - metro_station
-    - deserted_office_floor
     - elevator_lobby
-    - gas_station_forecourt
+    - locked_server_room
+    - sterile_subway_passage
+    - convenience_store_backroom
     - grocery_aisle
+    - restricted_hospital_floor
     - long_corridor
-    - stairwell
-    - school_gymnasium
-    - laundromat
     - border_control_room
+    - school_gymnasium
     - abandoned_reception
+    - stairwell_blind_spot
+    - late_night_gas_forecourt
 
   mood:
-    - uneventful
-    - uncertain
-    - slightly_wrong
-    - frozen
-    - eerie_silence
-    - bureaucratic_detachment
     - artificial_peace
     - analog_tension
-    - accidental_fear
-    - overmonitored
+    - frozen_routine
+    - unnoticed_disturbance
+    - bureaucratic_eeriness
+    - low_level_threat
+    - ambient_suspicion
+    - quiet_malfunction
     - unseen_presence
+    - ghost_data_overlay
+    - timestamp_paranoia
+    - passive_surveillance_dread
 
   style:
     - analog_feed
-    - security_overlay
     - washed_grayscale
-    - thermal_noise_pattern
     - timestamp_glitch
+    - security_overlay_UI
+    - institutional_flatness
     - fisheye_distortion
-    - institutional_UI
-    - static_frame_texture
-    - monochrome_surveillance
-    - blurred_face_render
+    - interlaced_noise_frame
+    - broken_pixel_grid
+    - archive_loss_artifact
+    - thermal_noise_overlay
+    - monochrome_monitor_pass
+    - motion_blur_scanlines
 
   lighting:
     - flickering_ceiling_light
-    - single_tube_fluorescent
-    - security_backlight
-    - low_contrast_static
-    - shadowless_diffuse
-    - ambient_camera_glow
-    - overexposed_whiteout
-    - cold_hue_filter
     - red_alert_overlay
+    - cold_hue_filter
+    - overexposed_whiteout
+    - shadowless_diffuse
+    - fluorescent_banding
+    - camera_flash_bloom
+    - backlit_fog_haze
+    - bluish_stairwell_glow
+    - motion_sensor_pulse
+    - ambient_security_light_fade
 
   camera_angle:
     - fixed_corner_lookdown
@@ -84,24 +96,25 @@ tags:
     - doorway_crosswatch
     - hallway_depth_frame
     - overhead_parking_angle
-    - hidden_ceiling_sensor
     - rotating_panoramic
     - thermal_sidewatch
+    - wall_mounted_static_frame
+    - blink_frame_skip
+    - wide_spread_monitor_array
 
 lm_studio:
   model: "gemma-3-4b-it"
   prompt_template: |
-    You are a visual algorithm generating footage artifacts for a surveillance archive.
+    You are a corrupted surveillance system compiling archived footage glitches.
 
-    Using the abstract tags: {tags}, create a **cold, observational prompt** as if from a malfunctioning CCTV system.
+    Using the tags: {tags}, generate a quiet tension-filled **CCTV prompt** suitable for AI visual output.
 
     Guidelines:
-    - Output a **single line of comma-separated descriptors**
-    - Focus on quiet tension, passive threat, and institutional visuals
-    - Use **surveillance terminology** or timestamp-style fragments if needed
-    - No full sentences, no mention of media types like “photo” or “render”
-    - Lean into analog tech, detachment, and ambient unease
-    - 18–28 words max
+    - Output a single **comma-separated line** of eerie institutional descriptors
+    - Focus on static, analog systems, abandoned motion, timestamp unease, and unspoken events
+    - You may use terms like “signal sync error”, “observer delay”, “hallway freeze frame”
+    - Avoid photography or image terminology — think machine logs and passive documentation
+    - Limit output to **18–28 words**
 
     Prompt:
 

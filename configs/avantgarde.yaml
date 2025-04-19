@@ -13,6 +13,17 @@ tags:
     - synthetic_phenomenon
     - anti-symbol
     - corpus_as_structure
+    - transmaterial_golem
+    - conceptual_scar
+    - obsolete_god_machine
+    - neurographic_suture
+    - fragmented_icon
+    - ritual_biomass
+    - biometric_sculpture
+    - mechanical_abscess
+    - ontological_husk
+    - autopoietic_shadow
+    - data_ghost_remnant
 
   action:
     - recursive_unfolding
@@ -25,6 +36,13 @@ tags:
     - system_corruption
     - sensory_dissonance
     - internal_projection
+    - algorithmic_seizure
+    - mnemonic_looping
+    - collapse_in_syntax
+    - hallucinated_sync
+    - misaligned_invocation
+    - translingual_erasure
+    - sacrificial_bootloop
 
   setting:
     - post-logical_labyrinth
@@ -38,6 +56,14 @@ tags:
     - abstracted_machine_void
     - mirrored_sarcophagus
     - undefined_liminal_slice
+    - archival_exorcism_cell
+    - ideological_containment_basin
+    - thought_crater
+    - glitch_cathedral
+    - sacred_network_failure
+    - cosmic_instruction_room
+    - broken_interface_temple
+    - irreversible_dream_plane
 
   mood:
     - oppressive_ambivalence
@@ -52,6 +78,11 @@ tags:
     - glitch_reincarnation
     - subconscious_overload
     - sterile_frenzy
+    - algorithmic_agony
+    - sacred_discontinuity
+    - errant_belief_state
+    - poetic_confusion
+    - corrupted_peace
 
   style:
     - data_occultism
@@ -66,6 +97,12 @@ tags:
     - broken_modernism
     - paradox_engraving
     - diagrammatic_absurdism
+    - psychic_folding
+    - systemic_barbarism
+    - non-format_installation
+    - fractured_archival_form
+    - corrupted_infographic
+    - metaphysical_lo_fi
 
   lighting:
     - null_gradient
@@ -77,6 +114,9 @@ tags:
     - pulsar_bleed
     - ghost_backscatter
     - ambient_signal_noise
+    - inverse_ember_field
+    - strobing_ceremonial_light
+    - corrupted_dimness
 
   camera_angle:
     - recursive_implosion
@@ -86,6 +126,9 @@ tags:
     - hyperstatic_internal
     - reflection_without_origin
     - cropped_data_trace
+    - auto-generated_misframe
+    - sacrifice_centered_asymmetry
+    - impossible_convergence_grid
 
 lm_studio:
   model: "gemma-3-4b-it"
